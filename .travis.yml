@@ -1,0 +1,49 @@
+language: php
+
+php:
+  # - 5.6
+  - 7.0
+node_js: "7"
+before_install:
+  - nvm install 6.9
+  - nvm use 6.9
+install:
+  - npm install -g yarn
+  # - cd frontend/
+  # - yarn install
+  # - cd ..
+before_script:
+  - cd backend/
+  - cp .env.travis .env
+  - mysql -e 'create database homestead_test;'
+  - composer self-update
+  - composer install --no-interaction
+  - php artisan key:generate
+  # - php artisan jwt:generate
+  - php artisan migrate --env=testing --no-interaction -vvv
+  - php artisan db:seed --env=testing --no-interaction -vvv
+  - cd ..
+
+  - cd frontend/
+  - yarn install
+  # - cp src/config.example.js src/config.js
+  - cd ..
+
+script:
+  - cd backend/
+  - vendor/bin/phpunit --verbose --coverage-text --coverage-clover=coverage.xml
+  - cd ..
+
+  - cd frontend/
+  - npm test -- --coverage
+  - cd ..
+
+after_success:
+  - cd backend/
+  - bash <(curl -s https://codecov.io/bash)
+  - cd ..
+
+  - cd frontend/
+  - bash <(curl -s https://codecov.io/bash)
+  - cd ..
+  
