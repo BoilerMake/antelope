@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 
 /*
@@ -16,3 +17,10 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('user:create {email} {--admin}', function ($email, $admin) {
+    $this->info("Creating user for {$email}!");
+    if($admin) $this->info("Admin user");
+    $user = User::addNew($email, $admin);
+    $this->info($user->getToken());
+});
