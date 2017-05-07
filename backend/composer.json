@@ -6,10 +6,12 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "barryvdh/laravel-cors": "^0.9.2",
         "barryvdh/laravel-ide-helper": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "spatie/laravel-tail": "^1.4"
+        "spatie/laravel-tail": "^1.4",
+        "tymon/jwt-auth": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
