@@ -11,7 +11,10 @@ class InboxSidebar extends Component {
             </div>);
         return (
             <div className="inbox-column left">
-                <div className="top-left">Antelope</div>
+                <div className="top-left">
+                    Antelope
+                    {this.props.isMobile &&  <button onClick={this.props.toggleSidebar}>aa</button>}
+                </div>
                 <div className="inbox-column-bottom" >
                     {inboxList}
                 </div>

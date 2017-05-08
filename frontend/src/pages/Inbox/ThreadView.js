@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 class ThreadView extends Component {
     render () {
         return (
             <div className="inbox-column right">
                 <div className="inbox-column-bottom" style={{padding: '5px'}}>
+                    {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
                     <h1>ThreadView: {this.props.threadId}</h1>
                     <pre style={{width: '200px'}}>
                         {JSON.stringify(this.props.user.me,null, 2)}

@@ -4,7 +4,11 @@ class ThreadListView extends Component {
     render () {
         return (
             <div className="inbox-column center">
-                <div className="top-right">hello. viewing inbox: {this.props.inboxId}</div>
+                <div className="top-right">
+                    hello. viewing inbox: {this.props.inboxId}
+
+                    <p>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>toggle sidebar</a>}</p>
+                    </div>
                 <div className="inbox-column-bottom">
                     <div className="inbox-thread-list-item-wrapper">
                         <div className="inbox-thread-list-item">FROM NAME<br/><Link to={`/inbox/${this.props.inboxId}/th1`}>th1</Link></div>
