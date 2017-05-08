@@ -19,7 +19,7 @@ body {
 }
 .inbox-column.right {
   background-color: #f3f3f3;
-  /* flex: 0 0 55%; */
+  flex: 1 1 50%;
 }
 .inbox-column.center {
   flex: 0 0 350px
@@ -35,7 +35,7 @@ body {
 .inbox-column-bottom {
   flex-grow: 1;
   overflow-y: auto;
-  padding: 0px;
+  padding: 0;
 }
 .inbox-sidebar-item-wrapper {
   color: #F2F2F2;
@@ -82,4 +82,19 @@ body {
 
 .f {
   display: flex;
+  width: 100%;
+}
+
+.login-container {
+  display: flex;           /* establish flex container */
+  flex-direction: column;  /* make main axis vertical */
+  justify-content: center; /* center items vertically, in this case */
+  align-items: center;     /* center items horizontally, in this case */
+  height: 70%;
+  width: 100%;
+}
+.login {
+  width: 300px;
+  margin: 5px;
+  text-align: center;     /* will center text in <p>, which is not a flex item */
 }

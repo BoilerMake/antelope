@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 
 //STATIC PAGES
-import Home from './pages/Landing';
+// import Home from './pages/Landing';
 
 //
 import Login from './pages/Login';
@@ -31,21 +31,16 @@ const PrivateRoute = ({ component: Component, isAuthenticated, isAllowed, ...res
 );
 
 const UserRoute = withRouter(connect((state) => ({isAuthenticated: state.user.authenticated, isAllowed: true}))(PrivateRoute));
-// const ExecRoute = withRouter(connect((state) => ({isAuthenticated: state.user.authenticated, isAllowed: state.user.tokenData && state.user.tokenData.roles.contains("exec")}))(PrivateRoute));
 
 const Routes = () => (
     <div className="f">
-        <Route exact path="/" component={Home}/>
+        <Route exact path="/" render={() => (<Redirect to="/inbox/0"/>)}/>
+        {/*<Route exact path="/" component={Home}/>*/}
         <Route path="/login" component={Login}/>
 
         <UserRoute path="/dashboard" component={Dashboard}/>
-        {/*<ExecRoute path="/exec/dashboard" component={Dashboard}/>*/}
-
+        <Route exact path="/inbox/" render={() => (<Redirect to="/inbox/0"/>)}/>
         <UserRoute path="/inbox/:inboxId/:threadId?" component={Inbox}/>
-        {/*<Redirect exact from="/inbox" to="/inbox/0"/>*/}
-        {/*<UserRoute path="/inbox" component={Inbox}>*/}
-            {/*<UserRoute path="/:inboxId/:threadId?" component={Inbox}/>*/}
-        {/*</UserRoute>*/}
     </div>
 );
 
