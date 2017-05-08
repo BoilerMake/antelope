@@ -1,61 +1,78 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
-
-.App-logo {
-  $logo: 200px;
-  animation: App-logo-spin infinite 5s linear;
-  display:inline-block;
-  width: $logo;
-  height: $logo;
-}
-
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-
 html {
   height: 100%;
+  font-family: sans-serif;
 }
-
 body {
   height: 100%;
-  overflow: hidden;  /*makes the body non-scrollable (we will add scrolling to the sidebar and main content containers)*/
-  margin: 0px;  /*removes default style*/
-  display: flex;  /*enables flex content for its children*/
-  box-sizing: border-box;
-}
-
-.column {
-  height: 100%;  /*allows both columns to span the full height of the browser window*/
+  overflow: hidden;
+  margin: 0px;
   display: flex;
-  flex-direction: column;  /*places the left and right headers above the bottom content*/
 }
-
-#left {
-  flex-shrink: 0;  /*makes sure that content is not cut off in a smaller browser window*/
+.inbox-column {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-
+.inbox-column.left {
+  flex: 0 0 220px;
+  background-color: #2D353A;
+}
+.inbox-column.right {
+  background-color: #f3f3f3;
+  /* flex: 0 0 55%; */
+}
+.inbox-column.center {
+  flex: 0 0 350px
+}
 .top-left {
-  flex-shink: 0;
+  flex-shrink: 0;
+  background-color: #333;
+  color: white;
+  height: 80px;
+  padding: 20px;
+  border-bottom: 1px solid white;
+}
+.inbox-column-bottom {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0px;
+}
+.inbox-sidebar-item-wraper {
+  color: white;
+  height: 50px;
+  width: 220px;
+  display:flex;
+  align-items:center;
+  /* padding-left: 5px; */
+  margin: 0px;
+  padding: 0px;
+  border: 1px;
+  border-bottom: 1px solid white;
+}
+.inbox-sidebar-item {
+  padding-left: 15px;
+}
+
+.inbox-thread-list-item-wrapper {
+  border-bottom: 1px solid #EEEEEE;
+  height: 100px;
+}
+.inbox-thread-list-item {
+  padding: 5px;
 }
 
 .top-right {
+  display: inline-flex;
   flex-shrink: 0;
-  display: inline-flex;
+  background-color: grey;
+  color: white;
+  padding: 20px;
+  height: 80px;
+  border-bottom: 1px solid black;
 }
 
-ul {
-  display: inline-flex;
-  list-style: none;
-}
 
-.bottom {
-  flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
-  overflow-y: auto;  /*adds scroll to this container*/
+
+.f {
+  display: flex;
 }

@@ -34,7 +34,7 @@ const UserRoute = withRouter(connect((state) => ({isAuthenticated: state.user.au
 const ExecRoute = withRouter(connect((state) => ({isAuthenticated: state.user.authenticated, isAllowed: state.user.tokenData && state.user.tokenData.roles.contains("exec")}))(PrivateRoute));
 
 const Routes = () => (
-    <div>
+    <div className="f">
         <Route exact path="/" component={Home}/>
         <Route path="/login" component={Login}/>
 
