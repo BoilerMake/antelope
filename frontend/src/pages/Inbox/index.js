@@ -1,109 +1,28 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import ThreadView from './ThreadView';
+import ThreadListView from './ThreadListView';
+import InboxSidebar from './InboxSidebar';
 class Inbox extends Component {
     render () {
         return (
             <div className="f">
-                <div className="inbox-column left">
-                    <div className="top-left">Antelope</div>
-                    <div className="inbox-column-bottom" >
-                        <div className="inbox-sidebar-item-wraper">
-                            <div className="inbox-sidebar-item">aaaaa</div>
-                        </div>
-                        <div className="inbox-sidebar-item-wraper">
-                            <div className="inbox-sidebar-item"><Link to="/inbox/aa" style={{color: 'white'}}>aa</Link></div>
-                        </div>
-                        <div className="inbox-sidebar-item-wraper">
-                            <div className="inbox-sidebar-item"><Link to="/inbox/bb" style={{color: 'white'}}>bb</Link></div>
-                        </div>
-                        <div className="inbox-sidebar-item-wraper">
-                            <div className="inbox-sidebar-item">aaaaa</div>
-                        </div>
-                        <div className="inbox-sidebar-item-wraper">
-                            <div className="inbox-sidebar-item">aaaaa</div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <div className="inbox-column center">
-                    <div className="top-right">
-                        hello.
-                        <p>inbox:{this.props.match.params.inboxId} thread:{this.props.match.params.threadId} </p>
-
-                    </div>
-                    <div className="inbox-column-bottom">
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/><Link to={`/inbox/${this.props.match.params.inboxId}/th1`}>th1</Link></div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-                        <div className="inbox-thread-list-item-wrapper">
-                            <div className="inbox-thread-list-item">FROM NAME<br/>hi</div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <div className="inbox-column right">
-                    <div className="inbox-column-bottom">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quam massa, ornare at turpis quis, varius pulvinar lorem. Morbi eleifend nisi eget viverra fermentum. Vivamus interdum dui quis orci placerat semper. Morbi lobortis ex sit amet risus cursus pharetra. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam luctus leo augue, non facilisis nunc aliquam sed. Aliquam erat volutpat. Nam laoreet cursus nunc, id tincidunt justo. Nullam elit magna, finibus at aliquam ut, blandit vel magna. Phasellus ullamcorper urna a leo luctus vestibulum. Duis posuere leo ac lectus auctor, convallis aliquam odio gravida.</p>
-                        <p>Sed porttitor turpis quis est pellentesque, in accumsan risus porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas quis elit sed felis dapibus sodales ut auctor nibh. Mauris dapibus diam in ante scelerisque ultrices. Nam tincidunt lorem vel ultricies sodales. Nullam facilisis placerat pulvinar. Nullam in arcu urna. Pellentesque tempus lorem et ligula viverra convallis. Integer id vehicula quam, sit amet dictum urna. Praesent pellentesque hendrerit risus non pharetra. In a libero finibus, hendrerit justo quis, consequat nunc. Sed iaculis efficitur nunc sagittis hendrerit. Praesent ligula augue, malesuada quis pretium semper, facilisis non quam. Phasellus ac placerat mi. Quisque ac fermentum tellus.</p>
-                        <p>Duis facilisis aliquet neque, nec dignissim dolor venenatis non. Donec quis consectetur nibh. Ut ut purus in metus pellentesque feugiat non ut augue. Aenean at leo vulputate, viverra ligula ut, aliquam turpis. Cras nunc dui, sollicitudin quis lorem sit amet, auctor mollis libero. Integer non magna ipsum. Etiam ullamcorper urna tortor, nec tempor tortor elementum et. Donec placerat mi nisi, id rhoncus lacus sodales sed. Nullam lorem risus, sollicitudin non lacinia a, scelerisque et mauris. Vivamus nisi enim, egestas ac ante eu, molestie vestibulum felis. Praesent vitae dui tincidunt mi malesuada pharetra. Integer vehicula leo at laoreet tempor. In vestibulum rutrum tellus, eget suscipit orci egestas et. Vestibulum tincidunt aliquam dui, ac pharetra eros commodo ut. Sed tempus eget orci a laoreet. Donec gravida imperdiet congue.</p>
-                        <p>Proin at iaculis velit, et finibus lorem. Aenean ac enim pretium, hendrerit nunc in, tincidunt mauris. Suspendisse congue ipsum nec libero sagittis pretium. Quisque vulputate sem est, in laoreet orci sagittis sed. Vestibulum in lectus eleifend, lacinia lectus in, maximus tortor. Mauris quis posuere arcu, nec hendrerit mauris. In pulvinar sodales rhoncus. In hac habitasse platea dictumst. Ut tempor mattis ligula sed dapibus.</p>
-                        <p>Sed vel condimentum elit. Donec varius ex eget vestibulum egestas. Cras sed cursus massa, eget feugiat sapien. Cras maximus lectus mi, a rhoncus libero gravida quis. Fusce luctus malesuada elementum. Integer nec lectus convallis, ullamcorper orci eu, bibendum nisl. Cras hendrerit mi fringilla ante egestas pharetra. Ut sollicitudin suscipit turpis, eleifend pharetra nisl mollis sit amet. Nulla mauris elit, venenatis luctus dictum sit amet, aliquet nec leo. Fusce sed sapien libero. In lacus dui, porttitor tempus ullamcorper ac, laoreet id massa. Nulla facilisi.</p>
-                        <p>Proin at iaculis velit, et finibus lorem. Aenean ac enim pretium, hendrerit nunc in, tincidunt mauris. Suspendisse congue ipsum nec libero sagittis pretium. Quisque vulputate sem est, in laoreet orci sagittis sed. Vestibulum in lectus eleifend, lacinia lectus in, maximus tortor. Mauris quis posuere arcu, nec hendrerit mauris. In pulvinar sodales rhoncus. In hac habitasse platea dictumst. Ut tempor mattis ligula sed dapibus.</p>
-                        <p>Sed vel condimentum elit. Donec varius ex eget vestibulum egestas. Cras sed cursus massa, eget feugiat sapien. Cras maximus lectus mi, a rhoncus libero gravida quis. Fusce luctus malesuada elementum. Integer nec lectus convallis, ullamcorper orci eu, bibendum nisl. Cras hendrerit mi fringilla ante egestas pharetra. Ut sollicitudin suscipit turpis, eleifend pharetra nisl mollis sit amet. Nulla mauris elit, venenatis luctus dictum sit amet, aliquet nec leo. Fusce sed sapien libero. In lacus dui, porttitor tempus ullamcorper ac, laoreet id massa. Nulla facilisi.</p>
-                        <p>Proin at iaculis velit, et finibus lorem. Aenean ac enim pretium, hendrerit nunc in, tincidunt mauris. Suspendisse congue ipsum nec libero sagittis pretium. Quisque vulputate sem est, in laoreet orci sagittis sed. Vestibulum in lectus eleifend, lacinia lectus in, maximus tortor. Mauris quis posuere arcu, nec hendrerit mauris. In pulvinar sodales rhoncus. In hac habitasse platea dictumst. Ut tempor mattis ligula sed dapibus.</p>
-                        <p>Sed vel condimentum elit. Donec varius ex eget vestibulum egestas. Cras sed cursus massa, eget feugiat sapien. Cras maximus lectus mi, a rhoncus libero gravida quis. Fusce luctus malesuada elementum. Integer nec lectus convallis, ullamcorper orci eu, bibendum nisl. Cras hendrerit mi fringilla ante egestas pharetra. Ut sollicitudin suscipit turpis, eleifend pharetra nisl mollis sit amet. Nulla mauris elit, venenatis luctus dictum sit amet, aliquet nec leo. Fusce sed sapien libero. In lacus dui, porttitor tempus ullamcorper ac, laoreet id massa. Nulla facilisi.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quam massa, ornare at turpis quis, varius pulvinar lorem. Morbi eleifend nisi eget viverra fermentum. Vivamus interdum dui quis orci placerat semper. Morbi lobortis ex sit amet risus cursus pharetra. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam luctus leo augue, non facilisis nunc aliquam sed. Aliquam erat volutpat. Nam laoreet cursus nunc, id tincidunt justo. Nullam elit magna, finibus at aliquam ut, blandit vel magna. Phasellus ullamcorper urna a leo luctus vestibulum. Duis posuere leo ac lectus auctor, convallis aliquam odio gravida.</p>
-                        <p>Sed porttitor turpis quis est pellentesque, in accumsan risus porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas quis elit sed felis dapibus sodales ut auctor nibh. Mauris dapibus diam in ante scelerisque ultrices. Nam tincidunt lorem vel ultricies sodales. Nullam facilisis placerat pulvinar. Nullam in arcu urna. Pellentesque tempus lorem et ligula viverra convallis. Integer id vehicula quam, sit amet dictum urna. Praesent pellentesque hendrerit risus non pharetra. In a libero finibus, hendrerit justo quis, consequat nunc. Sed iaculis efficitur nunc sagittis hendrerit. Praesent ligula augue, malesuada quis pretium semper, facilisis non quam. Phasellus ac placerat mi. Quisque ac fermentum tellus.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quam massa, ornare at turpis quis, varius pulvinar lorem. Morbi eleifend nisi eget viverra fermentum. Vivamus interdum dui quis orci placerat semper. Morbi lobortis ex sit amet risus cursus pharetra. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam luctus leo augue, non facilisis nunc aliquam sed. Aliquam erat volutpat. Nam laoreet cursus nunc, id tincidunt justo. Nullam elit magna, finibus at aliquam ut, blandit vel magna. Phasellus ullamcorper urna a leo luctus vestibulum. Duis posuere leo ac lectus auctor, convallis aliquam odio gravida.</p>
-                        <p>Sed porttitor turpis quis est pellentesque, in accumsan risus porta. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas quis elit sed felis dapibus sodales ut auctor nibh. Mauris dapibus diam in ante scelerisque ultrices. Nam tincidunt lorem vel ultricies sodales. Nullam facilisis placerat pulvinar. Nullam in arcu urna. Pellentesque tempus lorem et ligula viverra convallis. Integer id vehicula quam, sit amet dictum urna. Praesent pellentesque hendrerit risus non pharetra. In a libero finibus, hendrerit justo quis, consequat nunc. Sed iaculis efficitur nunc sagittis hendrerit. Praesent ligula augue, malesuada quis pretium semper, facilisis non quam. Phasellus ac placerat mi. Quisque ac fermentum tellus.</p>
-                    </div>
-                </div>
+                <InboxSidebar/>
+                <ThreadListView inboxId={this.props.match.params.inboxId}/>
+                <ThreadView threadId={this.props.match.params.threadId || null}/>
             </div>
         );
     }
 }
-
+export default Inbox;
 //now the redux integration layer
-import { connect } from 'react-redux'
-function mapStateToProps (state) {
-    return {
-        user: state.user
-    };
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Inbox);
+// import { connect } from 'react-redux'
+// function mapStateToProps (state) {
+//     return {
+//         user: state.user
+//     };
+// }
+//
+// const mapDispatchToProps = (dispatch, ownProps) => ({
+// });
+//
+// export default connect(mapStateToProps, mapDispatchToProps)(Inbox);

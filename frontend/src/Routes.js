@@ -31,7 +31,7 @@ const PrivateRoute = ({ component: Component, isAuthenticated, isAllowed, ...res
 );
 
 const UserRoute = withRouter(connect((state) => ({isAuthenticated: state.user.authenticated, isAllowed: true}))(PrivateRoute));
-const ExecRoute = withRouter(connect((state) => ({isAuthenticated: state.user.authenticated, isAllowed: state.user.tokenData && state.user.tokenData.roles.contains("exec")}))(PrivateRoute));
+// const ExecRoute = withRouter(connect((state) => ({isAuthenticated: state.user.authenticated, isAllowed: state.user.tokenData && state.user.tokenData.roles.contains("exec")}))(PrivateRoute));
 
 const Routes = () => (
     <div className="f">
@@ -39,9 +39,13 @@ const Routes = () => (
         <Route path="/login" component={Login}/>
 
         <UserRoute path="/dashboard" component={Dashboard}/>
-        <ExecRoute path="/exec/dashboard" component={Dashboard}/>
+        {/*<ExecRoute path="/exec/dashboard" component={Dashboard}/>*/}
 
-        <Route path="/inbox/:inboxId/:threadId?" component={Inbox}/>
+        <UserRoute path="/inbox/:inboxId/:threadId?" component={Inbox}/>
+        {/*<Redirect exact from="/inbox" to="/inbox/0"/>*/}
+        {/*<UserRoute path="/inbox" component={Inbox}>*/}
+            {/*<UserRoute path="/:inboxId/:threadId?" component={Inbox}/>*/}
+        {/*</UserRoute>*/}
     </div>
 );
 

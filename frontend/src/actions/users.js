@@ -36,7 +36,7 @@ export function fetchMe () {
         const token = cookie.load('token');
         // const token = getState().user.token;
 
-        return fetch(`${API_BASE_URL}/me?token=${token}`)
+        return fetch(`${API_BASE_URL}/users/me?token=${token}`)
             .then((response) => response.json())
             .then((json) => dispatch(receiveMe(json)));
     };
