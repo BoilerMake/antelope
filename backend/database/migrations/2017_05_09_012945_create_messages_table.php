@@ -27,7 +27,7 @@ class CreateMessagesTable extends Migration
             $table->string('in_reply_to')->nullable();
             $table->text('body_plain')->nullable();
             $table->text('body_html')->nullable();
-            $table->json('headers')->nullable();
+            $table->text('headers')->nullable();
             $table->text('raw')->nullable();
             $table->integer('timestamp')->nullable();
             $table->boolean('is_incoming')->default(true);
