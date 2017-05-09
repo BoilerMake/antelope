@@ -19,3 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //auth
 Route::post('auth/login', 'AuthController@login');
+ROute::get('test','MailController@test');
+Route::post('mailgunhook','MailController@mailgunHook');
+
+Route::group(['middleware'=>['jwt.auth'], 'prefix' => 'users/me'], function () {
+
+    //get update me
+    Route::get('/', 'UsersController@getMe');
+});
