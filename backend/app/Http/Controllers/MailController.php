@@ -16,9 +16,6 @@ class MailController extends Controller
 {
     public function test()
     {
-        Message::newMessage(1, 'nicky semenzaa <nicky@nickysemenza.com>', 'raw send!', 'boring body', '<h2>mm</h2>');
-//        return Message::first()->thread->inbox->primary_address;
-//        return Message::with('thread.inbox')->first();
     }
 
     /**
@@ -38,7 +35,8 @@ class MailController extends Controller
 
     /**
      * Mailgun sends POST to this route when a message is received.
-     *
+     * If it is a reply, we need to add it to the appropriate thread
+     * If it is a new email, we need to determine which inbox to route it to, and add it to a new thread in that inbox.
      * @param Request $request
      *
      * @return mixed
@@ -51,7 +49,6 @@ class MailController extends Controller
         if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
             return response()->error('mailgun signature invalid');
         }
-        Log::info(Request::all());
 
         //Determine if we need to start a new thread, or if we add to existing thread (for reply).
         //TODO: In-Reply-To could possibly be multiple ids?
@@ -84,7 +81,8 @@ class MailController extends Controller
         $m->timestamp = Request::get('timestamp');
         $m->raw = json_encode(Request::all());
         $m->save();
-//        $m->reply();
+        $m->reply();
+        //we need to return a 200 to mailgun, or else they will retry POSTing.
         return response()->success('message saved. is-reply?:'.($isAReply ? 'y' : 'n').' thread:'.$thread_id);
     }
 }

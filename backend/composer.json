@@ -14,7 +14,8 @@
         "mailgun/mailgun-php": "^2.3",
         "php-http/curl-client": "^1.7",
         "spatie/laravel-tail": "^1.4",
-        "tymon/jwt-auth": "dev-master"
+        "tymon/jwt-auth": "dev-master",
+        "soundasleep/html2text": "~0.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -16,6 +16,8 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->integer('thread_id')->unsigned();
             $table->foreign('thread_id')->references('id')->on('threads');
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('message_id');
             $table->string('subject');
             $table->string('recipient');
@@ -30,7 +32,6 @@ class CreateMessagesTable extends Migration
             $table->text('headers')->nullable();
             $table->text('raw')->nullable();
             $table->integer('timestamp')->nullable();
-            $table->boolean('is_incoming')->default(true);
             $table->timestamps();
         });
     }
