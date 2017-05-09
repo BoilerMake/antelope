@@ -26,7 +26,7 @@ before_script:
 
   - cd frontend/
   - yarn install
-  # - cp src/config.example.js src/config.js
+  - cp src/config.example.js src/config.js
   - cd ..
 
 script:
