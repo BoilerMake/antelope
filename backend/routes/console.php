@@ -20,7 +20,9 @@ Artisan::command('inspire', function () {
 
 Artisan::command('user:create {email} {--admin}', function ($email, $admin) {
     $this->info("Creating user for {$email}!");
-    if($admin) $this->info("Admin user");
+    if ($admin) {
+        $this->info('Admin user');
+    }
     $user = User::addNew($email, $admin);
     $this->info($user->getToken());
 });
