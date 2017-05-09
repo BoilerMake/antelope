@@ -28,8 +28,9 @@ class User extends Authenticatable
         'password',
     ];
 
-    public static function addNew($email, $admin) {
-        $user = new User();
+    public static function addNew($email, $admin)
+    {
+        $user = new self();
         $user->email = $email;
         $user->is_admin = $admin;
         //set a temporary password
@@ -39,8 +40,10 @@ class User extends Authenticatable
         //no chance of collision if we prepend a random string with the unique id
         $user->confirmation_code = $user->id.Str::random(10);
         $user->save();
+
         return $user;
     }
+
     public function getToken()
     {
         return JWTAuth::fromUser($this, ['exp' => strtotime('+1 year')]);

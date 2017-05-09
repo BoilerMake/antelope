@@ -12,10 +12,10 @@ class InboxTableSeeder extends Seeder
     public function run()
     {
         DB::table('inboxes')->insert([
-            'name' => 'test inbox',
-            'regex' => '',
+            'name'            => 'test inbox',
+            'regex'           => '',
             'primary_address' => 'test@test.com',
-            'is_default' => true
+            'is_default'      => true,
         ]);
         DB::table('threads')->insert([
             'inbox_id' => 1,
