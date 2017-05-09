@@ -14,8 +14,10 @@ use Log;
 class MailController extends Controller
 {
     public function test() {
-        return Message::first()->thread->inbox->primary_address;
-        return Message::with('thread.inbox')->first();
+
+        Message::newMessage(1,'nicky semenzaa <nicky@nickysemenza.com>','raw send!','boring body','<h2>mm</h2>');
+//        return Message::first()->thread->inbox->primary_address;
+//        return Message::with('thread.inbox')->first();
 
     }
 
@@ -56,11 +58,16 @@ class MailController extends Controller
         //Persist message to DB;
         $m = new Message();
         $m->thread_id = $thread_id;
-        $m->from = Request::get('from');// this is 'from'
-        $m->sender = Request::get('sender');//this is another version of 'from', slightly diff
+
+        //summary on from vs. sender: https://cr.yp.to/immhf/sender.html
+        //tl;dr: "It is unclear why Sender is supposed to be useful."
+        $m->from = Request::get('from');
+        $m->sender = Request::get('sender');
+
         $m->subject = Request::get('subject');
-        $m->recipient = Request::get('recipient');//this is 'to'
+        $m->recipient = Request::get('recipient');//this is the address the message was sent 'to'
         $m->message_id = Request::get('Message-Id');
+
         $m->body_plain = Request::get('body-plain');
         $m->body_html = Request::get('body-html');
         $m->references = Request::get('References');
