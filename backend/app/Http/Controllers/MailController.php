@@ -16,6 +16,7 @@ class MailController extends Controller
 {
     public function test()
     {
+        Message::newMessage(1, null, 'nicky semenza <nicky@nickysemenza.com>', 'TEST trackin', '<div>hello there :) <a href="nickysemenza.com">clickme</a></div>');
     }
 
     /**
@@ -51,13 +52,18 @@ class MailController extends Controller
         }
 
         //Determine if we need to start a new thread, or if we add to existing thread (for reply).
-        //TODO: In-Reply-To could possibly be multiple ids?
         $reference = Message::where('message_id', Request::get('In-Reply-To'))->first();
         $isAReply = ($reference == true);
         if ($reference) {
             $thread_id = $reference->thread_id;
+            //it might have been set to don previously, so we need to 'reopen' if need be.
+            //todo: log the state changing if it changes?
+            Thread::find($thread_id)->update('state',Thread::STATE_ASSIGNED);
         } else {
-            $thread_id = Thread::create(['inbox_id'=>self::getInboxIdForIncoming(Request::get('recipient'))])->id;
+            $thread_id = Thread::create([
+                'inbox_id' => self::getInboxIdForIncoming(Request::get('recipient')),
+                'state' => Thread::STATE_NEW
+            ])->id;
         }
 
         //Persist message to DB;
@@ -81,8 +87,12 @@ class MailController extends Controller
         $m->timestamp = Request::get('timestamp');
         $m->raw = json_encode(Request::all());
         $m->save();
-        $m->reply();
+        $m->reply(null,'sup');
         //we need to return a 200 to mailgun, or else they will retry POSTing.
         return response()->success('message saved. is-reply?:'.($isAReply ? 'y' : 'n').' thread:'.$thread_id);
+    }
+    public function mailgunEvent(){
+        Log::info('email #'.Request::get('antelope-message-id').' was:'.Request::get('event'));
+        return 'ok';
     }
 }

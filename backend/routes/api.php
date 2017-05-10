@@ -24,6 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('auth/login', 'AuthController@login');
 ROute::get('test', 'MailController@test');
 Route::post('mailgunhook', 'MailController@mailgunHook');
+Route::post('mailgunevent', 'MailController@mailgunEvent');
 
 Route::group(['middleware'=>['jwt.auth'], 'prefix' => 'users/me'], function () {
 
