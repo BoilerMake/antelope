@@ -1,15 +1,6 @@
 import deepFreeze from 'deep-freeze';
 import { assert } from 'chai';
-import reducer_user from './reducer_user.js';
-
-const initialState = {
-    authenticated: false,
-    me: null,
-    error: null,
-    loading: false,
-    token_data: null,
-    token: null
-};
+import reducer_user, { INITIAL_STATE as initialState } from './reducer_user.js';
 
 deepFreeze(initialState);
 

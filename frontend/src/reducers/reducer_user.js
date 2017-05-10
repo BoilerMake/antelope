@@ -10,7 +10,7 @@ import {
 
 import jwtDecode from 'jwt-decode';
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
     authenticated: false,
     me: null,
     error: null,
