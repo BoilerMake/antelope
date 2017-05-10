@@ -53,4 +53,25 @@ class User extends Authenticatable
     {
         return JWTAuth::fromUser($this, ['exp' => strtotime('+1 year')]);
     }
+    private function getInboxIdsByPermission() {
+        $user = User::with('groups.inboxes')->find($this->id);
+        $inboxes_by_permission = [];
+        foreach ($user->groups as $group) {
+            foreach($group->inboxes as $eachGroupInbox) {
+                $inboxes_by_permission[$eachGroupInbox->pivot->permission][]=$eachGroupInbox->id;
+            }
+        }
+        $r = $inboxes_by_permission[Group::INBOX_PERMISSION_READONLY];
+        $rw = $inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE];
+
+        //we prioritize readwrite higher than readonly, so if a user has readonly AND readwrite permissions from
+        //  two different groups, then we ignore the readonly, letting the readwrite take precedence.
+        return [
+            'readOnly_ids'=> array_values(array_diff($r,$rw)),
+            'readWrite_ids'=> $rw,
+            'all_ids'=> array_unique(array_merge($r,$rw))];
+    }
+    public function getInboxIds() {
+        return self::getInboxIdsByPermission()['all_ids'];
+    }
 }

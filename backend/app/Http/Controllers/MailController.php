@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use App\Models\Inbox;
 use App\Models\Message;
 use App\Models\Thread;
+use App\Models\User;
 use Log;
 use Mailgun\Mailgun;
 use Request;
@@ -16,7 +18,31 @@ class MailController extends Controller
 {
     public function test()
     {
-        Message::newMessage(1, null, 'nicky semenza <nicky@nickysemenza.com>', 'TEST trackin', '<div>hello there :) <a href="nickysemenza.com">clickme</a></div>');
+        $u = User::first();
+        return $u->getToken();
+        return Inbox::findMany($u->getInboxIds());
+//        $u = User::with('groups.inboxes')->first();
+//        $inboxes_by_permission = [];
+//        foreach ($u->groups as $group) {
+//            foreach($group->inboxes as $eachGroupInbox) {
+//                $inboxes_by_permission[$eachGroupInbox->pivot->permission][]=$eachGroupInbox->id;
+//            }
+//        }
+//        $r = $inboxes_by_permission[Group::INBOX_PERMISSION_READONLY];
+//        $rw = $inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE];
+//
+//        //we prioritize readwrite higher than readonly, so if a user has readonly AND readwrite permissions from
+//        //  two different groups, then we ignore the readonly, letting the readwrite take precedence.
+//        return [
+//            'readOnly_ids'=> array_values(array_diff($r,$rw)),
+//            'readWrite_ids'=> $rw,
+//            'all_ids'=> array_unique(array_merge($r,$rw))];
+
+//        return [
+//            'readonly'=>Inbox::findMany($readOnly_ids),
+//            'readwrite'=>Inbox::findMany($readWrite_ids),
+//        ];
+//        Message::newMessage(1, null, 'nicky semenza <nicky@nickysemenza.com>', 'TEST trackin', '<div>hello there :) <a href="nickysemenza.com">clickme</a></div>');
     }
 
     /**

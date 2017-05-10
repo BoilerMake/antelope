@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 class InboxSidebar extends Component {
+    componentDidMount() {
+        this.props.fetchUserInboxList();
+    }
     render () {
-        let inboxes = [{id: 0, name: "all inboxes"},{id: 3, name: "inb3"},{id: 5, name: "inb5"}];
+        let inboxes = this.props.user.inbox_list;//[{id: 0, name: "all inboxes"},{id: 3, name: "inb3"},{id: 5, name: "inb5"}];
         let inboxList = inboxes.map((inbox) =>
             <div className={parseInt(this.props.match.params.inboxId)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'} key={inbox.id}>
                 <div className="inbox-sidebar-item">
@@ -25,13 +28,17 @@ class InboxSidebar extends Component {
 
 //now the redux integration layer
 import { connect } from 'react-redux'
+import { fetchUserInboxList } from '../../actions/users';
 function mapStateToProps (state) {
     return {
         user: state.user
     };
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-});
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        fetchUserInboxList: () => { dispatch(fetchUserInboxList())}
+    };
+};
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(InboxSidebar));

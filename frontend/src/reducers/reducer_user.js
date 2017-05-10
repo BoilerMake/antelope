@@ -3,6 +3,8 @@ import {
     LOGIN_FROM_JWT_SUCCESS,
     RECEIVE_ME,
     REQUEST_ME,
+    // REQUEST_USER_INBOX_LIST,
+    RECEIVE_USER_INBOX_LIST,
     LOGOUT_USER
 } from '../actions/users';
 
@@ -14,7 +16,8 @@ const INITIAL_STATE = {
     error: null,
     loading: false,
     token_data: null,
-    token: null
+    token: null,
+    inbox_list: []
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -37,6 +40,10 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state,
                 loading: false,
                 me: action.me.data
+            };
+        case RECEIVE_USER_INBOX_LIST:
+            return { ...state,
+                inbox_list: action.data.data
             };
 
         default:

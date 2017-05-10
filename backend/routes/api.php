@@ -30,4 +30,5 @@ Route::group(['middleware'=>['jwt.auth'], 'prefix' => 'users/me'], function () {
 
     //get update me
     Route::get('/', 'UsersController@getMe');
+    Route::get('inboxes', 'UsersController@getInboxes');
 });

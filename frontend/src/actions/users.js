@@ -58,3 +58,33 @@ function receiveMe (json) {
         receivedAt: Date.now()
     };
 }
+
+export const REQUEST_USER_INBOX_LIST = 'REQUEST_USER_INBOX_LIST';
+export const RECEIVE_USER_INBOX_LIST = 'RECEIVE_USER_INBOX_LIST';
+
+export function fetchUserInboxList () {
+    return (dispatch, getState) => {
+        dispatch(requestUserInboxList());
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/users/me/inboxes?token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveUserInboxList(json)));
+    };
+}
+
+function requestUserInboxList () {
+    return {
+        type: REQUEST_USER_INBOX_LIST
+    };
+}
+
+function receiveUserInboxList (json) {
+    if ('error' in json) {
+        json = null;
+    }
+    return {
+        type: RECEIVE_USER_INBOX_LIST,
+        data: json,
+        receivedAt: Date.now()
+    };
+}
