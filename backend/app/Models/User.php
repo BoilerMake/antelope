@@ -28,7 +28,12 @@ class User extends Authenticatable
         'password',
     ];
 
-    public static function addNew($email, $admin)
+    public function groups()
+    {
+        return $this->belongsToMany('App\Models\Group');
+    }
+
+    public static function addNew($email, $admin=false)
     {
         $user = new self();
         $user->email = $email;
