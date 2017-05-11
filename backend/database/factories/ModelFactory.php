@@ -18,20 +18,19 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     return [
         'first_name'     => $faker->name,
         'email'          => $faker->unique()->safeEmail,
-        'password'       => $password ?: $password = bcrypt('secret')
+        'password'       => $password ?: $password = bcrypt('secret'),
     ];
 });
-
 
 $factory->define(App\Models\Inbox::class, function (Faker\Generator $faker) {
     return [
         'name'              => 'inb'.$faker->word,
         'primary_address'   => $faker->unique()->safeEmail,
-        'regex'          => ''
+        'regex'             => '',
     ];
 });
 $factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
     return [
-        'name'              => 'gr'.$faker->word
+        'name'              => 'gr'.$faker->word,
     ];
 });

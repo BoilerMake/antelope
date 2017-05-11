@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Group;
 use App\Models\Inbox;
 use App\Models\Message;
 use App\Models\Thread;
-use App\Models\User;
 use Log;
 use Mailgun\Mailgun;
 use Request;
@@ -16,7 +14,6 @@ use Request;
  */
 class MailController extends Controller
 {
-
     /**
      * Given a recipient address, will determine which inbox it should be routed to
      * todo: Use some sort of regex based on Inbox table columns
@@ -36,6 +33,7 @@ class MailController extends Controller
      * Mailgun sends POST to this route when a message is received.
      * If it is a reply, we need to add it to the appropriate thread
      * If it is a new email, we need to determine which inbox to route it to, and add it to a new thread in that inbox.
+     *
      * @param Request $request
      *
      * @return mixed
@@ -46,8 +44,9 @@ class MailController extends Controller
         //Need to verify that the POST request is authentic from Mailgun, not spoofed
         $mg = Mailgun::create(env('MAILGUN_APIKEY'));
         if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
-            if(!env('MAILGUN_IGNORE_SIGNATURE'))//so we can override signature validation for testing
+            if (!env('MAILGUN_IGNORE_SIGNATURE')) {//so we can override signature validation for testing
                 return response()->error('mailgun signature invalid');
+            }
         }
 
         //Determine if we need to start a new thread, or if we add to existing thread (for reply).
@@ -57,11 +56,11 @@ class MailController extends Controller
             $thread_id = $reference->thread_id;
             //it might have been set to don previously, so we need to 'reopen' if need be.
             //todo: log the state changing if it changes?
-            Thread::find($thread_id)->update(['state',Thread::STATE_ASSIGNED]);
+            Thread::find($thread_id)->update(['state', Thread::STATE_ASSIGNED]);
         } else {
             $thread_id = Thread::create([
                 'inbox_id' => self::getInboxIdForIncoming(Request::get('recipient')),
-                'state' => Thread::STATE_NEW
+                'state'    => Thread::STATE_NEW,
             ])->id;
         }
 
@@ -93,12 +92,15 @@ class MailController extends Controller
 
     /**
      * Receives mailgun events such as click, open, etc.
-     * TODO: implement
+     * TODO: implement.
+     *
      * @return string
      * @codeCoverageIgnore
      */
-    public function mailgunEvent(){
+    public function mailgunEvent()
+    {
         Log::info('email #'.Request::get('antelope-message-id').' was:'.Request::get('event'));
+
         return 'ok';
     }
 }
