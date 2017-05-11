@@ -1,23 +1,25 @@
 <?php
 
-use App\Models\Group;
-use App\Models\Inbox;
-use App\Models\User;
-use Illuminate\Database\Seeder;
+namespace Tests\Unit;
 
-class GroupSeeder extends Seeder
+use App\Models\Inbox;
+use App\Models\Group;
+use App\Models\User;
+use Tests\TestCase;
+
+class UserGroupInboxPermissionsTest extends TestCase
 {
     /**
-     * Run the database seeds.
+     * A basic test example.
      *
      * @return void
      */
-    public function run()
+    public function testUserGroupPermissions()
     {
         $inbox_1 = factory(Inbox::class)->create();
         $inbox_2 = factory(Inbox::class)->create();
         $inbox_3 = factory(Inbox::class)->create();
-        
+
         $group_id_1 = factory(Group::class)->create()->id;
         $group_id_2 = factory(Group::class)->create()->id;
 
@@ -34,5 +36,8 @@ class GroupSeeder extends Seeder
         $user1->groups()->attach($group_id_1);
         $user1->groups()->attach($group_id_2);
 
+        $this->assertEquals(Group::find($group_id_1)->users[0]->id,$user1->id);
+
+        $this->assertEquals(array_diff($user1->getInboxIds(),[$inbox_1->id,$inbox_2->id,$inbox_3->id]),[]);
     }
 }

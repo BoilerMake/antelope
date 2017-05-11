@@ -16,34 +16,6 @@ use Request;
  */
 class MailController extends Controller
 {
-    public function test()
-    {
-        $u = User::first();
-        return $u->getToken();
-        return Inbox::findMany($u->getInboxIds());
-//        $u = User::with('groups.inboxes')->first();
-//        $inboxes_by_permission = [];
-//        foreach ($u->groups as $group) {
-//            foreach($group->inboxes as $eachGroupInbox) {
-//                $inboxes_by_permission[$eachGroupInbox->pivot->permission][]=$eachGroupInbox->id;
-//            }
-//        }
-//        $r = $inboxes_by_permission[Group::INBOX_PERMISSION_READONLY];
-//        $rw = $inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE];
-//
-//        //we prioritize readwrite higher than readonly, so if a user has readonly AND readwrite permissions from
-//        //  two different groups, then we ignore the readonly, letting the readwrite take precedence.
-//        return [
-//            'readOnly_ids'=> array_values(array_diff($r,$rw)),
-//            'readWrite_ids'=> $rw,
-//            'all_ids'=> array_unique(array_merge($r,$rw))];
-
-//        return [
-//            'readonly'=>Inbox::findMany($readOnly_ids),
-//            'readwrite'=>Inbox::findMany($readWrite_ids),
-//        ];
-//        Message::newMessage(1, null, 'nicky semenza <nicky@nickysemenza.com>', 'TEST trackin', '<div>hello there :) <a href="nickysemenza.com">clickme</a></div>');
-    }
 
     /**
      * Given a recipient address, will determine which inbox it should be routed to
@@ -74,7 +46,8 @@ class MailController extends Controller
         //Need to verify that the POST request is authentic from Mailgun, not spoofed
         $mg = Mailgun::create(env('MAILGUN_APIKEY'));
         if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
-            return response()->error('mailgun signature invalid');
+            if(!env('MAILGUN_IGNORE_SIGNATURE'))//so we can override signature validation for testing
+                return response()->error('mailgun signature invalid');
         }
 
         //Determine if we need to start a new thread, or if we add to existing thread (for reply).
@@ -84,7 +57,7 @@ class MailController extends Controller
             $thread_id = $reference->thread_id;
             //it might have been set to don previously, so we need to 'reopen' if need be.
             //todo: log the state changing if it changes?
-            Thread::find($thread_id)->update('state',Thread::STATE_ASSIGNED);
+            Thread::find($thread_id)->update(['state',Thread::STATE_ASSIGNED]);
         } else {
             $thread_id = Thread::create([
                 'inbox_id' => self::getInboxIdForIncoming(Request::get('recipient')),
@@ -113,10 +86,17 @@ class MailController extends Controller
         $m->timestamp = Request::get('timestamp');
         $m->raw = json_encode(Request::all());
         $m->save();
-        $m->reply(null,'sup');
+//        $m->reply(null,'sup');
         //we need to return a 200 to mailgun, or else they will retry POSTing.
         return response()->success('message saved. is-reply?:'.($isAReply ? 'y' : 'n').' thread:'.$thread_id);
     }
+
+    /**
+     * Receives mailgun events such as click, open, etc.
+     * TODO: implement
+     * @return string
+     * @codeCoverageIgnore
+     */
     public function mailgunEvent(){
         Log::info('email #'.Request::get('antelope-message-id').' was:'.Request::get('event'));
         return 'ok';

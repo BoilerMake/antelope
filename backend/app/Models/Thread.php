@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
-    protected $fillable = ['inbox_id'];
+    protected $fillable = ['inbox_id','state'];
 
     const STATE_NEW = 'new';
     const STATE_ASSIGNED = 'assigned';

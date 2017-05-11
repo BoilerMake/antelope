@@ -33,7 +33,7 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Group');
     }
 
-    public static function addNew($email, $admin=false)
+    public static function addNew($email, $admin=false, $password=null)
     {
         $user = new self();
         $user->email = $email;
@@ -53,6 +53,12 @@ class User extends Authenticatable
     {
         return JWTAuth::fromUser($this, ['exp' => strtotime('+1 year')]);
     }
+
+    /**
+     * Gets inbox ids based on permission levels, taking into account readwrite > write precedence.
+     * TODO: clean this up, do we want to handle 0 inboxes differently? (mainly for users/me/inboxes)
+     * @return array
+     */
     private function getInboxIdsByPermission() {
         $user = User::with('groups.inboxes')->find($this->id);
         $inboxes_by_permission = [];
@@ -61,8 +67,12 @@ class User extends Authenticatable
                 $inboxes_by_permission[$eachGroupInbox->pivot->permission][]=$eachGroupInbox->id;
             }
         }
-        $r = $inboxes_by_permission[Group::INBOX_PERMISSION_READONLY];
-        $rw = $inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE];
+        $r = [];
+        $rw = [];
+        if(isset($inboxes_by_permission[Group::INBOX_PERMISSION_READONLY]))
+            $r = $inboxes_by_permission[Group::INBOX_PERMISSION_READONLY];
+        if(isset($inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE]))
+            $rw = $inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE];
 
         //we prioritize readwrite higher than readonly, so if a user has readonly AND readwrite permissions from
         //  two different groups, then we ignore the readonly, letting the readwrite take precedence.

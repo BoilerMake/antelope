@@ -16,5 +16,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
+//        putenv("MAILGUN_IGNORE_SIGNATURE=true");
+//        self::assertEquals(env("A"),"B");
     }
 }
