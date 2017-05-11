@@ -33,7 +33,7 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Group');
     }
 
-    public static function addNew($email, $admin=false, $password=null)
+    public static function addNew($email, $admin = false, $password = null)
     {
         $user = new self();
         $user->email = $email;
@@ -56,32 +56,38 @@ class User extends Authenticatable
 
     /**
      * Gets inbox ids based on permission levels, taking into account readwrite > write precedence.
-     * TODO: clean this up, do we want to handle 0 inboxes differently? (mainly for users/me/inboxes)
+     * TODO: clean this up, do we want to handle 0 inboxes differently? (mainly for users/me/inboxes).
+     *
      * @return array
      */
-    private function getInboxIdsByPermission() {
-        $user = User::with('groups.inboxes')->find($this->id);
+    private function getInboxIdsByPermission()
+    {
+        $user = self::with('groups.inboxes')->find($this->id);
         $inboxes_by_permission = [];
         foreach ($user->groups as $group) {
-            foreach($group->inboxes as $eachGroupInbox) {
-                $inboxes_by_permission[$eachGroupInbox->pivot->permission][]=$eachGroupInbox->id;
+            foreach ($group->inboxes as $eachGroupInbox) {
+                $inboxes_by_permission[$eachGroupInbox->pivot->permission][] = $eachGroupInbox->id;
             }
         }
         $r = [];
         $rw = [];
-        if(isset($inboxes_by_permission[Group::INBOX_PERMISSION_READONLY]))
+        if (isset($inboxes_by_permission[Group::INBOX_PERMISSION_READONLY])) {
             $r = $inboxes_by_permission[Group::INBOX_PERMISSION_READONLY];
-        if(isset($inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE]))
+        }
+        if (isset($inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE])) {
             $rw = $inboxes_by_permission[Group::INBOX_PERMISSION_READWRITE];
+        }
 
         //we prioritize readwrite higher than readonly, so if a user has readonly AND readwrite permissions from
         //  two different groups, then we ignore the readonly, letting the readwrite take precedence.
         return [
-            'readOnly_ids'=> array_values(array_diff($r,$rw)),
+            'readOnly_ids' => array_values(array_diff($r, $rw)),
             'readWrite_ids'=> $rw,
-            'all_ids'=> array_unique(array_merge($r,$rw))];
+            'all_ids'      => array_unique(array_merge($r, $rw)), ];
     }
-    public function getInboxIds() {
+
+    public function getInboxIds()
+    {
         return self::getInboxIdsByPermission()['all_ids'];
     }
 }

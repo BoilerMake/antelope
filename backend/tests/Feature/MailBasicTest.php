@@ -12,63 +12,65 @@ class MailBasicTest extends TestCase
      *
      * @return void
      */
-    public function testMailgunHookInvalidAuth() {
+    public function testMailgunHookInvalidAuth()
+    {
         $response = $this->json('POST', '/mailgunhook');
         $response
             ->assertJson([
                 'success' => false,
-                'message' => 'mailgun signature invalid'
+                'message' => 'mailgun signature invalid',
             ]);
     }
-    public function testMailgunHook() {
-        putenv("MAILGUN_IGNORE_SIGNATURE=true");
+
+    public function testMailgunHook()
+    {
+        putenv('MAILGUN_IGNORE_SIGNATURE=true');
         $faker = \Faker\Factory::create();
         //now let's send a message
-        $fromEmail=$faker->email;
+        $fromEmail = $faker->email;
         $messageId1 = "<{$faker->uuid}@mail.domain.com>";
-        $response = $this->json('POST', '/mailgunhook',[
-            'from'=>"{$faker->name} <{$fromEmail}>",
-            'sender'=>$fromEmail,
-            'subject'=>$faker->sentence(),
-            'recipient'=>$faker->email,
-            'Message-Id'=>$messageId1,
-            'body-plain'=>'txt',
-            'body-html'=>'<h1>html</h1>',
-            'References'=>'',
-            'In-Reply-To'=>'',
-            'message-headers'=>'',
-            'timestamp'=>'123',
+        $response = $this->json('POST', '/mailgunhook', [
+            'from'           => "{$faker->name} <{$fromEmail}>",
+            'sender'         => $fromEmail,
+            'subject'        => $faker->sentence(),
+            'recipient'      => $faker->email,
+            'Message-Id'     => $messageId1,
+            'body-plain'     => 'txt',
+            'body-html'      => '<h1>html</h1>',
+            'References'     => '',
+            'In-Reply-To'    => '',
+            'message-headers'=> '',
+            'timestamp'      => '123',
         ]);
         $response
             ->assertJson([
-                'success' => true
+                'success' => true,
             ]);
-
 
         //now let's send a message that's a reply to the first one
-        $fromEmail=$faker->email;
+        $fromEmail = $faker->email;
         $messageId2 = "<{$faker->uuid}@mail.domain.com>";
-        $response = $this->json('POST', '/mailgunhook',[
-            'from'=>"{$faker->name} <{$fromEmail}>",
-            'sender'=>$fromEmail,
-            'subject'=>"Re: {$faker->sentence()}",
-            'recipient'=>$faker->email,
-            'Message-Id'=>$messageId2,
-            'body-plain'=>'txt',
-            'body-html'=>'<h1>html</h1>',
-            'References'=>'',
-            'In-Reply-To'=>$messageId1,
-            'message-headers'=>'',
-            'timestamp'=>'123',
+        $response = $this->json('POST', '/mailgunhook', [
+            'from'           => "{$faker->name} <{$fromEmail}>",
+            'sender'         => $fromEmail,
+            'subject'        => "Re: {$faker->sentence()}",
+            'recipient'      => $faker->email,
+            'Message-Id'     => $messageId2,
+            'body-plain'     => 'txt',
+            'body-html'      => '<h1>html</h1>',
+            'References'     => '',
+            'In-Reply-To'    => $messageId1,
+            'message-headers'=> '',
+            'timestamp'      => '123',
         ]);
         $response
             ->assertJson([
-                'success' => true
+                'success' => true,
             ]);
-        $m1 = Message::where('message_id',$messageId1)->first();
-        $m2 = Message::where('message_id',$messageId2)->first();
+        $m1 = Message::where('message_id', $messageId1)->first();
+        $m2 = Message::where('message_id', $messageId2)->first();
         //both the messages should be in the same thread
-        $this->assertEquals($m1->thread_id,$m2->thread_id);
-        $this->assertEquals($m1->thread->inbox,$m2->thread->inbox);
+        $this->assertEquals($m1->thread_id, $m2->thread_id);
+        $this->assertEquals($m1->thread->inbox, $m2->thread->inbox);
     }
 }

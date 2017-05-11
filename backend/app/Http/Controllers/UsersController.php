@@ -21,10 +21,13 @@ class UsersController extends Controller
         //        return JWTAuth::parseToken()->authenticate();
         return response()->success(Auth::user());
     }
-    public function getInboxes() {
+
+    public function getInboxes()
+    {
         $user = Auth::user();
-        $combinedInbox = [['id'=>0,'name'=>'All Inboxes']];//fake entry to show all inboxes
-        $inboxes = Inbox::select('id','name')->findMany($user->getInboxIds())->toArray();
-        return response()->success(array_merge($combinedInbox,$inboxes));
+        $combinedInbox = [['id'=>0, 'name'=>'All Inboxes']]; //fake entry to show all inboxes
+        $inboxes = Inbox::select('id', 'name')->findMany($user->getInboxIds())->toArray();
+
+        return response()->success(array_merge($combinedInbox, $inboxes));
     }
 }
