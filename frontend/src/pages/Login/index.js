@@ -3,7 +3,7 @@ import LoginForm from './LoginForm'
 import { SubmissionError } from 'redux-form'
 import { Redirect, Link } from 'react-router-dom'
 import { API_BASE_URL } from '../../config';
-class Login extends Component {
+export class Login extends Component {
 
     constructor (props) {
         super(props);
@@ -28,10 +28,13 @@ class Login extends Component {
                 }
             });
     };
-
-    render () {
+    componentDidMount() {
         if(this.props.user.authenticated)
             this.setState({ redirectToReferrer: true });
+    }
+
+    render () {
+
         const { from } = this.props.location.state || { from: { pathname: '/dashboard' } };
 
         if (this.state.redirectToReferrer) {
