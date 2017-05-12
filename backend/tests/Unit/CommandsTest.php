@@ -3,16 +3,12 @@
  * Created by PhpStorm.
  * User: nickysemenza
  * Date: 5/11/17
- * Time: 9:45 PM
+ * Time: 9:45 PM.
  */
 
 namespace Tests\Unit;
 
-
-use App\Models\Inbox;
-use App\Models\Message;
 use App\Models\User;
-use Exception;
 use Tests\TestCase;
 
 class CommandsTest extends TestCase
@@ -21,19 +17,20 @@ class CommandsTest extends TestCase
     {
         $faker = \Faker\Factory::create();
         $email = $faker->email;
-        $this->artisan("user:create",[
-            "email"=>$email
+        $this->artisan('user:create', [
+            'email'=> $email,
         ]);
-        $this->assertDatabaseHas('users',['email'=>$email,'is_admin'=>false]);
+        $this->assertDatabaseHas('users', ['email'=>$email, 'is_admin'=>false]);
     }
+
     public function testCreateUserAdmin()
     {
         $faker = \Faker\Factory::create();
         $email = $faker->email;
-        $this->artisan("user:create",[
-            "email"=>$email,
-            "--admin"=>true
+        $this->artisan('user:create', [
+            'email'  => $email,
+            '--admin'=> true,
         ]);
-        $this->assertDatabaseHas('users',['email'=>$email,'is_admin'=>true]);
+        $this->assertDatabaseHas('users', ['email'=>$email, 'is_admin'=>true]);
     }
 }
