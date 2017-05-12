@@ -39,10 +39,12 @@ class UserGroupInboxPermissionsTest extends TestCase
 
         $this->assertEquals(array_diff($user1->getInboxIds(), [$inbox_1->id, $inbox_2->id, $inbox_3->id]), []);
     }
-    public function testCreateUser() {
+
+    public function testCreateUser()
+    {
         $faker = \Faker\Factory::create();
         $email = $faker->email;
         User::addNew($email);
-        $this->assertDatabaseHas('users',['email'=>$email]);
+        $this->assertDatabaseHas('users', ['email'=>$email]);
     }
 }
