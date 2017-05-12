@@ -16,10 +16,12 @@ class Message extends Model
 
     /**
      * Replies to a message, basically appends this message to the target's thread.
+     *
      * @param $user_id - who sent the message
      * @param $body_html - the message body
      * TODO: allow changing subject? you can only change so much to work with email threading
      * TODO: allow changing the 'from' address?
+     *
      * @return Message|false
      */
     public function reply($user_id, $body_html)
@@ -41,6 +43,7 @@ class Message extends Model
      * @param $to - who to send the email to
      * @param $subject - email subject
      * @param $body_html - body in HTML form
+     *
      * @return Message|false
      */
     public static function newMessage($inbox_id, $user_id, $to, $subject, $body_html)
@@ -59,8 +62,9 @@ class Message extends Model
      * @param $threadId - the thread that the message should be attached to
      * @param $user_id - the User who is sending the message
      * @param null|int $replying_to_message_id
+     *
      * @return Message|false
-     * TODO: return false on failure, maybe error somehow cleanly
+     *                       TODO: return false on failure, maybe error somehow cleanly
      */
     private static function sendMessage($to, $from, $subject, $body_html, $threadId, $user_id, $replying_to_message_id = null)
     {
@@ -92,8 +96,9 @@ class Message extends Model
             'html'                 => $body_html,
             'v:antelope-message-id'=> $m->id,
         ];
-        if(env('MAILGUN_TEST_MODE'))
+        if (env('MAILGUN_TEST_MODE')) {
             $params['o:testmode'] = true;
+        }
         if ($replying_to_message_id) {
             $params['In-Reply-To'] = $replying_to_message_id;
             $params['References'] = $replying_to_message_id;
@@ -103,6 +108,7 @@ class Message extends Model
 
         $m->save();
         Log::info('sent message #'.$m->id);
+
         return $m;
     }
 
