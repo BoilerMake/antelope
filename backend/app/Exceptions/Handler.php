@@ -10,7 +10,6 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
  * @codeCoverageIgnore
  * todo: is there a good way to test these?
  * Class Handler
- * @package App\Exceptions
  */
 class Handler extends ExceptionHandler
 {
