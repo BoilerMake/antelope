@@ -26,6 +26,9 @@ ROute::get('test', 'MailController@test');
 Route::post('mailgunhook', 'MailController@mailgunHook');
 Route::post('mailgunevent', 'MailController@mailgunEvent');
 
+Route::get('inbox/{id}','InboxController@getInbox');
+
+
 Route::group(['middleware'=>['jwt.auth'], 'prefix' => 'users/me'], function () {
 
     //get update me

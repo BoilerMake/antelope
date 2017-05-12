@@ -16,8 +16,10 @@ const errorMessage = (state = null, action) => {
 }
 import { reducer as formReducer } from 'redux-form'
 import UserReducer from './reducer_user';
+import InboxReducer from './reducer_inbox';
 const rootReducer = combineReducers({
     user: UserReducer,
+    inbox: InboxReducer,
     errorMessage,
     form: formReducer
     // routing
