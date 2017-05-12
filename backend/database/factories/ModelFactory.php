@@ -12,7 +12,13 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
+use App\Models\Inbox;
+use App\Models\User;
+use App\Models\Group;
+use App\Models\Thread;
+use App\Models\Message;
+
+$factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -22,15 +28,43 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Inbox::class, function (Faker\Generator $faker) {
+$factory->define(Inbox::class, function (Faker\Generator $faker) {
     return [
         'name'              => 'inb'.$faker->word,
         'primary_address'   => $faker->unique()->safeEmail,
         'regex'             => '',
     ];
 });
-$factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
+$factory->define(Group::class, function (Faker\Generator $faker) {
     return [
         'name'              => 'gr'.$faker->word,
+    ];
+});
+$factory->define(Thread::class, function (Faker\Generator $faker) {
+    return [
+        'state'              => Thread::STATE_NEW,
+        'inbox_id' => function () {
+            return factory(Inbox::class)->create()->id;
+        }
+    ];
+});
+$factory->define(Message::class, function (Faker\Generator $faker) {
+    $fromEmail = $faker->email;
+    $messageId1 = "<{$faker->uuid}@mail.domain.com>";
+    return [
+        'from'           => "{$faker->name} <{$fromEmail}>",
+        'sender'         => $fromEmail,
+        'subject'        => $faker->sentence(),
+        'recipient'      => $faker->email,
+        'message_id'     => $messageId1,
+        'body_plain'     => 'txt',
+        'body_html'      => '<h1>html</h1>',
+        'references'     => '',
+        'in_reply_to'    => '',
+        'headers'=> '',
+        'timestamp'      => '123',
+        'thread_id' => function () {
+            return factory(Thread::class)->create()->id;
+        }
     ];
 });
