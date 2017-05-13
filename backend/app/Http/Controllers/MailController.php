@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Inbox;
 use App\Models\Message;
+use App\Models\MessageEvent;
 use App\Models\Thread;
 use Log;
 use Mailgun\Mailgun;
@@ -95,12 +96,25 @@ class MailController extends Controller
      * TODO: implement.
      *
      * @return string
-     * @codeCoverageIgnore
      */
     public function mailgunEvent()
     {
-        Log::info('email #'.Request::get('antelope-message-id').' was:'.Request::get('event'));
+        //Need to verify that the POST request is authentic from Mailgun, not spoofed
+        $mg = Mailgun::create(env('MAILGUN_APIKEY'));
+        if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
+            if (!env('MAILGUN_IGNORE_SIGNATURE')) {//so we can override signature validation for testing
+                return response()->error('mailgun signature invalid');
+            }
+        }
 
-        return 'ok';
+        Log::info('email #'.Request::get('antelope-message-id').' was:'.Request::get('event'));
+        MessageEvent::create([
+            'message_id' => Request::get('antelope-message-id'),
+            'name'       => Request::get('event'),
+            'timestamp'  => Request::get('timestamp'),
+            'recipient'  => Request::get('recipient'),
+            'raw'        => json_encode(Request::all())
+        ]);
+        return response()->success('ok');
     }
 }
