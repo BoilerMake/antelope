@@ -35,7 +35,7 @@ class ThreadView extends Component {
 
         let messageList = threadContents.messages.map(message => {
             return(
-                <MessageItem message={message}/>
+                <MessageItem message={message} key={message.id}/>
             )
         })
 
