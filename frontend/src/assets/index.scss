@@ -81,6 +81,13 @@ body {
 .inbox-thread-list-item-wrapper {
   border-bottom: 1px solid #EEEEEE;
   height: 100px;
+
+}
+.inbox-thread-list-item-wrapper.active {
+  background-color: lightblue;
+}
+.inbox-thread-list-item-wrapper.unread {
+  background-color: lightcoral;
 }
 .inbox-thread-list-item {
   padding: 5px;

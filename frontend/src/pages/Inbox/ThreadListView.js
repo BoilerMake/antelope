@@ -30,7 +30,10 @@ class ThreadListView extends Component {
 
         let threadList = inboxContents.threads.map((thread)=>{
             if(!thread.snippet) return(null);
-            return(<div onClick={()=>{this.handleOnClick(thread.id)}}><ThreadItem thread={thread} inboxId={inboxId}/></div>)
+            return(
+                <div onClick={()=>{this.handleOnClick(thread.id)}}>
+                    <ThreadItem thread={thread} inboxId={inboxId} active={parseInt(this.props.threadId,10)==thread.id}/>
+                </div>)
         });
 
         return (

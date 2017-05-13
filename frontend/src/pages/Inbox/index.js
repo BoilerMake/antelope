@@ -44,7 +44,7 @@ class Inbox extends Component {
             return (
                 <div className="f">
                     <InboxSidebar/>
-                    <ThreadListView inboxId={this.props.match.params.inboxId}/>
+                    <ThreadListView threadId={threadId} inboxId={inboxId}/>
                     <ThreadView threadId={threadId} inboxId={inboxId}/>
                 </div>
             );
