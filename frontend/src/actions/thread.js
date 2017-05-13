@@ -6,6 +6,7 @@ export const RECEIVE_THREAD = 'RECEIVE_THREAD';
 
 export function fetchThread (id) {
     return (dispatch, getState) => {
+        if(id===null) return;
         dispatch(requestThread(id));
         const token = cookie.load('token');
         return fetch(`${API_BASE_URL}/thread/${id}?token=${token}`)

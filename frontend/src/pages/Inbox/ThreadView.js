@@ -11,8 +11,25 @@ class ThreadView extends Component {
     }
     render () {
         let threadId = this.props.threadId;
+        if(threadId===null){
+            return (
+                <div className="inbox-column right">
+                    <div className="inbox-column-bottom">
+                        {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
+                        no thread selected
+                    </div>
+                </div>
+            );
+        }
         if(this.props.thread[threadId]===undefined || this.props.thread[threadId].contents === undefined)
-            return (<h1>loading</h1>);
+            return (
+                <div className="inbox-column right">
+                    <div className="inbox-column-bottom">
+                        {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
+                        <h2>loading!</h2>
+                    </div>
+                </div>
+            );
         let threadContents = this.props.thread[threadId].contents;
         console.log(threadContents);
 
