@@ -10,6 +10,7 @@ class Inbox extends Model
     {
         return $this->belongsToMany('App\Models\Group')->withPivot('permission');
     }
+
     public function threads()
     {
         return $this->hasMany('App\Models\Thread');
