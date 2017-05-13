@@ -25,17 +25,18 @@ class InboxController extends Controller
         $user = Auth::user();
         if ($inbox_id == 0) {
             //we want to combine all the user's Inbox to act as the fake 0 inbox
-            $threads = Thread::whereIn('inbox_id', $user->getInboxIds())->get();
-
-            return response()->success([
-                'id'     => 0,
-                'name'   => 'All Inboxes',
-                'threads'=> $threads,
-            ]);
+            $threads = Thread::getSorted($user->getInboxIds());
+            $inboxName = 'All Inboxes';
         }
-        $inbox = Inbox::with('threads')->find($inbox_id);
-
-        return response()->success($inbox);
+        else {
+            $inboxName = Inbox::find($inbox_id)->name;
+            $threads = Thread::getSorted([$inbox_id]);
+        }
+        return response()->success([
+            'id'     => $inbox_id,
+            'name'   => $inboxName,
+            'threads'=> $threads,
+        ]);
     }
 
     /**

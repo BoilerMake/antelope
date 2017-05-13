@@ -41,6 +41,9 @@ class UserInboxTest extends TestCase
             });
         $inbox_1 = Inbox::find($inboxes[0]->id);
 
+        $message = factory(Message::class)->create();
+        $inbox_1->threads()->first()->messages()->save($message);
+
         $groupId = factory(Group::class)->create()->id;
         $inbox_1->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
         $user = factory(User::class)->create();
