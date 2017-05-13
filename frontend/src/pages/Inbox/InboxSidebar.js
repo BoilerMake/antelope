@@ -4,12 +4,17 @@ class InboxSidebar extends Component {
     componentDidMount() {
         this.props.fetchUserInboxList();
     }
+    handleOnClick = (path) => {
+        this.props.history.push(path)
+    }
     render () {
         let inboxes = this.props.user.inbox_list;
         let inboxList = inboxes.map((inbox) =>
-            <div className={parseInt(this.props.match.params.inboxId,10)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'} key={inbox.id}>
+            <div className={parseInt(this.props.match.params.inboxId,10)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'}
+                 key={inbox.id}
+                 onClick={()=>{this.handleOnClick(`/inbox/${inbox.id}`)}}>
                 <div className="inbox-sidebar-item">
-                    <Link className="sidebar-item-link" to={`/inbox/${inbox.id}`}>{inbox.name}</Link>
+                    <div className="sidebar-item-link">{inbox.name}</div>
                 </div>
             </div>);
         return (
@@ -23,14 +28,16 @@ class InboxSidebar extends Component {
                         {inboxList}
                     </div>
                     <div>
-                        <div className="inbox-sidebar-item-wrapper">
+                        <div className="inbox-sidebar-item-wrapper"
+                             style={{"borderTop":"1px solid white"}}
+                             onClick={()=>this.handleOnClick('/settings')}>
                             <div className="inbox-sidebar-item">
                                 <div className="sidebar-item-link">settings [todo]</div>
                             </div>
                         </div>
-                        <div className="inbox-sidebar-item-wrapper">
+                        <div className="inbox-sidebar-item-wrapper" onClick={()=>this.props.logout()}>
                             <div className="inbox-sidebar-item">
-                                <div onClick={()=>this.props.logout()} className="sidebar-item-link">logout</div>
+                                <div className="sidebar-item-link">logout</div>
                             </div>
                         </div>
                     </div>

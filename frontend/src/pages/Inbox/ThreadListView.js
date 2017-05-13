@@ -10,9 +10,6 @@ class ThreadListView extends Component {
             this.props.fetchInbox(nextProps.inboxId);
     }
     handleOnClick = (threadId) => {
-        // some action...
-        // then redirect
-        console.log("aa");
         this.props.history.push(`/inbox/${this.props.inboxId}/${threadId}`)
     }
     render () {
