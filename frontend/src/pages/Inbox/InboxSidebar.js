@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 class InboxSidebar extends Component {
     componentDidMount() {
         this.props.fetchUserInboxList();
-    }
-    handleOnClick = (path) => {
-        this.props.history.push(path)
     }
     render () {
         let inboxes = this.props.user.inbox_list;
         let inboxList = inboxes.map((inbox) =>
             <div className={parseInt(this.props.match.params.inboxId,10)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'}
                  key={inbox.id}
-                 onClick={()=>{this.handleOnClick(`/inbox/${inbox.id}`)}}>
+                 onClick={()=>{this.props.history.push(`/inbox/${inbox.id}`)}}>
                 <div className="inbox-sidebar-item">
                     <div className="sidebar-item-link">{inbox.name}</div>
                 </div>
@@ -30,7 +27,7 @@ class InboxSidebar extends Component {
                     <div>
                         <div className="inbox-sidebar-item-wrapper"
                              style={{"borderTop":"1px solid white"}}
-                             onClick={()=>this.handleOnClick('/settings')}>
+                             onClick={()=>this.props.history.push('/settings')}>
                             <div className="inbox-sidebar-item">
                                 <div className="sidebar-item-link">settings [todo]</div>
                             </div>

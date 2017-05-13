@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import ThreadItem from './ThreadItem';
 class ThreadListView extends Component {
     componentDidMount() {
@@ -8,9 +8,6 @@ class ThreadListView extends Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.inboxId !== this.props.inboxId)
             this.props.fetchInbox(nextProps.inboxId);
-    }
-    handleOnClick = (threadId) => {
-        this.props.history.push(`/inbox/${this.props.inboxId}/${threadId}`)
     }
     render () {
         let inboxId = this.props.inboxId;
@@ -28,8 +25,8 @@ class ThreadListView extends Component {
         let threadList = inboxContents.threads.map((thread)=>{
             if(!thread.snippet) return(null);
             return(
-                <div onClick={()=>{this.handleOnClick(thread.id)}}>
-                    <ThreadItem thread={thread} inboxId={inboxId} active={parseInt(this.props.threadId,10)==thread.id}/>
+                <div onClick={()=>{this.props.history.push(`/inbox/${this.props.inboxId}/${thread.id}`)}} key={thread.id}>
+                    <ThreadItem thread={thread} inboxId={inboxId} active={parseInt(this.props.threadId,10)===thread.id}/>
                 </div>)
         });
 
