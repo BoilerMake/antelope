@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import moment from 'moment'
+import ThreadItem from './ThreadItem';
 class ThreadListView extends Component {
     componentDidMount() {
         this.props.fetchInbox(this.props.inboxId);
@@ -24,19 +24,7 @@ class ThreadListView extends Component {
 
         let threadList = inboxContents.threads.map((thread)=>{
             if(!thread.snippet) return(null);
-            let date = moment.utc(thread.snippet.created_at,'YYYY-MM-DD HH:mm:ss').local();
-            return(
-                <div className="inbox-thread-list-item-wrapper" key={thread.id}>
-                    <div className="inbox-thread-list-item">
-                        {thread.snippet.subject}
-                        <br/>
-                        {thread.snippet.sender}
-                        <br/>
-                        {date.fromNow()} // {date.calendar()}
-                        <br/>
-                        <Link to={`/inbox/${inboxId}/${thread.id}`}>view thread #{thread.id}</Link>
-                    </div>
-                </div>);
+            return(<ThreadItem thread={thread} inboxId={inboxId}/>)
         });
 
         return (
