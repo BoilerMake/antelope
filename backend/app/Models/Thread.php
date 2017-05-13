@@ -18,6 +18,7 @@ class Thread extends Model
     {
         return $this->belongsTo('App\Models\Inbox');
     }
+
     public function messages()
     {
         return $this->hasMany('App\Models\Message');
@@ -25,6 +26,7 @@ class Thread extends Model
 
     /**
      * Provides a snippet, to be used for the thread list.
+     *
      * @return mixed
      */
     public function getSnippetAttribute()

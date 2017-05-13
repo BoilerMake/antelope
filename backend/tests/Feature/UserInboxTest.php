@@ -12,7 +12,7 @@ use Tests\TestCase;
 class UserInboxTest extends TestCase
 {
     /**
-     * Test GET /users/me/inboxes
+     * Test GET /users/me/inboxes.
      */
     public function testGetMyInboxes()
     {
@@ -28,7 +28,7 @@ class UserInboxTest extends TestCase
     }
 
     /**
-     * Test GET inbox/{id}
+     * Test GET inbox/{id}.
      */
     public function testGetSingleInboxById()
     {
@@ -53,10 +53,11 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(sizeof($response->json()['data']['threads']),3);
+        $this->assertEquals(count($response->json()['data']['threads']), 3);
     }
+
     /**
-     * Test GET inbox/0
+     * Test GET inbox/0.
      */
     public function testGetAllUserInboxes()
     {
@@ -82,11 +83,11 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(sizeof($response->json()['data']['threads']),6);
+        $this->assertEquals(count($response->json()['data']['threads']), 6);
     }
 
     /**
-     * Test GET thread/{id}
+     * Test GET thread/{id}.
      */
     public function testGetThread()
     {
@@ -112,7 +113,6 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(sizeof($response->json()['data']['messages']),3);
-
+        $this->assertEquals(count($response->json()['data']['messages']), 3);
     }
 }

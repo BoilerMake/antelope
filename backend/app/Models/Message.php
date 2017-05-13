@@ -9,7 +9,8 @@ use Mailgun\Mailgun;
 
 class Message extends Model
 {
-    protected $hidden = ['headers','raw'];
+    protected $hidden = ['headers', 'raw'];
+
     public function thread()
     {
         return $this->belongsTo('App\Models\Thread');
