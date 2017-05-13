@@ -5,7 +5,6 @@ import { API_BASE_URL } from '../config';
 export const LOGIN_FROM_JWT_SUCCESS = 'LOGIN_FROM_JWT_SUCCESS';
 export function loginFromJWT (token) {
 	cookie.save('token',token, {path: '/'});
-	console.log("aa");
     return (dispatch) => {
         dispatch(saveToken(token));
         setTimeout(() => { dispatch(fetchMe()); }, 50);

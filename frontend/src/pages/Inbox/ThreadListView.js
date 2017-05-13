@@ -19,7 +19,6 @@ class ThreadListView extends Component {
                 </div>
             </div>);
         let inboxContents = this.props.inbox[inboxId].contents;
-        console.log(inboxContents);
 
 
         let threadList = inboxContents.threads.map((thread)=>{
@@ -33,7 +32,7 @@ class ThreadListView extends Component {
         return (
             <div className="inbox-column center">
                 <div className="top-right">
-                    hello. viewing inbox: {inboxContents.name}
+                    <h2>{inboxContents.name}</h2>
 
                     <p>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>toggle sidebar</a>}</p>
                     </div>
