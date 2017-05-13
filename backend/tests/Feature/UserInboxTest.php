@@ -30,7 +30,7 @@ class UserInboxTest extends TestCase
     /**
      * Test GET inbox/{id}
      */
-    public function testGetInbox()
+    public function testGetSingleInboxById()
     {
         $inboxes = factory(Inbox::class, 1)
             ->create()
@@ -54,6 +54,35 @@ class UserInboxTest extends TestCase
             ]);
 
         $this->assertEquals(sizeof($response->json()['data']['threads']),3);
+    }
+    /**
+     * Test GET inbox/0
+     */
+    public function testGetAllUserInboxes()
+    {
+        $inboxes = factory(Inbox::class, 2)
+            ->create()
+            ->each(function ($u) {
+                $u->threads()->save(factory(Thread::class)->make());
+                $u->threads()->save(factory(Thread::class)->make());
+                $u->threads()->save(factory(Thread::class)->make());
+            });
+        $inbox_1 = Inbox::find($inboxes[0]->id);
+        $inbox_2 = Inbox::find($inboxes[1]->id);
+        $groupId = factory(Group::class)->create()->id;
+        $inbox_1->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
+        $inbox_2->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
+        $user = factory(User::class)->create();
+        $user->groups()->attach($groupId);
+        $token = $user->getToken();
+        $response = $this->json('GET', '/inbox/0', [], ['Authorization'=>'Bearer '.$token]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $this->assertEquals(sizeof($response->json()['data']['threads']),6);
     }
 
     /**
