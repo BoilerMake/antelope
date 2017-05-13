@@ -32,6 +32,11 @@ export class Login extends Component {
         if(this.props.user.authenticated)
             this.setState({ redirectToReferrer: true });
     }
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.user !== this.user)
+            if(this.props.user.authenticated)
+                this.setState({ redirectToReferrer: true });
+    }
 
     render () {
 

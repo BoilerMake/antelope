@@ -49,6 +49,11 @@ body {
   overflow-y: auto;
   padding: 0;
 }
+.inbox-sidebar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
 .inbox-sidebar-item-wrapper {
   color: #F2F2F2;
   height: 50px;
@@ -70,6 +75,7 @@ body {
 }
 .sidebar-item-link {
   text-decoration: none;
+  color: white;
 }
 
 .inbox-thread-list-item-wrapper {

@@ -5,11 +5,11 @@ class InboxSidebar extends Component {
         this.props.fetchUserInboxList();
     }
     render () {
-        let inboxes = this.props.user.inbox_list;//[{id: 0, name: "all inboxes"},{id: 3, name: "inb3"},{id: 5, name: "inb5"}];
+        let inboxes = this.props.user.inbox_list;
         let inboxList = inboxes.map((inbox) =>
             <div className={parseInt(this.props.match.params.inboxId,10)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'} key={inbox.id}>
                 <div className="inbox-sidebar-item">
-                    <Link className="sidebar-item-link" to={`/inbox/${inbox.id}`} style={{color: 'white'}}>{inbox.name}</Link>
+                    <Link className="sidebar-item-link" to={`/inbox/${inbox.id}`}>{inbox.name}</Link>
                 </div>
             </div>);
         return (
@@ -18,8 +18,22 @@ class InboxSidebar extends Component {
                     Antelope
                     {this.props.isMobile &&  <button onClick={this.props.toggleSidebar}>aa</button>}
                 </div>
-                <div className="inbox-column-bottom" >
-                    {inboxList}
+                <div className="inbox-column-bottom inbox-sidebar-wrapper" >
+                    <div>
+                        {inboxList}
+                    </div>
+                    <div>
+                        <div className="inbox-sidebar-item-wrapper">
+                            <div className="inbox-sidebar-item">
+                                <div className="sidebar-item-link">settings [todo]</div>
+                            </div>
+                        </div>
+                        <div className="inbox-sidebar-item-wrapper">
+                            <div className="inbox-sidebar-item">
+                                <div onClick={()=>this.props.logout()} className="sidebar-item-link">logout</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -28,7 +42,7 @@ class InboxSidebar extends Component {
 
 //now the redux integration layer
 import { connect } from 'react-redux'
-import { fetchUserInboxList } from '../../actions/users';
+import { fetchUserInboxList, logoutUser } from '../../actions/users';
 function mapStateToProps (state) {
     return {
         user: state.user
@@ -37,7 +51,8 @@ function mapStateToProps (state) {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        fetchUserInboxList: () => { dispatch(fetchUserInboxList())}
+        fetchUserInboxList: () => { dispatch(fetchUserInboxList())},
+        logout: () => { dispatch(logoutUser())}
     };
 };
 
