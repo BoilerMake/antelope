@@ -7,7 +7,7 @@ class InboxSidebar extends Component {
     render () {
         let inboxes = this.props.user.inbox_list;//[{id: 0, name: "all inboxes"},{id: 3, name: "inb3"},{id: 5, name: "inb5"}];
         let inboxList = inboxes.map((inbox) =>
-            <div className={parseInt(this.props.match.params.inboxId)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'} key={inbox.id}>
+            <div className={parseInt(this.props.match.params.inboxId,10)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'} key={inbox.id}>
                 <div className="inbox-sidebar-item">
                     <Link className="sidebar-item-link" to={`/inbox/${inbox.id}`} style={{color: 'white'}}>{inbox.name}</Link>
                 </div>
