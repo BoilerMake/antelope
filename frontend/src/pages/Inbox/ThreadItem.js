@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import moment from 'moment'
 export default class ThreadItem extends Component {
 
@@ -9,13 +8,12 @@ export default class ThreadItem extends Component {
         return(
             <div className="inbox-thread-list-item-wrapper" key={thread.id}>
                 <div className="inbox-thread-list-item">
-                    {thread.snippet.subject}
+                    <strong>#{thread.id}:</strong> {thread.snippet.subject}
                     <br/>
                     {thread.snippet.sender}
                     <br/>
                     {date.fromNow()} // {date.calendar()}
                     <br/>
-                    <Link to={`/inbox/${this.props.inboxId}/${thread.id}`}>view thread #{thread.id}</Link>
                 </div>
             </div>);
     }

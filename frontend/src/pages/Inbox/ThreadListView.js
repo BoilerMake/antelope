@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import ThreadItem from './ThreadItem';
 class ThreadListView extends Component {
     componentDidMount() {
@@ -8,6 +8,12 @@ class ThreadListView extends Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.inboxId !== this.props.inboxId)
             this.props.fetchInbox(nextProps.inboxId);
+    }
+    handleOnClick = (threadId) => {
+        // some action...
+        // then redirect
+        console.log("aa");
+        this.props.history.push(`/inbox/${this.props.inboxId}/${threadId}`)
     }
     render () {
         let inboxId = this.props.inboxId;
@@ -24,7 +30,7 @@ class ThreadListView extends Component {
 
         let threadList = inboxContents.threads.map((thread)=>{
             if(!thread.snippet) return(null);
-            return(<ThreadItem thread={thread} inboxId={inboxId}/>)
+            return(<div onClick={()=>{this.handleOnClick(thread.id)}}><ThreadItem thread={thread} inboxId={inboxId}/></div>)
         });
 
         return (
@@ -59,4 +65,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadListView);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ThreadListView));
