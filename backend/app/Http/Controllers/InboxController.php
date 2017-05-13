@@ -27,11 +27,11 @@ class InboxController extends Controller
             //we want to combine all the user's Inbox to act as the fake 0 inbox
             $threads = Thread::getSorted($user->getInboxIds());
             $inboxName = 'All Inboxes';
-        }
-        else {
+        } else {
             $inboxName = Inbox::find($inbox_id)->name;
             $threads = Thread::getSorted([$inbox_id]);
         }
+
         return response()->success([
             'id'     => $inbox_id,
             'name'   => $inboxName,

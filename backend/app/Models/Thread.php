@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     protected $fillable = ['inbox_id', 'state'];
-    protected $appends = ['snippet','messageCount'];
+    protected $appends = ['snippet', 'messageCount'];
 
     const STATE_NEW = 'new';
     const STATE_ASSIGNED = 'assigned';
@@ -26,7 +26,8 @@ class Thread extends Model
 
     /**
      * Provides a snippet, to be used for the thread list.
-     * This is the most recent message in the thread (chronologically)
+     * This is the most recent message in the thread (chronologically).
+     *
      * @return mixed
      */
     public function getSnippetAttribute()
@@ -35,7 +36,8 @@ class Thread extends Model
     }
 
     /**
-     * Gets the number of messages in a thread
+     * Gets the number of messages in a thread.
+     *
      * @return int count
      */
     public function getMessageCountAttribute()
@@ -45,19 +47,24 @@ class Thread extends Model
 
     /**
      * Gets the threads for given $inbox_ids
-     * Sorts them by the created_at of the most recent Message message in each thread, descending
+     * Sorts them by the created_at of the most recent Message message in each thread, descending.
+     *
      * @param array $inbox_ids the Inboxes to pull threads from
+     *
      * @return array threadData
      */
-    public static function getSorted(array $inbox_ids) {
-        $t = Thread::whereIn('inbox_id', $inbox_ids)
+    public static function getSorted(array $inbox_ids)
+    {
+        $t = self::whereIn('inbox_id', $inbox_ids)
             ->get()
-            ->sortByDesc(function($thread)
-            {
-                if($thread->snippet==null)//edge case, todo: make this cleaner
+            ->sortByDesc(function ($thread) {
+                if ($thread->snippet == null) {//edge case, todo: make this cleaner
                     return 0;
+                }
+
                 return $thread->snippet->created_at->toDateTimeString();
             });
+
         return $t->values()->all();
     }
 }
