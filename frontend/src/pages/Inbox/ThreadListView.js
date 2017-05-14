@@ -33,10 +33,36 @@ class ThreadListView extends Component {
         return (
             <div className="col center">
                 <div className="col-top-right">
-                    <div className="inboxlist-header-label">Inbox:</div>
-                    <div className="inboxlist-header-name">{inboxContents.name}</div>
-                    <br/>
-                    <div>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>toggle sidebar</a>}</div>
+                    <div className="inboxlist-header-leftcol">
+                        <div className="inboxlist-header-row">
+                            <div className="inboxlist-header-label">Inbox:</div>
+                            <div className="inboxlist-header-name">{inboxContents.name}</div>
+                        </div>
+                        <div className="inboxlist-header-row">
+                            <input type="text" name="search" placeholder="search..."/>
+                        </div>
+
+                    </div>
+                    <div className="inboxlist-header-rightcol">
+                        <div>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>[toggle sidebar]</a>}</div>
+                        <div>hi</div>
+                        <div className="inboxlist-header-row">
+                            <div className="state-icon new"/>
+                            <div>23</div>
+                        </div>
+                        <div className="inboxlist-header-row">
+                            <div className="state-icon assigned"/>
+                            <div>4</div>
+                        </div>
+                        <div className="inboxlist-header-row">
+                            <div className="state-icon in-progress"/>
+                            <div>9</div>
+                        </div>
+                        <div className="inboxlist-header-row">
+                            <div className="state-icon done"/>
+                            <div>591</div>
+                        </div>
+                    </div>
                     </div>
                 <div className="col-bottom">
                     {threadList}

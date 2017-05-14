@@ -29,7 +29,7 @@ $active-text: #F3F3F3;
   background-color: $sidebar-bg;
 }
 .col.center {
-  flex: 1 0 300px//why 1 0 not 0 0
+  flex: 1 0 250px//why 1 0 not 0 0
 }
 .col.right {
   background-color: $light-bg;
@@ -40,6 +40,10 @@ $active-text: #F3F3F3;
   //on mobile, we only show the sidebar as a full-width element
   .col.left {
     flex: 1 0 100%;
+  }
+  .col.center {
+    width: 100%;
+    flex: 1 1 100%;
   }
 }
 .col-top-left-brand {
@@ -55,10 +59,11 @@ $active-text: #F3F3F3;
   flex-shrink: 0;
   background-color: white;
   color: black;
-  padding-left: 32px;
+  padding-left: 25px;
   padding-top: 10px;
   height: 110px;
   border-bottom: 1px solid #EEEEEE;
+  justify-content: space-between;
 }
 .col-bottom {
   flex-grow: 1;
@@ -70,16 +75,39 @@ $active-text: #F3F3F3;
 
 //top part
 
-.inboxlist-header-name {
-  font-size: 20px;
+.threadlist-header-name {
+  font-size: 18px;
   font-weight: 800;
 }
-.inboxlist-header-label {
-  font-size: 20px;
+.threadlist-header-label {
+  font-size: 18px;
   font-weight: 300;
   padding-right: 4px;
 }
-
+.inboxlist-header-leftcol {
+  display: flex;
+  flex-direction: column;
+}
+.inboxlist-header-label {
+  font-size: 18px;
+  font-weight: 300;
+  padding-right: 4px;
+}
+.inboxlist-header-name {
+  font-size: 18px;
+  font-weight: 800;
+}
+.inboxlist-header-rightcol {
+  flex: 0 0 30%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+.inboxlist-header-row {
+  display: flex;
+  padding-top: 2px;
+  flex-direction: row;
+}
 //the list
 .inbox-thread-list-item-wrapper {
   border-bottom: 1px solid #EEEEEE;
@@ -125,12 +153,14 @@ $active-text: #F3F3F3;
 }
 .threaditem-rowitem-left.subject {
   font-size: 14px;
+  width: 200px;//this was problematic
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .threaditem-rowitem-left.body {
+  width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
