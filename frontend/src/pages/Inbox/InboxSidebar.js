@@ -10,7 +10,8 @@ class InboxSidebar extends Component {
                  key={inbox.id}
                  onClick={()=>{this.props.history.push(`/inbox/${inbox.id}`)}}>
                 <div className="sidebar-item">
-                    <div>{inbox.name}</div>
+                    <div><div>{inbox.name}</div></div>
+                    <div className="sidebar-badge"><div>{inbox.countNew}</div></div>
                 </div>
             </div>);
         return (
@@ -19,7 +20,7 @@ class InboxSidebar extends Component {
                     Antelope
                     {this.props.isMobile &&  <div onClick={this.props.toggleSidebar}>[hide sidebar]</div>}
                 </div>
-                <div className="col-bottom sidebar-wrapper" >
+                <div className="col-bottom sidebar-wrapper">
                     <div id="sidebar-upper">
                         {inboxList}
                     </div>

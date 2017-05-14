@@ -9,6 +9,13 @@ body {
   display: flex;
 }
 
+$primary: #EC7B65;
+$secondary: #45A7B9;
+$sidebar-bg: #2D353A;
+$sidebar-bg-active: #111a1f;
+$light-bg: #EDECED;
+$active-text: #F3F3F3;
+
 /** 3 COLUMN LAYOUT **/
 .col {
   height: 100%;
@@ -18,13 +25,13 @@ body {
 .col.left {
   //column that the sidebar lives in
   flex: 0 0 220px;
-  background-color: #2D353A;
+  background-color: $sidebar-bg;
 }
 .col.center {
   flex: 1 0 350px//why 1 0 not 0 0
 }
 .col.right {
-  background-color: #f3f3f3;
+  background-color: $light-bg;
   flex: 1 1 50%;
 }
 
@@ -36,7 +43,7 @@ body {
 }
 .col-top-left-brand {
   flex-shrink: 0;
-  background-color: #333;
+  background-color: $sidebar-bg;
   color: white;
   height: 80px;
   padding: 20px;
@@ -45,11 +52,11 @@ body {
 .col-top-right {
   display: inline-flex;
   flex-shrink: 0;
-  background-color: grey;
-  color: white;
+  background-color: white;
+  color: black;
   padding: 20px;
   height: 80px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #EEEEEE;
 }
 .col-bottom {
   flex-grow: 1;
@@ -79,23 +86,31 @@ body {
   flex-direction: column;
 }
 .sidebar-item-wrapper {
-  color: #F2F2F2;
+  color: $active-text;
   height: 50px;
-  width: 100%;
+  //width: 100%;
   display:flex;
-  align-items:center;
-  /* padding-left: 5px; */
-  margin: 0px;
-  padding: 0px;
-  border: 1px;
   border-bottom: 1px solid white;
 }
 .sidebar-item-wrapper.active-item {
-  background-color: #111a1f;
+  background-color: $sidebar-bg-active;
 }
 .sidebar-item {
+  width: 100%;
   padding-left: 15px;
+  padding-right: 15px;
   text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-badge {
+  background-color: $secondary;
+  border-radius: 4px;
+  padding: 1px 3px;
+  text-align: center;
+  line-height: 1;
 }
 
 /** Login */
