@@ -11,7 +11,7 @@ class Thread extends Model
 
     const STATE_NEW = 'new';
     const STATE_ASSIGNED = 'assigned';
-    const STATE_IN_PROGRESS = 'in_progress';
+    const STATE_IN_PROGRESS = 'in-progress';
     const STATE_DONE = 'done';
 
     public function inbox()

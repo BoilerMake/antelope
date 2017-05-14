@@ -25,11 +25,11 @@ $active-text: #F3F3F3;
 }
 .col.left {
   //column that the sidebar lives in
-  flex: 0 0 220px;
+  flex: 0 0 150px;
   background-color: $sidebar-bg;
 }
 .col.center {
-  flex: 1 0 350px//why 1 0 not 0 0
+  flex: 1 0 300px//why 1 0 not 0 0
 }
 .col.right {
   background-color: $light-bg;
@@ -55,8 +55,9 @@ $active-text: #F3F3F3;
   flex-shrink: 0;
   background-color: white;
   color: black;
-  padding: 20px;
-  height: 80px;
+  padding-left: 32px;
+  padding-top: 10px;
+  height: 110px;
   border-bottom: 1px solid #EEEEEE;
 }
 .col-bottom {
@@ -66,9 +67,26 @@ $active-text: #F3F3F3;
 }
 
 /** ThreadList **/
+
+//top part
+
+.inboxlist-header-name {
+  font-size: 20px;
+  font-weight: 800;
+}
+.inboxlist-header-label {
+  font-size: 20px;
+  font-weight: 300;
+  padding-right: 4px;
+}
+
+//the list
 .inbox-thread-list-item-wrapper {
   border-bottom: 1px solid #EEEEEE;
-  min-height: 100px;
+  padding-left: 3px;
+  padding-right: 5px;
+  //min-height: 70px;
+  flex-grow: 1;
   //height: 100px;
 }
 .inbox-thread-list-item-wrapper.active {
@@ -78,14 +96,28 @@ $active-text: #F3F3F3;
   background-color: lightcoral;
 }
 .inbox-thread-list-item {
-  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+}
+.threaditem-leftcol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding-right: 4px;
+}
+.threaditem-rightcol {
+  width: 100%;
 }
 .threaditem-row {
   display: flex;
   justify-content: space-between;
 }
 .threaditem-rowitem-left {
-  flex: 0 0 60%;
+  flex: 0 0 55%;
+  padding-top:3px;
+  padding-bottom:3px;
 }
 .threaditem-rowitem-left.sender {
   font-size: 16px;
@@ -94,11 +126,20 @@ $active-text: #F3F3F3;
 .threaditem-rowitem-left.subject {
   font-size: 14px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.threaditem-rowitem-left.body {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .threaditem-rowitem-right.time {
   font-weight: 300;
   font-size: 14px;
   letter-spacing: -0.15px;
+  text-align: right;
 }
 .threaditem-rowitem-right.assign {
   font-weight: 300;
@@ -106,10 +147,23 @@ $active-text: #F3F3F3;
   text-align: right;
 }
 
-.state-icon-assigned {
+.state-icon {
   /* Oval: */
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+}
+.state-icon.new{
+  background: $secondary
+}
+.state-icon.assigned{
   background: #EFA043;
-  //border: 2px solid #EFA043;
+}
+.state-icon.in-progress{
+  background: #9977CE;
+}
+.state-icon.done{
+  background: #7ED321;
 }
 /** Sidebar **/
 .sidebar-wrapper {

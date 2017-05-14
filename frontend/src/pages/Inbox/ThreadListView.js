@@ -14,9 +14,9 @@ class ThreadListView extends Component {
         if(this.props.inbox[inboxId]===undefined || this.props.inbox[inboxId].contents === undefined)
             return (<div className="col center">
                 <div className="col-top-right">
-                    <h2>Inbox loading...</h2>
+                    <div className="inboxlist-header-label">Inbox: loading...</div>
                     <br/>
-                    <div>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>toggle sidebar</a>}</div>
+                    <div>{this.props.isMobile &&  <div onClick={this.props.toggleSidebar}>toggle sidebar</div>}</div>
                 </div>
             </div>);
         let inboxContents = this.props.inbox[inboxId].contents;
@@ -33,7 +33,8 @@ class ThreadListView extends Component {
         return (
             <div className="col center">
                 <div className="col-top-right">
-                    <h2>{inboxContents.name}</h2>
+                    <div className="inboxlist-header-label">Inbox:</div>
+                    <div className="inboxlist-header-name">{inboxContents.name}</div>
                     <br/>
                     <div>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>toggle sidebar</a>}</div>
                     </div>
