@@ -15,6 +15,10 @@ class Message extends Model
     {
         return $this->belongsTo('App\Models\Thread');
     }
+    public function events()
+    {
+        return $this->hasMany('App\Models\MessageEvent');
+    }
 
     /**
      * Replies to a message, basically appends this message to the target's thread.
