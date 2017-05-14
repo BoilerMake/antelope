@@ -13,8 +13,8 @@ class ThreadView extends Component {
         let threadId = this.props.threadId;
         if(threadId===null){
             return (
-                <div className="inbox-column right">
-                    <div className="inbox-column-bottom">
+                <div className="col right">
+                    <div className="col-bottom">
                         {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
                         no thread selected
                     </div>
@@ -23,8 +23,8 @@ class ThreadView extends Component {
         }
         if(this.props.thread[threadId]===undefined || this.props.thread[threadId].contents === undefined)
             return (
-                <div className="inbox-column right">
-                    <div className="inbox-column-bottom">
+                <div className="col right">
+                    <div className="col-bottom">
                         {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
                         <h2>loading!</h2>
                     </div>
@@ -40,8 +40,8 @@ class ThreadView extends Component {
         })
 
         return (
-            <div className="inbox-column right">
-                <div className="inbox-column-bottom" style={{padding: '5px'}}>
+            <div className="col right">
+                <div className="col-bottom" style={{padding: '5px'}}>
                     {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
                     <h1>{threadContents.snippet.subject}{this.props.threadId}</h1>
                     <pre style={{width: '80%', "whiteSpace":"pre-wrap"}}>

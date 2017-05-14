@@ -6,33 +6,33 @@ class InboxSidebar extends Component {
     }
     render () {
         let inboxList = this.props.user.inbox_list.map((inbox) =>
-            <div className={parseInt(this.props.match.params.inboxId,10)===inbox.id ? 'inbox-sidebar-item-wrapper active-item' : 'inbox-sidebar-item-wrapper'}
+            <div className={parseInt(this.props.match.params.inboxId,10)===inbox.id ? 'sidebar-item-wrapper active-item' : 'sidebar-item-wrapper'}
                  key={inbox.id}
                  onClick={()=>{this.props.history.push(`/inbox/${inbox.id}`)}}>
-                <div className="inbox-sidebar-item">
+                <div className="sidebar-item">
                     <div>{inbox.name}</div>
                 </div>
             </div>);
         return (
-            <div className="inbox-column left">
-                <div className="top-left">
+            <div className="col left">
+                <div className="col-top-left-brand">
                     Antelope
-                    {this.props.isMobile &&  <button onClick={this.props.toggleSidebar}>aa</button>}
+                    {this.props.isMobile &&  <div onClick={this.props.toggleSidebar}>[hide sidebar]</div>}
                 </div>
-                <div className="inbox-column-bottom inbox-sidebar-wrapper" >
+                <div className="col-bottom sidebar-wrapper" >
                     <div id="sidebar-upper">
                         {inboxList}
                     </div>
                     <div id="sidebar-lower">
-                        <div className="inbox-sidebar-item-wrapper"
+                        <div className="sidebar-item-wrapper"
                              style={{"borderTop":"1px solid white"}}
                              onClick={()=>this.props.history.push('/settings')}>
-                            <div className="inbox-sidebar-item">
+                            <div className="sidebar-item">
                                 <div>settings [todo]</div>
                             </div>
                         </div>
-                        <div className="inbox-sidebar-item-wrapper" onClick={()=>this.props.logout()}>
-                            <div className="inbox-sidebar-item">
+                        <div className="sidebar-item-wrapper" onClick={()=>this.props.logout()}>
+                            <div className="sidebar-item">
                                 <div>logout</div>
                             </div>
                         </div>

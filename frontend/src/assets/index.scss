@@ -9,31 +9,32 @@ body {
   display: flex;
 }
 
-.inbox-column {
+/** 3 COLUMN LAYOUT **/
+.col {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-.inbox-column.left {
+.col.left {
+  //column that the sidebar lives in
   flex: 0 0 220px;
   background-color: #2D353A;
 }
-.inbox-column.center {
+.col.center {
   flex: 1 0 350px//why 1 0 not 0 0
 }
-.inbox-column.right {
+.col.right {
   background-color: #f3f3f3;
   flex: 1 1 50%;
 }
 
 @media only screen and (max-width: 500px) {
   //on mobile, we only show the sidebar as a full-width element
-  .inbox-column.left {
+  .col.left {
     flex: 1 0 100%;
   }
 }
-
-.top-left {
+.col-top-left-brand {
   flex-shrink: 0;
   background-color: #333;
   color: white;
@@ -41,15 +42,19 @@ body {
   padding: 20px;
   border-bottom: 1px solid white;
 }
-.inbox-column-bottom {
+.col-top-right {
+  display: inline-flex;
+  flex-shrink: 0;
+  background-color: grey;
+  color: white;
+  padding: 20px;
+  height: 80px;
+  border-bottom: 1px solid black;
+}
+.col-bottom {
   flex-grow: 1;
   overflow-y: auto;
   padding: 0;
-}
-.inbox-sidebar-wrapper {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
 }
 
 /** ThreadList **/
@@ -67,18 +72,13 @@ body {
   padding: 5px;
 }
 
-.top-right {
-  display: inline-flex;
-  flex-shrink: 0;
-  background-color: grey;
-  color: white;
-  padding: 20px;
-  height: 80px;
-  border-bottom: 1px solid black;
-}
-
 /** Sidebar **/
-.inbox-sidebar-item-wrapper {
+.sidebar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.sidebar-item-wrapper {
   color: #F2F2F2;
   height: 50px;
   width: 100%;
@@ -90,10 +90,10 @@ body {
   border: 1px;
   border-bottom: 1px solid white;
 }
-.inbox-sidebar-item-wrapper.active-item {
+.sidebar-item-wrapper.active-item {
   background-color: #111a1f;
 }
-.inbox-sidebar-item {
+.sidebar-item {
   padding-left: 15px;
   text-decoration: none;
 }
