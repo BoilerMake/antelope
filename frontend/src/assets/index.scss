@@ -1,6 +1,7 @@
 html {
   height: 100%;
   font-family: 'Lato', sans-serif;
+  font-size: 15px;
 }
 body {
   height: 100%;
@@ -67,7 +68,8 @@ $active-text: #F3F3F3;
 /** ThreadList **/
 .inbox-thread-list-item-wrapper {
   border-bottom: 1px solid #EEEEEE;
-  height: 100px;
+  min-height: 100px;
+  //height: 100px;
 }
 .inbox-thread-list-item-wrapper.active {
   background-color: lightblue;
@@ -78,7 +80,37 @@ $active-text: #F3F3F3;
 .inbox-thread-list-item {
   padding: 5px;
 }
+.threaditem-row {
+  display: flex;
+  justify-content: space-between;
+}
+.threaditem-rowitem-left {
+  flex: 0 0 60%;
+}
+.threaditem-rowitem-left.sender {
+  font-size: 16px;
+  font-weight: 700;
+}
+.threaditem-rowitem-left.subject {
+  font-size: 14px;
+  font-weight: 700;
+}
+.threaditem-rowitem-right.time {
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: -0.15px;
+}
+.threaditem-rowitem-right.assign {
+  font-weight: 300;
+  font-size: 12px;
+  text-align: right;
+}
 
+.state-icon-assigned {
+  /* Oval: */
+  background: #EFA043;
+  //border: 2px solid #EFA043;
+}
 /** Sidebar **/
 .sidebar-wrapper {
   display: flex;
