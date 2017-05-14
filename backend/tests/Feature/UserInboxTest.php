@@ -16,29 +16,16 @@ class UserInboxTest extends TestCase
      */
     public function testGetMyInboxes()
     {
-        $inboxes = factory(Inbox::class, 1)
-            ->create()
-            ->each(function ($u) {
-                $u->threads()->save(factory(Thread::class)->make());
-                $u->threads()->save(factory(Thread::class)->make());
-                $u->threads()->save(factory(Thread::class)->make());
-            });
-        $inbox_1 = Inbox::find($inboxes[0]->id);
-
-        $message = factory(Message::class)->create();
-        $inbox_1->threads()->first()->messages()->save($message);
-
-        $groupId = factory(Group::class)->create()->id;
-        $inbox_1->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
+        $inbox = self::makeSeededInbox(4);
         $user = factory(User::class)->create();
-        $user->groups()->attach($groupId);
+        self::connectUserToInbox($user,$inbox);
         $token = $user->getToken();
         $response = $this->json('GET', '/users/me/inboxes', [], ['Authorization'=>'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'data'    => [['id'=>0]],
+                'data'    => [['id'=>0],['id'=>$inbox->id]],
             ]);
     }
 
@@ -47,31 +34,19 @@ class UserInboxTest extends TestCase
      */
     public function testGetSingleInboxById()
     {
-        $inboxes = factory(Inbox::class, 1)
-            ->create()
-            ->each(function ($u) {
-                $u->threads()->save(factory(Thread::class)->make());
-                $u->threads()->save(factory(Thread::class)->make());
-                $u->threads()->save(factory(Thread::class)->make());
-            });
-        $inbox_1 = Inbox::find($inboxes[0]->id);
 
-        $message = factory(Message::class)->create();
-        $inbox_1->threads()->first()->messages()->save($message);
-
-        $groupId = factory(Group::class)->create()->id;
-        $inbox_1->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
+        $inbox = self::makeSeededInbox(4);
         $user = factory(User::class)->create();
-        $user->groups()->attach($groupId);
+        self::connectUserToInbox($user,$inbox);
         $token = $user->getToken();
-        $response = $this->json('GET', '/inbox/'.$inbox_1->id, [], ['Authorization'=>'Bearer '.$token]);
+        $response = $this->json('GET', '/inbox/'.$inbox->id, [], ['Authorization'=>'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
                 'success' => true,
             ]);
 
-        $this->assertEquals(count($response->json()['data']['threads']), 3);
+        $this->assertEquals(4,count($response->json()['data']['threads']));
     }
 
     /**
@@ -79,20 +54,11 @@ class UserInboxTest extends TestCase
      */
     public function testGetAllUserInboxes()
     {
-        $inboxes = factory(Inbox::class, 2)
-            ->create()
-            ->each(function ($u) {
-                $u->threads()->save(factory(Thread::class)->make());
-                $u->threads()->save(factory(Thread::class)->make());
-                $u->threads()->save(factory(Thread::class)->make());
-            });
-        $inbox_1 = Inbox::find($inboxes[0]->id);
-        $inbox_2 = Inbox::find($inboxes[1]->id);
-        $groupId = factory(Group::class)->create()->id;
-        $inbox_1->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
-        $inbox_2->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
+        $inbox = self::makeSeededInbox(4);
+        $inbox_2 = self::makeSeededInbox(3);
         $user = factory(User::class)->create();
-        $user->groups()->attach($groupId);
+        self::connectUserToInbox($user,$inbox);
+        self::connectUserToInbox($user,$inbox_2);
         $token = $user->getToken();
         $response = $this->json('GET', '/inbox/0', [], ['Authorization'=>'Bearer '.$token]);
         $response
@@ -101,7 +67,7 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(count($response->json()['data']['threads']), 6);
+        $this->assertEquals(7,count($response->json()['data']['threads']));
     }
 
     /**
@@ -109,28 +75,17 @@ class UserInboxTest extends TestCase
      */
     public function testGetThread()
     {
-        $threads = factory(Thread::class, 1)
-            ->create()
-            ->each(function ($u) {
-                $u->messages()->save(factory(Message::class)->make());
-                $u->messages()->save(factory(Message::class)->make());
-                $u->messages()->save(factory(Message::class)->make());
-            });
-        $thread_1 = Thread::find($threads[0]->id);
-        $inbox_1 = Inbox::find($threads[0]->inbox_id);
-
-        $groupId = factory(Group::class)->create()->id;
-        $inbox_1->groups()->attach($groupId, ['permission'=>Group::INBOX_PERMISSION_READWRITE]);
+        $inbox = self::makeSeededInbox(1,5);
         $user = factory(User::class)->create();
-        $user->groups()->attach($groupId);
+        self::connectUserToInbox($user,$inbox);
         $token = $user->getToken();
-        $response = $this->json('GET', '/thread/'.$thread_1->id, [], ['Authorization'=>'Bearer '.$token]);
+        $response = $this->json('GET', '/thread/'.$inbox->threads[0]->id, [], ['Authorization'=>'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
                 'success' => true,
             ]);
 
-        $this->assertEquals(count($response->json()['data']['messages']), 3);
+        $this->assertEquals(5,count($response->json()['data']['messages']));
     }
 }

@@ -25,6 +25,7 @@ class MailBasicTest extends TestCase
 
     public function testMailgunHook()
     {
+        self::makeSeededInbox();
         putenv('MAILGUN_IGNORE_SIGNATURE=true');
         $faker = \Faker\Factory::create();
         //now let's send a message
