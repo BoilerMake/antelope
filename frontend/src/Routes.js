@@ -35,7 +35,6 @@ const UserRoute = withRouter(connect((state) => ({isAuthenticated: state.user.au
 const Routes = () => (
     <div className="f">
         <Route exact path="/" render={() => (<Redirect to="/inbox/0"/>)}/>
-        {/*<Route exact path="/" component={Home}/>*/}
         <Route path="/login" component={Login}/>
 
         <UserRoute path="/dashboard" component={Dashboard}/>
