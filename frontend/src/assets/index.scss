@@ -5,9 +5,10 @@ html {
 body {
   height: 100%;
   overflow: hidden;
-  margin: 0px;
+  margin: 0;
   display: flex;
 }
+
 .inbox-column {
   height: 100%;
   display: flex;
@@ -25,16 +26,12 @@ body {
   flex: 1 1 50%;
 }
 
-
 @media only screen and (max-width: 500px) {
-  //.inbox-column.center {
-  //  flex: 0 0 100%;
-  //}
+  //on mobile, we only show the sidebar as a full-width element
   .inbox-column.left {
     flex: 1 0 100%;
   }
 }
-
 
 .top-left {
   flex-shrink: 0;
@@ -54,34 +51,11 @@ body {
   justify-content: space-between;
   flex-direction: column;
 }
-.inbox-sidebar-item-wrapper {
-  color: #F2F2F2;
-  height: 50px;
-  width: 100%;
-  display:flex;
-  align-items:center;
-  /* padding-left: 5px; */
-  margin: 0px;
-  padding: 0px;
-  border: 1px;
-  border-bottom: 1px solid white;
-}
-.inbox-sidebar-item-wrapper.active-item {
-  background-color: #111a1f;
-}
-.inbox-sidebar-item {
-  padding-left: 15px;
-  text-decoration: none;
-}
-.sidebar-item-link {
-  text-decoration: none;
-  color: white;
-}
 
+/** ThreadList **/
 .inbox-thread-list-item-wrapper {
   border-bottom: 1px solid #EEEEEE;
   height: 100px;
-
 }
 .inbox-thread-list-item-wrapper.active {
   background-color: lightblue;
@@ -103,8 +77,28 @@ body {
   border-bottom: 1px solid black;
 }
 
+/** Sidebar **/
+.inbox-sidebar-item-wrapper {
+  color: #F2F2F2;
+  height: 50px;
+  width: 100%;
+  display:flex;
+  align-items:center;
+  /* padding-left: 5px; */
+  margin: 0px;
+  padding: 0px;
+  border: 1px;
+  border-bottom: 1px solid white;
+}
+.inbox-sidebar-item-wrapper.active-item {
+  background-color: #111a1f;
+}
+.inbox-sidebar-item {
+  padding-left: 15px;
+  text-decoration: none;
+}
 
-
+/** Login */
 .f {
   display: flex;
   width: 100%;
