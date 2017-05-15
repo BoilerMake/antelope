@@ -3,13 +3,20 @@ import moment from 'moment'
 export default class MessageItem extends Component {
 
     render () {
-        let date = moment.utc(this.props.message.created_at,'YYYY-MM-DD HH:mm:ss').local();
+        const { message } = this.props;
+        const date = moment.utc(message.created_at,'YYYY-MM-DD HH:mm:ss').local();
         return (
-            <div style={{"border": "1px solid green"}}>
-                {date.fromNow()} // {date.calendar()}
-                <pre style={{width: '80%', "whiteSpace":"pre-wrap"}}>
-                    {JSON.stringify(this.props,null, 2)}
-                </pre>
+            <div className="message-item">
+                <div className="message-item-header">
+                    <div className="message-item-header-left">{message.from}</div>
+                    <div className="message-item-header-right">{date.calendar()}</div>
+                </div>
+                <hr/>
+                <div className="message-item-body" dangerouslySetInnerHTML={{__html: message.body_html}}>
+                </div>
+                {/*<pre style={{width: '80%', "whiteSpace":"pre-wrap"}}>*/}
+                    {/*{JSON.stringify(message,null, 2)}*/}
+                {/*</pre>*/}
             </div>
         );
     }

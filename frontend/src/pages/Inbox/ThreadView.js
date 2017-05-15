@@ -10,12 +10,13 @@ class ThreadView extends Component {
             this.props.fetchThread(nextProps.threadId);
     }
     render () {
-        let threadId = this.props.threadId;
+        const mobileBackLink = (this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>);
+        const threadId = this.props.threadId;
         if(threadId===null){
             return (
                 <div className="col right">
                     <div className="col-bottom">
-                        {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
+                        {mobileBackLink}
                         no thread selected
                     </div>
                 </div>
@@ -25,14 +26,12 @@ class ThreadView extends Component {
             return (
                 <div className="col right">
                     <div className="col-bottom">
-                        {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
+                        {mobileBackLink}
                         <h2>loading!</h2>
                     </div>
                 </div>
             );
         let threadContents = this.props.thread[threadId].contents;
-        console.log(threadContents);
-
         let messageList = threadContents.messages.map(message => {
             return(
                 <MessageItem message={message} key={message.id}/>
@@ -41,21 +40,15 @@ class ThreadView extends Component {
 
         return (
             <div className="col right">
-                <div className="col-bottom" style={{padding: '5px'}}>
+                <div className="col-bottom" style={{padding: '20px'}}>
                     {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
-                    <h1>{threadContents.snippet.subject}{this.props.threadId}</h1>
-                    <pre style={{width: '80%', "whiteSpace":"pre-wrap"}}>
-                        {/*{JSON.stringify(this.props.user.me,null, 2)}*/}
-                        {/*{JSON.stringify(threadContents,null, 2)}*/}
-                    </pre>
-                    {this.props.threadId ? `Viewing thread ${this.props.threadId}` : 'no threaad selected'}
+                    {this.props.threadId ? null : 'no threaad selected'}
 
-                    eep
+                    <div className="threadview-subject">{threadContents.snippet.subject}</div>
+                    <div className="threadview-sender">{threadContents.snippet.from}</div>
+                    <hr/>
                     {messageList}
-
-                    <h3>hi</h3>
-                    <div style={{width: '50%', backgroundColor: 'blue'}}>hi</div>
-                    <div style={{width: '100%', backgroundColor: 'red'}}>hi</div>
+                    <div style={{width: '50%', backgroundColor: 'grey'}}>50% width</div>
                 </div>
             </div>
         );

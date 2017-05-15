@@ -172,7 +172,6 @@ $active-text: #F3F3F3;
 .threaditem-rowitem-right.time {
   font-weight: 300;
   font-size: 14px;
-  letter-spacing: -0.15px;
   text-align: right;
 }
 .threaditem-rowitem-right.assign {
@@ -199,6 +198,44 @@ $active-text: #F3F3F3;
 .state-icon.done{
   background: #7ED321;
 }
+
+/** ThreadView **/
+.threadview-subject {
+  font-weight: 800;
+  font-size: 20px;
+}
+.threadview-sender {
+  font-weight: 800;
+  font-size: 16px;
+}
+
+
+/** MessageItem **/
+.message-item {
+  margin: 1em 0;
+  padding: 10px 20px;
+  background: #FFFFFF;
+  border: 1px solid #D7D8D8;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+  border-radius: 2px;
+}
+.message-item-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.message-item-header-left {
+  font-weight: 800;
+  font-size: 16px;
+}
+.message-item-header-right {
+  font-weight: 300;
+  font-size: 14px;
+  text-align: right;
+}
+
+
+
 /** Sidebar **/
 .sidebar-wrapper {
   display: flex;
