@@ -18,7 +18,7 @@ export default class ThreadItem extends Component {
                     </div>
                     <div className="threaditem-rightcol">
                         <div className="threaditem-row">
-                            <div className="threaditem-rowitem-left sender">{thread.snippet.sender}</div>
+                            <div className="threaditem-rowitem-left sender">{thread.snippet.from}</div>
                             <div className="threaditem-rowitem-right time">{date.calendar()}</div>
                         </div>
                         <div className="threaditem-row">

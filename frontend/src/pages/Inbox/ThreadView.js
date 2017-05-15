@@ -44,11 +44,13 @@ class ThreadView extends Component {
                     {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
                     {this.props.threadId ? null : 'no threaad selected'}
 
+
                     <div className="threadview-subject">{threadContents.snippet.subject}</div>
                     <div className="threadview-sender">{threadContents.snippet.from}</div>
                     <hr/>
                     {messageList}
-                    <div style={{width: '50%', backgroundColor: 'grey'}}>50% width</div>
+                    <button className="btn-primary">Reply</button>
+                    {/*<div style={{width: '50%', backgroundColor: 'grey'}}>50% width</div>*/}
                 </div>
             </div>
         );

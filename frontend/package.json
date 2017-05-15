@@ -12,6 +12,7 @@
     "fetch-mock": "^5.10.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.18.1",
+    "normalize.css": "^7.0.0",
     "react": "^15.5.4",
     "react-addons-css-transition-group": "^15.5.2",
     "react-addons-test-utils": "^15.5.1",
