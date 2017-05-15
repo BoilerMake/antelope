@@ -19,11 +19,15 @@ class Inbox extends Component {
         }
         else {
             //desktop layout
+            const bodyCondensed = (threadId
+                ? <ThreadView threadId={threadId} inboxId={inboxId} />
+                : <ThreadListView inboxId={inboxId}/>);
+            const bodyDesktop = (<div className="f"><ThreadListView threadId={threadId} inboxId={inboxId}/>
+            <ThreadView threadId={threadId} inboxId={inboxId}/></div>);
             return (
                 <div className="f">
                     <InboxSidebar/>
-                    <ThreadListView threadId={threadId} inboxId={inboxId}/>
-                    <ThreadView threadId={threadId} inboxId={inboxId}/>
+                    {this.props.isCondensed ? bodyCondensed : bodyDesktop}
                 </div>
             );
         }
@@ -36,7 +40,8 @@ import { connect } from 'react-redux'
 function mapStateToProps (state) {
     return {
         sidebar: state.system.sidebar,
-        isMobile: state.system.mobile
+        isMobile: state.system.layout === "mobile",
+        isCondensed: state.system.layout === "condensed"
     };
 }
 

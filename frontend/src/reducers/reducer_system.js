@@ -5,16 +5,21 @@ import {
 } from '../actions/system';
 
 export const INITIAL_STATE = {
-    mobile: true,
+    layout: 'mobile',
     sidebar: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
     switch (action.type) {
         case SYSTEM_TOGGLE_SIDEBAR:
-            return { ...state, sidebar: !state.sidebar }
+            return { ...state, sidebar: !state.sidebar };
         case SYSTEM_UPDATE_SCREEN_WIDTH:
-            return { ...state, mobile: (action.width <= 500) };
+            let layout = 'desktop';
+            if(action.width <= 500)
+                layout = 'mobile';
+            else if(action.width <= 800)
+                layout = 'condensed';
+            return {...state, layout};
         default:
             return state;
     }

@@ -29,7 +29,7 @@ $active-text: #F3F3F3;
   background-color: $sidebar-bg;
 }
 .col.center {
-  flex: 1 0 250px//why 1 0 not 0 0
+  flex: 1 0 290px//why 1 0 not 0 0
 }
 .col.right {
   background-color: $light-bg;
@@ -143,18 +143,22 @@ $active-text: #F3F3F3;
   justify-content: space-between;
 }
 .threaditem-rowitem-left {
-  flex: 0 0 55%;
+  flex: 0 0 60%;
   padding-top:3px;
   padding-bottom:3px;
 }
 .threaditem-rowitem-left.sender {
   font-size: 16px;
   font-weight: 700;
+  width: 200px;//this was problematic
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .threaditem-rowitem-left.subject {
   font-size: 14px;
-  width: 200px;//this was problematic
   font-weight: 700;
+  width: 200px;//this was problematic
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
