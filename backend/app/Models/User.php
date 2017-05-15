@@ -27,10 +27,18 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+    protected $appends = ['displayName'];
 
     public function groups()
     {
         return $this->belongsToMany('App\Models\Group');
+    }
+
+    public function getDisplayNameAttribute()
+    {
+//        return "{$this->first_name} {$this->last_name} (#{$this->id})";
+        $last = substr($this->last_name,0,1);
+        return "{$this->first_name} {$last}";
     }
 
     public static function addNew($email, $admin = false, $password = null)

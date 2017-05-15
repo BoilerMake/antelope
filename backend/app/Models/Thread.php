@@ -23,6 +23,10 @@ class Thread extends Model
     {
         return $this->hasMany('App\Models\Message');
     }
+    public function users()
+    {
+        return $this->belongsToMany('App\Models\User');
+    }
 
     /**
      * Provides a snippet, to be used for the thread list.
@@ -55,7 +59,7 @@ class Thread extends Model
      */
     public static function getSorted(array $inbox_ids)
     {
-        $t = self::whereIn('inbox_id', $inbox_ids)
+        $t = self::with('users')->whereIn('inbox_id', $inbox_ids)
             ->get()
             ->sortByDesc(function ($thread) {
                 if ($thread->snippet == null) {//edge case, todo: make this cleaner

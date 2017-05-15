@@ -50,7 +50,7 @@ class InboxController extends Controller
     {
         //todo: check permissions, maybe via middleware?
         $user = Auth::user();
-        $thread = Thread::with('messages.events')->find($thread_id);
+        $thread = Thread::with('messages.events','users')->find($thread_id);
 
         return response()->success($thread);
     }

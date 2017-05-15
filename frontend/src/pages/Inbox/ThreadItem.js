@@ -9,6 +9,7 @@ export default class ThreadItem extends Component {
             style = "inbox-thread-list-item-wrapper unread";
         if(this.props.active)
             style = "inbox-thread-list-item-wrapper active";
+        let threadUsers = thread.users.map(u=>u.displayName).join(", ");
         return(
             <div className={style} key={thread.id}>
                 <div className="inbox-thread-list-item">
@@ -22,7 +23,7 @@ export default class ThreadItem extends Component {
                         </div>
                         <div className="threaditem-row">
                             <div className="threaditem-rowitem-left subject">{thread.snippet.subject}</div>
-                            <div className="threaditem-rowitem-right assign">Person1, Person2, Person3, Person4</div>
+                            <div className="threaditem-rowitem-right assign">{threadUsers}</div>
                         </div>
                         <div className="threaditem-row">
                             <div className="threaditem-rowitem-left body">{thread.snippet.body_plain}</div>
