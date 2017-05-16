@@ -336,3 +336,15 @@ $active-text: #F3F3F3;
 .btn-primary:active{
   background: darken($primary,30%);
 }
+.btn-secondary {
+ @extend .btn-primary;
+  background: $secondary;
+
+}
+.btn-secondary:hover {
+  background: darken($secondary,10%);
+  text-decoration: none;
+}
+.btn-secondary:active{
+  background: darken($secondary,30%);
+}

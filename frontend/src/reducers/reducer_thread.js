@@ -2,6 +2,8 @@
 import {
     RECEIVE_THREAD,
     REQUEST_THREAD,
+    RECEIVE_THREAD_ASSIGNMENTS,
+    REQUEST_THREAD_ASSIGNMENTS,
 } from '../actions/thread';
 
 export const INITIAL_STATE = {};
@@ -21,7 +23,21 @@ export default function (state = INITIAL_STATE, action) {
                 [id]: {
                     ...state[id],
                     contents: action.data,
-                    isFetching: true
+                    isFetching: false
+                }
+            };
+        case REQUEST_THREAD_ASSIGNMENTS:
+            return {
+                ...state,
+                [id]: {...state[id], isFetchingAssignments: true}
+            };
+        case RECEIVE_THREAD_ASSIGNMENTS:
+            return {
+                ...state,
+                [id]: {
+                    ...state[id],
+                    assignments: action.data,
+                    isFetchingAssignments: false
                 }
             };
         default:

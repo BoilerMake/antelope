@@ -29,6 +29,8 @@ Route::post('mailgunevent', 'MailController@mailgunEvent');
 Route::group(['middleware'=>['jwt.auth']], function () {
     Route::get('inbox/{id}', 'InboxController@getInbox');
     Route::get('thread/{id}', 'InboxController@getThread');
+    Route::get('thread/{id}/assignments', 'InboxController@getAssignments');
+    Route::put('thread/{id}/assignments', 'InboxController@putAssignments');
 });
 
 Route::group(['middleware'=>['jwt.auth'], 'prefix' => 'users/me'], function () {

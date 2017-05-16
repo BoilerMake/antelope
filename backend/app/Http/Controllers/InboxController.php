@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Inbox;
 use App\Models\Thread;
+use App\Models\User;
 use Auth;
+use function GuzzleHttp\Psr7\str;
+use Log;
+use Request;
 
 /**
  * Class UsersController.
@@ -53,5 +57,28 @@ class InboxController extends Controller
         $thread = Thread::with('messages.events','users')->find($thread_id);
 
         return response()->success($thread);
+    }
+    public function getAssignments($thread_id)
+    {
+        return response()->success(Thread::find($thread_id)->getAssignedUsers());
+    }
+    public function putAssignments($thread_id)
+    {
+        $thread = Thread::find($thread_id);
+        $data = json_decode(Request::getContent(),true);
+        foreach ($thread->getAssignedUsers() as $k => $assignedUser) {
+            $currentState = $assignedUser['assigned_to_thread'];
+            $newState = $data[$k]['assigned_to_thread'];
+            if(!$currentState && $newState) {
+                Log::info('assign '.$k);
+                $thread->users()->attach($k);
+            }
+            else if($currentState && !$newState) {
+                Log::info('unassign '.$k);
+                $thread->users()->detach($k);
+            }
+        }
+
+        return $data;
     }
 }

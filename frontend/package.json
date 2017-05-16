@@ -10,6 +10,7 @@
     "enzyme": "^2.8.1",
     "faker": "^4.1.0",
     "fetch-mock": "^5.10.0",
+    "immutability-helper": "^2.2.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.18.1",
     "normalize.css": "^7.0.0",

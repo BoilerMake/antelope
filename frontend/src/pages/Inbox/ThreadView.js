@@ -48,14 +48,20 @@ class ThreadView extends Component {
                     </div>
                 </div>
             );
-        let threadContents = this.props.thread[threadId].contents;
+        let thread = this.props.thread[threadId];
+        let threadContents = thread.contents;
         let messageList = threadContents.messages.map(message => {
             return(
                 <MessageItem message={message} key={message.id}/>
             )
         });
 
-        let MessageModal = (<ThreadAssignmentsModal isOpen={this.state.showAssignmentsModal} close={this.handleCloseAssignmentsModal}/>);
+        let AssignmentsModal = (<ThreadAssignmentsModal
+            isOpen={this.state.showAssignmentsModal}
+            close={this.handleCloseAssignmentsModal}
+            fetch={()=>{this.props.fetchThreadAssignments(threadId)}}
+            updateAssignments={(data)=>{this.props.updateThreadAssignments(threadId,data)}}
+            thread={thread}/>);
 
         return (
             <div className="col right">
@@ -63,7 +69,7 @@ class ThreadView extends Component {
                     {mobileBackLink}
                     {this.props.threadId ? null : 'no threaad selected'}
 
-                    {MessageModal}
+                    {AssignmentsModal}
                     <div className="threadview-header">
                         <div>
                             <div className="threadview-subject">{threadContents.snippet.subject}</div>
@@ -90,17 +96,22 @@ class ThreadView extends Component {
 
 //now the redux integration layer
 import { connect } from 'react-redux'
-import { fetchThread } from '../../actions/thread'
 function mapStateToProps (state) {
     return {
         user: state.user,
         thread: state.thread
     };
 }
-
+import { fetchThread, fetchThreadAssignments, updateThreadAssignments } from '../../actions/thread'
 const mapDispatchToProps = (dispatch, ownProps) => ({
     fetchThread: (threadId) => {
         dispatch(fetchThread(threadId));
+    },
+    fetchThreadAssignments: (threadId) => {
+        dispatch(fetchThreadAssignments(threadId));
+    },
+    updateThreadAssignments: (threadId,data) => {
+        dispatch(updateThreadAssignments(threadId,data));
     }
 });
 
