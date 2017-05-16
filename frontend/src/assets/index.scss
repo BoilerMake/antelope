@@ -208,6 +208,17 @@ $active-text: #F3F3F3;
   font-weight: 800;
   font-size: 16px;
 }
+.threadview-header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.threadview-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
 
 
 /** MessageItem **/

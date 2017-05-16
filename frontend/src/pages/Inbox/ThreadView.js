@@ -1,7 +1,24 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import MessageItem from './MessageItem';
+import ThreadAssignmentsModal from './ThreadAssignmentsModal';
 class ThreadView extends Component {
+    constructor () {
+        super();
+        this.state = {
+            showAssignmentsModal: false
+        };
+        this.handleOpenAssignmentsModal = this.handleOpenAssignmentsModal.bind(this);
+        this.handleCloseAssignmentsModal = this.handleCloseAssignmentsModal.bind(this);
+    }
+    handleOpenAssignmentsModal () {
+        this.setState({ showAssignmentsModal: true });
+    }
+
+    handleCloseAssignmentsModal () {
+        this.setState({ showAssignmentsModal: false });
+    }
+
     componentDidMount() {
         this.props.fetchThread(this.props.threadId);
     }
@@ -36,20 +53,34 @@ class ThreadView extends Component {
             return(
                 <MessageItem message={message} key={message.id}/>
             )
-        })
+        });
+
+        let MessageModal = (<ThreadAssignmentsModal isOpen={this.state.showAssignmentsModal} close={this.handleCloseAssignmentsModal}/>);
 
         return (
             <div className="col right">
                 <div className="col-bottom" style={{padding: '20px'}}>
-                    {this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>}
+                    {mobileBackLink}
                     {this.props.threadId ? null : 'no threaad selected'}
 
+                    {MessageModal}
+                    <div className="threadview-header">
+                        <div>
+                            <div className="threadview-subject">{threadContents.snippet.subject}</div>
+                            <div className="threadview-sender">{threadContents.snippet.from}</div>
+                        </div>
+                        <div style={{"alignSelf":"flex-end"}}>
+                            <button className="btn-primary">Notes</button>
+                            <button className="btn-primary" onClick={this.handleOpenAssignmentsModal}>Assignments</button>
+                        </div>
+                    </div>
 
-                    <div className="threadview-subject">{threadContents.snippet.subject}</div>
-                    <div className="threadview-sender">{threadContents.snippet.from}</div>
                     <hr/>
                     {messageList}
-                    <button className="btn-primary">Reply</button>
+                    <div className="threadview-footer">
+                        <button className="btn-primary">Reply All</button>
+                        <button className="btn-primary">Reply</button>
+                    </div>
                     {/*<div style={{width: '50%', backgroundColor: 'grey'}}>50% width</div>*/}
                 </div>
             </div>
