@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inbox;
 use App\Models\Thread;
 use App\Models\User;
+use App\Models\UserEvent;
 use Auth;
 use function GuzzleHttp\Psr7\str;
 use Log;
@@ -73,15 +74,15 @@ class InboxController extends Controller
             if(!$currentState && $newState) {
                 Log::info('assign '.$k);
                 $thread->users()->attach($k);
-                $user->recordThreadEvent($thread,'assign_thread',$k);
+                $user->recordThreadEvent($thread,UserEvent::TYPE_ASSIGN_THREAD,$k);
             }
             else if($currentState && !$newState) {
                 Log::info('unassign '.$k);
                 $thread->users()->detach($k);
-                $user->recordThreadEvent($thread,'unassign_thread',$k);
+                $user->recordThreadEvent($thread,UserEvent::TYPE_UNASSIGN_THREAD,$k);
             }
         }
 
-        return $data;
+        return response()->success($data);
     }
 }

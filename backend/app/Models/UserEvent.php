@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserEvent extends Model
 {
+    const TYPE_ASSIGN_THREAD = 'assign_thread';
+    const TYPE_UNASSIGN_THREAD = 'unassign_thread';
     protected $guarded = ['id'];
     public function user()
     {
