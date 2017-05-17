@@ -54,7 +54,7 @@ class InboxController extends Controller
     {
         //todo: check permissions, maybe via middleware?
         $user = Auth::user();
-        $thread = Thread::with('messages.events','users')->find($thread_id);
+        $thread = Thread::with('messages.events','users','userEvents.user','userEvents.target')->find($thread_id);
 
         return response()->success($thread);
     }
@@ -64,6 +64,7 @@ class InboxController extends Controller
     }
     public function putAssignments($thread_id)
     {
+        $user = Auth::user();
         $thread = Thread::find($thread_id);
         $data = json_decode(Request::getContent(),true);
         foreach ($thread->getAssignedUsers() as $k => $assignedUser) {
@@ -72,10 +73,12 @@ class InboxController extends Controller
             if(!$currentState && $newState) {
                 Log::info('assign '.$k);
                 $thread->users()->attach($k);
+                $user->recordThreadEvent($thread,'assign_thread',$k);
             }
             else if($currentState && !$newState) {
                 Log::info('unassign '.$k);
                 $thread->users()->detach($k);
+                $user->recordThreadEvent($thread,'unassign_thread',$k);
             }
         }
 

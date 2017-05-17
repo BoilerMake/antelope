@@ -27,6 +27,15 @@ class ThreadView extends Component {
             this.props.fetchThread(nextProps.threadId);
     }
     render () {
+        const UserEvent = ({event}) => {
+            switch (event.type) {
+                case 'assign_thread':
+                    return (<div><strong>{event.user.displayName}</strong> <i>assigned</i> the thread to <strong>{event.target.displayName}</strong></div>)
+                case 'unassign_thread':
+                    return (<div><strong>{event.user.displayName}</strong> <i>unassigned</i> the thread to <strong>{event.target.displayName}</strong></div>)
+            }
+            return (<div>{`<strong>${event.user.displayName} ${event.type}`}</div>);
+        };
         const mobileBackLink = (this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>);
         const threadId = this.props.threadId;
         if(threadId===null){
@@ -53,6 +62,11 @@ class ThreadView extends Component {
         let messageList = threadContents.messages.map(message => {
             return(
                 <MessageItem message={message} key={message.id}/>
+            )
+        });
+        let userEventList = threadContents.user_events.map(e => {
+            return(
+                <UserEvent event={e}/>
             )
         });
 
@@ -87,6 +101,8 @@ class ThreadView extends Component {
                         <button className="btn-primary">Reply All</button>
                         <button className="btn-primary">Reply</button>
                     </div>
+                    {userEventList}
+                    {/*<pre>{JSON.stringify(thread.contents.user_events,null, 2)}</pre>*/}
                     {/*<div style={{width: '50%', backgroundColor: 'grey'}}>50% width</div>*/}
                 </div>
             </div>

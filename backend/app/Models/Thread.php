@@ -23,6 +23,10 @@ class Thread extends Model
     {
         return $this->hasMany('App\Models\Message');
     }
+    public function userEvents()
+    {
+        return $this->hasMany('App\Models\UserEvent');
+    }
     public function users()
     {
         return $this->belongsToMany('App\Models\User');

@@ -98,4 +98,15 @@ class User extends Authenticatable
     {
         return self::getInboxIdsByPermission()['all_ids'];
     }
+    public function recordThreadEvent(Thread $thread, $type, $target_user_id = null)
+    {
+        return UserEvent::create([
+            'user_id'=>$this->id,
+            'thread_id'=>$thread->id,
+            'inbox_id'=>$thread->inbox_id,
+            'target_user_id'=>$target_user_id,
+            'type'=>$type,
+        ]);
+
+    }
 }
