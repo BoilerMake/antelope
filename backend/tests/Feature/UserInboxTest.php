@@ -138,5 +138,15 @@ class UserInboxTest extends TestCase
         $this->assertDatabaseHas('user_events',['user_id'=>$user1->id,'thread_id'=>$thread_id,'target_user_id'=>$user2->id,'type'=>UserEvent::TYPE_UNASSIGN_THREAD]);
 
 
+        $response = $this->json('GET', '/thread/'.$thread_id, [], ['Authorization'=>'Bearer '.$token]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $this->assertEquals(2,count($response->json()['data']['user_events']));
+
+
     }
 }
