@@ -15,6 +15,7 @@ class Message extends Model
     {
         return $this->belongsTo('App\Models\Thread');
     }
+
     public function events()
     {
         return $this->hasMany('App\Models\MessageEvent');

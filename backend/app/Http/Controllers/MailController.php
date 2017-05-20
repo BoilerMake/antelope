@@ -113,8 +113,9 @@ class MailController extends Controller
             'name'       => Request::get('event'),
             'timestamp'  => Request::get('timestamp'),
             'recipient'  => Request::get('recipient'),
-            'raw'        => json_encode(Request::all())
+            'raw'        => json_encode(Request::all()),
         ]);
+
         return response()->success('ok');
     }
 }

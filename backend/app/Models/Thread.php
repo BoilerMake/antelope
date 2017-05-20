@@ -23,19 +23,21 @@ class Thread extends Model
     {
         return $this->hasMany('App\Models\Message');
     }
+
     public function userEvents()
     {
         return $this->hasMany('App\Models\UserEvent');
     }
+
     public function users()
     {
         return $this->belongsToMany('App\Models\User');
     }
+
     public function drafts()
     {
         return $this->hasMany('App\Models\Draft');
     }
-
 
     /**
      * Provides a snippet, to be used for the thread list.
@@ -81,7 +83,8 @@ class Thread extends Model
         return $t->values()->all();
     }
 
-    public function getUserIdsWithReadWriteAccess() {
+    public function getUserIdsWithReadWriteAccess()
+    {
         return self::with('inbox.groups.users')
             ->find($this->id)->inbox->groups
             ->filter(function ($group) {
@@ -89,28 +92,30 @@ class Thread extends Model
             })->transform(function ($group) {
                 return $group->users->pluck('id');
             })->flatten()->unique()->values()->all();
-
     }
-    public function getAssignedUsers() {
+
+    public function getAssignedUsers()
+    {
         $thread = self::with('users')->find($this->id);
         $user_ids_assigned = $thread->users->pluck('id')->toArray();
         $user_ids_with_readwrite = $thread->getUserIdsWithReadWriteAccess();
 
         //build a map: user_id <-> is_assigned
         $user_ids = [];
-        foreach($user_ids_with_readwrite as $u)
+        foreach ($user_ids_with_readwrite as $u) {
             $user_ids[$u] = false;
-        foreach($user_ids_assigned as $u)
+        }
+        foreach ($user_ids_assigned as $u) {
             $user_ids[$u] = true;
+        }
 
         $users = [];
-        foreach($user_ids as $id => $v) {
+        foreach ($user_ids as $id => $v) {
             $user = User::find($id)->toArray();
             $user['assigned_to_thread'] = $v;
-            $users[$id]=$user;
+            $users[$id] = $user;
         }
+
         return $users;
     }
-
-
 }
