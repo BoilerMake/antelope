@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactModal from 'react-modal';
-import update from 'immutability-helper';
 
 export default class ThreadAssignmentsModal extends Component {
 

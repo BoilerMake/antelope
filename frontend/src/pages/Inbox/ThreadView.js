@@ -34,8 +34,9 @@ class ThreadView extends Component {
                     return (<div><strong>{event.user.displayName}</strong> <i>assigned</i> the thread to <strong>{event.target.displayName}</strong></div>)
                 case 'unassign_thread':
                     return (<div><strong>{event.user.displayName}</strong> <i>unassigned</i> the thread to <strong>{event.target.displayName}</strong></div>)
+                default:
+                    return (<div>{`<strong>${event.user.displayName} ${event.type}`}</div>);
             }
-            return (<div>{`<strong>${event.user.displayName} ${event.type}`}</div>);
         };
         const mobileBackLink = (this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>);
         const threadId = this.props.threadId;
