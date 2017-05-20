@@ -81,6 +81,10 @@ class InboxController extends Controller
                 Log::info('assign '.$k);
                 $thread->users()->attach($k);
                 $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $k);
+                if($thread->state === Thread::STATE_NEW) {
+                    $thread->state = Thread::STATE_ASSIGNED;
+                    $thread->save();
+                }
             } elseif ($currentState && !$newState) {
                 Log::info('unassign '.$k);
                 $thread->users()->detach($k);
@@ -108,10 +112,18 @@ class InboxController extends Controller
 
     public function updateDraft($draft_id)
     {
-        $draft = Draft::find($draft_id); //todo: fancy model hinting
+        $user = Auth::user();
+        $draft = Draft::with('thread')->find($draft_id); //todo: fancy model hinting
         $data = json_decode(Request::getContent(), true);
         $draft->body = $data['body'];
         $draft->save();
+        $action = Request::get('action');
+        if($action==="send") {
+            $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
+            $message = $draft->thread->getLastMessage();
+            $message->reply($draft->user_id,$draft->body);
+
+        }
 
         return response()->success($draft);
     }

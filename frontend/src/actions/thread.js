@@ -77,7 +77,7 @@ export function updateThreadAssignments(id,assignments) {
                 body: JSON.stringify(assignments)
             })
             .then((response) => response.json())
-            .then((json) => {dispatch(fetchThreadAssignments(id))});
+            .then((json) => {dispatch(fetchThreadAssignments(id)); dispatch(fetchThread(id))});
     };
 }
 
@@ -94,11 +94,11 @@ export function createDraft(thread_id,mode) {
             .then((json) => {dispatch(fetchThread(thread_id))});
     };
 }
-export function saveDraft(draft) {
+export function updateDraft(draft,action) {
     //todo: errors
     return (dispatch) => {
         const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/drafts/${draft.id}?token=${token}`,
+        return fetch(`${API_BASE_URL}/drafts/${draft.id}?token=${token}&action=${action}`,
             {
                 method: 'PUT',
                 body: JSON.stringify(draft)

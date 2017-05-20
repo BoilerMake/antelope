@@ -14,6 +14,7 @@ export default class Draft extends Component {
         this.onEditorStateChange = this.onEditorStateChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
         this.saveDraft = this.saveDraft.bind(this);
+        this.sendDraft = this.sendDraft.bind(this);
     }
     onEditorStateChange(editorState) {
         const markup = draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -49,7 +50,13 @@ export default class Draft extends Component {
         let draft = this.props.draft;
         draft.body = this.state.markup;
         console.log(draft);
-        this.props.save(draft);
+        this.props.update(draft,"save");
+    }
+    sendDraft() {
+        let draft = this.props.draft;
+        draft.body = this.state.markup;
+        console.log(draft);
+        this.props.update(draft,"send");
     }
     render () {
         let editingView = (
@@ -60,6 +67,7 @@ export default class Draft extends Component {
                 />
                 <button className="btn-primary" onClick={this.saveDraft}>Save</button>
                 <button className="btn-primary" onClick={this.toggleEditing}>Close</button>
+                <button className="btn-primary" onClick={this.sendDraft}>Send</button>
         </div>);
         let displayView = (
             <div>

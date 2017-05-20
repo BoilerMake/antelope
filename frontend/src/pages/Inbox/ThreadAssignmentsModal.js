@@ -10,12 +10,10 @@ export default class ThreadAssignmentsModal extends Component {
         };
     }
     componentDidMount() {
-        console.log('aba');
         this.props.fetch();
         this.setState({assignments: this.props.thread.assignments || []});
     }
     componentDidUpdate(prevProps) {
-        console.log("asdasda");
         if((prevProps.thread.assignments !== this.props.thread.assignments) && this.state.assignments.length === 0)
             this.setState({assignments: this.props.thread.assignments || []});
     }
@@ -27,8 +25,6 @@ export default class ThreadAssignmentsModal extends Component {
             ...a,
             [userId]: b
         }});
-        // this.setState({assignments: update(this.state.assignments, {index: {assigned_to_thread: {$set: !this.state.assignments[index].assigned_to_thread}}})})
-        // this.setState({assignments: [...this.state.assignments, this.state.assignments[index] = {'b'}]})
     }
     saveData() {
         this.props.updateAssignments(this.state.assignments);

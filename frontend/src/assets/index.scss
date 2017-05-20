@@ -13,6 +13,7 @@ body {
 $primary: #EC7B65;
 $secondary: #45A7B9;
 $sidebar-bg: #2D353A;
+$sidebar-bg-hover: #19232c;
 $sidebar-bg-active: #111a1f;
 $light-bg: #EDECED;
 $active-text: #F3F3F3;
@@ -30,7 +31,7 @@ $active-text: #F3F3F3;
 }
 .col.center {
 //why 1 0 not 0 0
-  flex: 1 0 290px;
+  flex: 0 0 330px;
 }
 .col.right {
   background-color: $light-bg;
@@ -263,6 +264,9 @@ $active-text: #F3F3F3;
 }
 .sidebar-item-wrapper.active-item {
   background-color: $sidebar-bg-active;
+}
+.sidebar-item-wrapper:hover {
+  background-color: $sidebar-bg-hover;
 }
 .sidebar-item {
   width: 100%;

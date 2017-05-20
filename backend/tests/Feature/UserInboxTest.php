@@ -144,7 +144,7 @@ class UserInboxTest extends TestCase
         $this->assertEquals(2, count($response->json()['data']['user_events']));
     }
 
-    public function testCreateSaveDraft()
+    public function testCreateSaveSendDraft()
     {
         $user = factory(User::class)->create();
         $inbox = TestCase::makeSeededInbox();
@@ -165,6 +165,7 @@ class UserInboxTest extends TestCase
 
         //assign user2 to the thread.
         $data['body'] = '<p>newhtml</p>';
+        $data['action'] = 'send';
         $response = $this->json('PUT', "/drafts/{$data['id']}", $data, ['Authorization'=>'Bearer '.$token]);
         $response
             ->assertStatus(200)

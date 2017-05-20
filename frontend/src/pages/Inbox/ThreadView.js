@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import MessageItem from './MessageItem';
 import Draft from './Draft';
+import moment from 'moment';
 import ThreadAssignmentsModal from './ThreadAssignmentsModal';
 class ThreadView extends Component {
     constructor () {
@@ -29,13 +30,16 @@ class ThreadView extends Component {
     }
     render () {
         const UserEvent = ({event}) => {
+            const date = moment.utc(event.created_at,'YYYY-MM-DD HH:mm:ss').local();
+            let dateString = date.calendar();
+
             switch (event.type) {
                 case 'assign_thread':
-                    return (<div><strong>{event.user.displayName}</strong> <i>assigned</i> the thread to <strong>{event.target.displayName}</strong></div>)
+                    return (<div><strong>{event.user.displayName}</strong> <i>assigned</i> the thread to <strong>{event.target.displayName}</strong> {dateString}</div>)
                 case 'unassign_thread':
-                    return (<div><strong>{event.user.displayName}</strong> <i>unassigned</i> the thread to <strong>{event.target.displayName}</strong></div>)
+                    return (<div><strong>{event.user.displayName}</strong> <i>unassigned</i> the thread to <strong>{event.target.displayName}</strong> {dateString}</div>)
                 default:
-                    return (<div>{`<strong>${event.user.displayName} ${event.type}`}</div>);
+                    return (<div><strong>{event.user.displayName}</strong> {event.type} {dateString}</div>);
             }
         };
         const mobileBackLink = (this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>);
@@ -63,17 +67,17 @@ class ThreadView extends Component {
         let threadContents = thread.contents;
         let messageList = threadContents.messages.map(message => {
             return(
-                <MessageItem message={message} key={message.id}/>
+                <MessageItem message={message} key={"m"+message.id}/>
             )
         });
         let userEventList = threadContents.user_events.map(e => {
             return(
-                <UserEvent event={e}/>
+                <UserEvent event={e} key={"e"+e.id}/>
             )
         });
         let draftList = threadContents.drafts.map(d => {
             return(
-                <Draft draft={d} save={this.props.saveDraft}/>
+                <Draft draft={d} update={this.props.updateDraft} key={"d"+d.id}/>
             )
         });
 
@@ -127,7 +131,7 @@ function mapStateToProps (state) {
         thread: state.thread
     };
 }
-import { fetchThread, fetchThreadAssignments, updateThreadAssignments, createDraft, saveDraft } from '../../actions/thread'
+import { fetchThread, fetchThreadAssignments, updateThreadAssignments, createDraft, updateDraft } from '../../actions/thread'
 const mapDispatchToProps = (dispatch, ownProps) => ({
     fetchThread: (threadId) => {
         dispatch(fetchThread(threadId));
@@ -141,8 +145,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     createDraft: (threadId,data) => {
         dispatch(createDraft(threadId,data));
     },
-    saveDraft: (draft) => {
-        dispatch(saveDraft(draft));
+    updateDraft: (draft,action) => {
+        dispatch(updateDraft(draft,action));
     }
 });
 
