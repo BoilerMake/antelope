@@ -29,7 +29,8 @@ $active-text: #F3F3F3;
   background-color: $sidebar-bg;
 }
 .col.center {
-  flex: 1 0 290px//why 1 0 not 0 0
+//why 1 0 not 0 0
+  flex: 1 0 290px;
 }
 .col.right {
   background-color: $light-bg;
