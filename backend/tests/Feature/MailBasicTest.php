@@ -32,17 +32,17 @@ class MailBasicTest extends TestCase
         $fromEmail = $faker->email;
         $messageId1 = "<{$faker->uuid}@mail.domain.com>";
         $response = $this->json('POST', '/mailgunhook', [
-            'from' => "{$faker->name} <{$fromEmail}>",
-            'sender' => $fromEmail,
-            'subject' => $faker->sentence(),
-            'recipient' => $faker->email,
-            'Message-Id' => $messageId1,
-            'body-plain' => 'txt',
-            'body-html' => $faker->randomHtml(),
-            'References' => '',
-            'In-Reply-To' => '',
+            'from'            => "{$faker->name} <{$fromEmail}>",
+            'sender'          => $fromEmail,
+            'subject'         => $faker->sentence(),
+            'recipient'       => $faker->email,
+            'Message-Id'      => $messageId1,
+            'body-plain'      => 'txt',
+            'body-html'       => $faker->randomHtml(),
+            'References'      => '',
+            'In-Reply-To'     => '',
             'message-headers' => '',
-            'timestamp' => '123',
+            'timestamp'       => '123',
         ]);
         $response
             ->assertJson([
@@ -53,17 +53,17 @@ class MailBasicTest extends TestCase
         $fromEmail = $faker->email;
         $messageId2 = "<{$faker->uuid}@mail.domain.com>";
         $response = $this->json('POST', '/mailgunhook', [
-            'from' => "{$faker->name} <{$fromEmail}>",
-            'sender' => $fromEmail,
-            'subject' => "Re: {$faker->sentence()}",
-            'recipient' => $faker->email,
-            'Message-Id' => $messageId2,
-            'body-plain' => 'txt',
-            'body-html' => $faker->randomHtml(),
-            'References' => '',
-            'In-Reply-To' => $messageId1,
+            'from'            => "{$faker->name} <{$fromEmail}>",
+            'sender'          => $fromEmail,
+            'subject'         => "Re: {$faker->sentence()}",
+            'recipient'       => $faker->email,
+            'Message-Id'      => $messageId2,
+            'body-plain'      => 'txt',
+            'body-html'       => $faker->randomHtml(),
+            'References'      => '',
+            'In-Reply-To'     => $messageId1,
             'message-headers' => '',
-            'timestamp' => '123',
+            'timestamp'       => '123',
         ]);
         $response
             ->assertJson([
@@ -93,14 +93,13 @@ class MailBasicTest extends TestCase
         $faker = \Faker\Factory::create();
         $response = $this->json('POST', '/mailgunevent', [
             'antelope-message-id' => factory(Message::class)->create()->id,
-            'recipient' => $faker->email,
-            'event' => 'opened',
-            'timestamp' => '123',
+            'recipient'           => $faker->email,
+            'event'               => 'opened',
+            'timestamp'           => '123',
         ]);
         $response
             ->assertJson([
                 'success' => true,
             ]);
-
     }
 }

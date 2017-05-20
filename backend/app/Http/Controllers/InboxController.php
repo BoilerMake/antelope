@@ -63,51 +63,56 @@ class InboxController extends Controller
 
         return response()->success($thread);
     }
+
     public function getAssignments($thread_id)
     {
         return response()->success(Thread::find($thread_id)->getAssignedUsers());
     }
+
     public function putAssignments($thread_id)
     {
         $user = Auth::user();
         $thread = Thread::find($thread_id);
-        $data = json_decode(Request::getContent(),true);
+        $data = json_decode(Request::getContent(), true);
         foreach ($thread->getAssignedUsers() as $k => $assignedUser) {
             $currentState = $assignedUser['assigned_to_thread'];
             $newState = $data[$k]['assigned_to_thread'];
-            if(!$currentState && $newState) {
+            if (!$currentState && $newState) {
                 Log::info('assign '.$k);
                 $thread->users()->attach($k);
-                $user->recordThreadEvent($thread,UserEvent::TYPE_ASSIGN_THREAD,$k);
-            }
-            else if($currentState && !$newState) {
+                $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $k);
+            } elseif ($currentState && !$newState) {
                 Log::info('unassign '.$k);
                 $thread->users()->detach($k);
-                $user->recordThreadEvent($thread,UserEvent::TYPE_UNASSIGN_THREAD,$k);
+                $user->recordThreadEvent($thread, UserEvent::TYPE_UNASSIGN_THREAD, $k);
             }
         }
 
         return response()->success($data);
     }
-    public function createDraft($thread_id,$mode='reply')
+
+    public function createDraft($thread_id, $mode = 'reply')
     {
         $thread = Thread::find($thread_id);
         $user = Auth::user();
-        $signature = "user #{$user->id} signature";//todo
+        $signature = "user #{$user->id} signature"; //todo
         $d = Draft::create([
-            'user_id'=>$user->id,
-            'thread_id'=>$thread_id,
-            "body"=>"<br/><br/>".$signature
+            'user_id'  => $user->id,
+            'thread_id'=> $thread_id,
+            'body'     => '<br/><br/>'.$signature,
         ]);
         $user->recordThreadEvent($thread, UserEvent::TYPE_CREATE_DRAFT);
+
         return response()->success($d);
     }
+
     public function updateDraft($draft_id)
     {
-        $draft = Draft::find($draft_id);//todo: fancy model hinting
-        $data = json_decode(Request::getContent(),true);
+        $draft = Draft::find($draft_id); //todo: fancy model hinting
+        $data = json_decode(Request::getContent(), true);
         $draft->body = $data['body'];
         $draft->save();
+
         return response()->success($draft);
     }
 }

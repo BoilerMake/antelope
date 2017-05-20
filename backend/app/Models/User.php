@@ -36,8 +36,9 @@ class User extends Authenticatable
 
     public function getDisplayNameAttribute()
     {
-//        return "{$this->first_name} {$this->last_name} (#{$this->id})";
-        $last = substr($this->last_name,0,1);
+        //        return "{$this->first_name} {$this->last_name} (#{$this->id})";
+        $last = substr($this->last_name, 0, 1);
+
         return "{$this->first_name} {$last}";
     }
 
@@ -98,15 +99,15 @@ class User extends Authenticatable
     {
         return self::getInboxIdsByPermission()['all_ids'];
     }
+
     public function recordThreadEvent(Thread $thread, $type, $target_user_id = null)
     {
         return UserEvent::create([
-            'user_id'=>$this->id,
-            'thread_id'=>$thread->id,
-            'inbox_id'=>$thread->inbox_id,
-            'target_user_id'=>$target_user_id,
-            'type'=>$type,
+            'user_id'       => $this->id,
+            'thread_id'     => $thread->id,
+            'inbox_id'      => $thread->inbox_id,
+            'target_user_id'=> $target_user_id,
+            'type'          => $type,
         ]);
-
     }
 }

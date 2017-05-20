@@ -26,9 +26,10 @@ class UsersController extends Controller
     {
         $user = Auth::user();
         $inboxes = Inbox::select('id', 'name')->findMany($user->getInboxIds());
-        $totalCountNew = $inboxes->reduce(function($carry, $item) {
-            return $carry+$item->countNew;
+        $totalCountNew = $inboxes->reduce(function ($carry, $item) {
+            return $carry + $item->countNew;
         });
+
         return response()->success(array_merge(
             [['id'=>0, 'name'=>'All Inboxes', 'countNew'=>$totalCountNew]],//all user-inbox combined
             $inboxes->toArray()

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Group;
 use App\Models\Inbox;
-use App\Models\Message;
 use App\Models\Thread;
 use App\Models\User;
 use App\Models\UserEvent;
@@ -19,14 +18,14 @@ class UserInboxTest extends TestCase
     {
         $inbox = self::makeSeededInbox(4);
         $user = factory(User::class)->create();
-        self::connectUserToInbox($user,$inbox);
+        self::connectUserToInbox($user, $inbox);
         $token = $user->getToken();
         $response = $this->json('GET', '/users/me/inboxes', [], ['Authorization'=>'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'data'    => [['id'=>0],['id'=>$inbox->id]],
+                'data'    => [['id'=>0], ['id'=>$inbox->id]],
             ]);
     }
 
@@ -35,10 +34,9 @@ class UserInboxTest extends TestCase
      */
     public function testGetSingleInboxById()
     {
-
         $inbox = self::makeSeededInbox(4);
         $user = factory(User::class)->create();
-        self::connectUserToInbox($user,$inbox);
+        self::connectUserToInbox($user, $inbox);
         $token = $user->getToken();
         $response = $this->json('GET', '/inbox/'.$inbox->id, [], ['Authorization'=>'Bearer '.$token]);
         $response
@@ -47,7 +45,7 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(4,count($response->json()['data']['threads']));
+        $this->assertEquals(4, count($response->json()['data']['threads']));
     }
 
     /**
@@ -58,8 +56,8 @@ class UserInboxTest extends TestCase
         $inbox = self::makeSeededInbox(4);
         $inbox_2 = self::makeSeededInbox(3);
         $user = factory(User::class)->create();
-        self::connectUserToInbox($user,$inbox);
-        self::connectUserToInbox($user,$inbox_2);
+        self::connectUserToInbox($user, $inbox);
+        self::connectUserToInbox($user, $inbox_2);
         $token = $user->getToken();
         $response = $this->json('GET', '/inbox/0', [], ['Authorization'=>'Bearer '.$token]);
         $response
@@ -68,7 +66,7 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(7,count($response->json()['data']['threads']));
+        $this->assertEquals(7, count($response->json()['data']['threads']));
     }
 
     /**
@@ -76,9 +74,9 @@ class UserInboxTest extends TestCase
      */
     public function testGetThread()
     {
-        $inbox = self::makeSeededInbox(1,5);
+        $inbox = self::makeSeededInbox(1, 5);
         $user = factory(User::class)->create();
-        self::connectUserToInbox($user,$inbox);
+        self::connectUserToInbox($user, $inbox);
         $token = $user->getToken();
         $response = $this->json('GET', '/thread/'.$inbox->threads[0]->id, [], ['Authorization'=>'Bearer '.$token]);
         $response
@@ -87,7 +85,7 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(5,count($response->json()['data']['messages']));
+        $this->assertEquals(5, count($response->json()['data']['messages']));
     }
 
     public function testChangeThreadAssignments()
@@ -96,9 +94,9 @@ class UserInboxTest extends TestCase
         $user2 = factory(User::class)->create();
         $user3 = factory(User::class)->create();
         $inbox = TestCase::makeSeededInbox();
-        TestCase::connectUserToInbox($user1,$inbox);
-        TestCase::connectUserToInbox($user2,$inbox);
-        TestCase::connectUserToInbox($user3,$inbox,Group::INBOX_PERMISSION_READONLY);
+        TestCase::connectUserToInbox($user1, $inbox);
+        TestCase::connectUserToInbox($user2, $inbox);
+        TestCase::connectUserToInbox($user3, $inbox, Group::INBOX_PERMISSION_READONLY);
         $thread_id = $inbox->threads[0]->id;
         $token = $user1->getToken();
         $response = $this->json('GET', "/thread/{$thread_id}/assignments", [], ['Authorization'=>'Bearer '.$token]);
@@ -110,7 +108,7 @@ class UserInboxTest extends TestCase
 
         //only 2 users have READWRITE permission
         $data = $response->json()['data'];
-        $this->assertEquals(2,count($data));
+        $this->assertEquals(2, count($data));
 
         //assign user2 to the thread.
         $data[$user2->id]['assigned_to_thread'] = true;
@@ -120,10 +118,9 @@ class UserInboxTest extends TestCase
             ->assertJson([
                 'success' => true,
             ]);
-        $this->assertDatabaseHas('thread_user',['thread_id'=>$thread_id,'user_id'=>$user2->id]);
-        $this->assertDatabaseMissing('thread_user',['thread_id'=>$thread_id,'user_id'=>$user1->id]);
-        $this->assertDatabaseHas('user_events',['user_id'=>$user1->id,'thread_id'=>$thread_id,'target_user_id'=>$user2->id,'type'=>UserEvent::TYPE_ASSIGN_THREAD]);
-
+        $this->assertDatabaseHas('thread_user', ['thread_id'=>$thread_id, 'user_id'=>$user2->id]);
+        $this->assertDatabaseMissing('thread_user', ['thread_id'=>$thread_id, 'user_id'=>$user1->id]);
+        $this->assertDatabaseHas('user_events', ['user_id'=>$user1->id, 'thread_id'=>$thread_id, 'target_user_id'=>$user2->id, 'type'=>UserEvent::TYPE_ASSIGN_THREAD]);
 
         //unassign user2 to the thread.
         $data[$user2->id]['assigned_to_thread'] = false;
@@ -133,10 +130,9 @@ class UserInboxTest extends TestCase
             ->assertJson([
                 'success' => true,
             ]);
-        $this->assertDatabaseMissing('thread_user',['thread_id'=>$thread_id,'user_id'=>$user2->id]);
-        $this->assertDatabaseMissing('thread_user',['thread_id'=>$thread_id,'user_id'=>$user1->id]);
-        $this->assertDatabaseHas('user_events',['user_id'=>$user1->id,'thread_id'=>$thread_id,'target_user_id'=>$user2->id,'type'=>UserEvent::TYPE_UNASSIGN_THREAD]);
-
+        $this->assertDatabaseMissing('thread_user', ['thread_id'=>$thread_id, 'user_id'=>$user2->id]);
+        $this->assertDatabaseMissing('thread_user', ['thread_id'=>$thread_id, 'user_id'=>$user1->id]);
+        $this->assertDatabaseHas('user_events', ['user_id'=>$user1->id, 'thread_id'=>$thread_id, 'target_user_id'=>$user2->id, 'type'=>UserEvent::TYPE_UNASSIGN_THREAD]);
 
         $response = $this->json('GET', '/thread/'.$thread_id, [], ['Authorization'=>'Bearer '.$token]);
         $response
@@ -145,15 +141,14 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertEquals(2,count($response->json()['data']['user_events']));
-
-
+        $this->assertEquals(2, count($response->json()['data']['user_events']));
     }
+
     public function testCreateSaveDraft()
     {
         $user = factory(User::class)->create();
         $inbox = TestCase::makeSeededInbox();
-        TestCase::connectUserToInbox($user,$inbox);
+        TestCase::connectUserToInbox($user, $inbox);
         $thread_id = $inbox->threads[0]->id;
         $token = $user->getToken();
         $response = $this->json('POST', "/thread/{$thread_id}/drafts", [], ['Authorization'=>'Bearer '.$token]);
@@ -163,11 +158,10 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertDatabaseHas('user_events',['user_id'=>$user->id,'thread_id'=>$thread_id,'type'=>UserEvent::TYPE_CREATE_DRAFT]);
+        $this->assertDatabaseHas('user_events', ['user_id'=>$user->id, 'thread_id'=>$thread_id, 'type'=>UserEvent::TYPE_CREATE_DRAFT]);
 
         $data = $response->json()['data'];
         //todo: check user signature is in there
-
 
         //assign user2 to the thread.
         $data['body'] = '<p>newhtml</p>';
@@ -177,7 +171,6 @@ class UserInboxTest extends TestCase
             ->assertJson([
                 'success' => true,
             ]);
-        $this->assertDatabaseHas('drafts',['thread_id'=>$thread_id,'body'=>$data['body']]);
-
+        $this->assertDatabaseHas('drafts', ['thread_id'=>$thread_id, 'body'=>$data['body']]);
     }
 }
