@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import MessageItem from './MessageItem';
+import Draft from './Draft';
 import ThreadAssignmentsModal from './ThreadAssignmentsModal';
 class ThreadView extends Component {
     constructor () {
@@ -69,6 +70,11 @@ class ThreadView extends Component {
                 <UserEvent event={e}/>
             )
         });
+        let draftList = threadContents.drafts.map(d => {
+            return(
+                <Draft draft={d} save={this.props.saveDraft}/>
+            )
+        });
 
         let AssignmentsModal = (<ThreadAssignmentsModal
             isOpen={this.state.showAssignmentsModal}
@@ -98,10 +104,12 @@ class ThreadView extends Component {
                     <hr/>
                     {messageList}
                     <div className="threadview-footer">
-                        <button className="btn-primary">Reply All</button>
-                        <button className="btn-primary">Reply</button>
+                        <button className="btn-primary" onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
+                        <button className="btn-primary" onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
                     </div>
                     {userEventList}
+                    {draftList}
+
                     {/*<pre>{JSON.stringify(thread.contents.user_events,null, 2)}</pre>*/}
                     {/*<div style={{width: '50%', backgroundColor: 'grey'}}>50% width</div>*/}
                 </div>
@@ -118,7 +126,7 @@ function mapStateToProps (state) {
         thread: state.thread
     };
 }
-import { fetchThread, fetchThreadAssignments, updateThreadAssignments } from '../../actions/thread'
+import { fetchThread, fetchThreadAssignments, updateThreadAssignments, createDraft, saveDraft } from '../../actions/thread'
 const mapDispatchToProps = (dispatch, ownProps) => ({
     fetchThread: (threadId) => {
         dispatch(fetchThread(threadId));
@@ -128,6 +136,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     },
     updateThreadAssignments: (threadId,data) => {
         dispatch(updateThreadAssignments(threadId,data));
+    },
+    createDraft: (threadId,data) => {
+        dispatch(createDraft(threadId,data));
+    },
+    saveDraft: (draft) => {
+        dispatch(saveDraft(draft));
     }
 });
 

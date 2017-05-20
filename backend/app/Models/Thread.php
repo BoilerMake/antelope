@@ -31,6 +31,11 @@ class Thread extends Model
     {
         return $this->belongsToMany('App\Models\User');
     }
+    public function drafts()
+    {
+        return $this->hasMany('App\Models\Draft');
+    }
+
 
     /**
      * Provides a snippet, to be used for the thread list.

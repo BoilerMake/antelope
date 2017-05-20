@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Draft;
 use App\Models\Inbox;
 use App\Models\Thread;
-use App\Models\User;
 use App\Models\UserEvent;
 use Auth;
-use function GuzzleHttp\Psr7\str;
 use Log;
 use Request;
 
@@ -55,7 +54,12 @@ class InboxController extends Controller
     {
         //todo: check permissions, maybe via middleware?
         $user = Auth::user();
-        $thread = Thread::with('messages.events','users','userEvents.user','userEvents.target')->find($thread_id);
+        $thread = Thread::with(
+            'messages.events',
+            'users',
+            'userEvents.user',
+            'userEvents.target',
+            'drafts')->find($thread_id);
 
         return response()->success($thread);
     }
@@ -84,5 +88,26 @@ class InboxController extends Controller
         }
 
         return response()->success($data);
+    }
+    public function createDraft($thread_id,$mode='reply')
+    {
+        $thread = Thread::find($thread_id);
+        $user = Auth::user();
+        $signature = "user #{$user->id} signature";//todo
+        $d = Draft::create([
+            'user_id'=>$user->id,
+            'thread_id'=>$thread_id,
+            "body"=>"<br/><br/>".$signature
+        ]);
+        $user->recordThreadEvent($thread, UserEvent::TYPE_CREATE_DRAFT);
+        return response()->success($d);
+    }
+    public function updateDraft($draft_id)
+    {
+        $draft = Draft::find($draft_id);//todo: fancy model hinting
+        $data = json_decode(Request::getContent(),true);
+        $draft->body = $data['body'];
+        $draft->save();
+        return response()->success($draft);
     }
 }

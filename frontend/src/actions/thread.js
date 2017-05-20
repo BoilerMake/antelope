@@ -80,3 +80,30 @@ export function updateThreadAssignments(id,assignments) {
             .then((json) => {dispatch(fetchThreadAssignments(id))});
     };
 }
+
+
+export function createDraft(thread_id,mode) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/thread/${thread_id}/drafts?token=${token}`,
+            {
+                method: 'POST',
+                body: JSON.stringify(mode)
+            })
+            .then((response) => response.json())
+            .then((json) => {dispatch(fetchThread(thread_id))});
+    };
+}
+export function saveDraft(draft) {
+    //todo: errors
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/drafts/${draft.id}?token=${token}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(draft)
+            })
+            .then((response) => response.json())
+            .then((json) => {dispatch(fetchThread(draft.thread_id))});
+    };
+}

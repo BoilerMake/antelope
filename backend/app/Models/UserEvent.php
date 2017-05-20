@@ -8,6 +8,7 @@ class UserEvent extends Model
 {
     const TYPE_ASSIGN_THREAD = 'assign_thread';
     const TYPE_UNASSIGN_THREAD = 'unassign_thread';
+    const TYPE_CREATE_DRAFT = 'create_draft';
     protected $guarded = ['id'];
     public function user()
     {
