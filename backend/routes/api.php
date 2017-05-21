@@ -44,3 +44,8 @@ Route::group(['middleware'=>['jwt.auth'], 'prefix' => 'users/me'], function () {
     Route::get('/', 'UsersController@getMe');
     Route::get('inboxes', 'UsersController@getInboxes');
 });
+
+
+Route::group(['middleware'=>['jwt.auth','adminOnly'], 'prefix' => 'settings'], function () {
+    Route::get('inboxes', 'SettingsController@getInboxes');
+});

@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Inbox from './pages/Inbox';
+import Settings from './pages/Settings';
 
 
 
@@ -40,6 +41,7 @@ const Routes = () => (
         <UserRoute path="/dashboard" component={Dashboard}/>
         <Route exact path="/inbox/" render={() => (<Redirect to="/inbox/0"/>)}/>
         <UserRoute path="/inbox/:inboxId/:threadId?" component={Inbox}/>
+        <UserRoute path="/settings/:category?" component={Settings}/>
     </div>
 );
 

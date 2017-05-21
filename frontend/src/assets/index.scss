@@ -307,8 +307,30 @@ $active-text: #F3F3F3;
 }
 
 
+/** SETTINGS **/
+
+.settingsWrapper {
+  background-color: #1C1F22;
+  color: $active-text;
+}
+
+.settingsHeaderText {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 29px;
+  color: #FFFFFF;
+  letter-spacing: -0.26px;
+}
 
 
+.settingsHR {
+  display: block;
+  height: 2px;
+  border: 0;
+  border-top: 2px solid $primary;
+  margin: 1em 0;
+  padding: 0;
+}
 .btn-primary {
   background: $primary;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
