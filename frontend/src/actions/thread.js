@@ -23,13 +23,9 @@ function requestThread (id) {
 }
 
 function receiveThread (json,id) {
-    //todo: good errors
-    // if ('error' in json) {
-    //     json = null;
-    // }
     return {
         type: RECEIVE_THREAD,
-        data: json.data,
+        json,
         id,
         receivedAt: Date.now()
     };

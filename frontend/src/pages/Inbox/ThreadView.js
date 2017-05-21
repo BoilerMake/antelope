@@ -44,6 +44,7 @@ class ThreadView extends Component {
         };
         const mobileBackLink = (this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>);
         const threadId = this.props.threadId;
+        let thread = this.props.thread[threadId];
         if(threadId===null){
             return (
                 <div className="col right">
@@ -54,7 +55,7 @@ class ThreadView extends Component {
                 </div>
             );
         }
-        if(this.props.thread[threadId]===undefined || this.props.thread[threadId].contents === undefined)
+        if(thread===undefined || (thread.contents === undefined && !thread.isError))
             return (
                 <div className="col right">
                     <div className="col-bottom">
@@ -63,7 +64,15 @@ class ThreadView extends Component {
                     </div>
                 </div>
             );
-        let thread = this.props.thread[threadId];
+        if(thread.isError)
+            return (
+                <div className="col right">
+                    <div className="col-bottom">
+                        {mobileBackLink}
+                        <h2>Error! {thread.error_message}</h2>
+                    </div>
+                </div>
+            );
         let threadContents = thread.contents;
         let messageList = threadContents.messages.map(message => {
             return(

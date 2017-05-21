@@ -17,13 +17,25 @@ export default function (state = INITIAL_STATE, action) {
                 [id]: {...state[id], isFetching: true}
             };
         case RECEIVE_THREAD:
-            //todo: error checking
+            if(action.json.success) {
+                return {
+                    ...state,
+                    [id]: {
+                        ...state[id],
+                        contents: action.json.data,
+                        isFetching: false,
+                        isError: false,
+                        error_message: null
+                    }
+                };
+            }
             return {
                 ...state,
                 [id]: {
                     ...state[id],
-                    contents: action.data,
-                    isFetching: false
+                    isFetching: false,
+                    isError: true,
+                    error_message: action.json.message
                 }
             };
         case REQUEST_THREAD_ASSIGNMENTS:

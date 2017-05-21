@@ -12,16 +12,28 @@ export default function (state = INITIAL_STATE, action) {
         case REQUEST_INBOX:
             return {
                 ...state,
-                [id]: {...state[id], isFetching: true}
+                [id]: {...state[id], isFetching: true, isError: false}
             };
         case RECEIVE_INBOX:
-            //todo: error checking
+            if(action.json.success) {
+                return {
+                    ...state,
+                    [id]: {
+                        ...state[id],
+                        contents: action.json.data,
+                        isFetching: false,
+                        isError: false,
+                        error_message: null
+                    }
+                };
+            }
             return {
                 ...state,
                 [id]: {
                     ...state[id],
-                    contents: action.data,
-                    isFetching: true
+                    isFetching: false,
+                    isError: true,
+                    error_message: action.json.message
                 }
             };
         default:

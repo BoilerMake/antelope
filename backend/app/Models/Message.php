@@ -39,6 +39,8 @@ class Message extends Model
         $replying_to_message_id = $this->message_id;
         $threadId = $this->thread_id;
 
+        Thread::find($this->thread_id)->update(['state'=>Thread::STATE_IN_PROGRESS]);
+
         return self::sendMessage($to, $from, $subject, $body_html, $threadId, $user_id, $replying_to_message_id);
     }
 

@@ -22,13 +22,9 @@ function requestInbox (id) {
 }
 
 function receiveInbox (json,id) {
-    //todo: good errors
-    // if ('error' in json) {
-    //     json = null;
-    // }
     return {
         type: RECEIVE_INBOX,
-        data: json.data,
+        json,
         id,
         receivedAt: Date.now()
     };
