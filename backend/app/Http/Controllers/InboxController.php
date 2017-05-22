@@ -36,8 +36,6 @@ class InboxController extends Controller
         } else {
             if(!in_array($inbox_id,$user_inbox_ids))
                 return response()->error("You do not have permission to access this inbox.",null,403);
-            Log::info('good to go'.$inbox_id);
-            Log::info($user->id,$user_inbox_ids);
             $inboxName = Inbox::find($inbox_id)->name;
             $threads = Thread::getSorted([$inbox_id]);
         }

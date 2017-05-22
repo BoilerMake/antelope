@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inbox;
+use App\Models\User;
 use Auth;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class UsersController.
@@ -18,7 +18,6 @@ class UsersController extends Controller
      */
     public function getMe()
     {
-        //        return JWTAuth::parseToken()->authenticate();
         return response()->success(Auth::user());
     }
 

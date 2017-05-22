@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Inbox extends Model
 {
     protected $appends = ['countNew'];
+    protected $guarded = ['id'];
 
     public function getCountNewAttribute()
     {

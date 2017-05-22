@@ -26,3 +26,16 @@ function receiveSettingsInbox (json) {
         json: json
     };
 }
+
+export function putSettingsInboxes(inboxes) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/inboxes?token=${token}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(inboxes)
+            })
+            .then((response) => response.json())
+            .then((json) => dispatch(fetchSettingsInboxes()));
+    };
+}

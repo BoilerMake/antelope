@@ -8,6 +8,7 @@ class AdminOnly
 {
     /**
      * Handle an incoming request.
+     * Only allows users who have the is_admin flag.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
