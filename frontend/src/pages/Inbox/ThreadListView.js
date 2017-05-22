@@ -57,19 +57,19 @@ class ThreadListView extends Component {
                         <div>hi</div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon new"/>
-                            <div>23</div>
+                            <div>{inboxItem.contents.counts.new}</div>
                         </div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon assigned"/>
-                            <div>4</div>
+                            <div>{inboxItem.contents.counts.assigned}</div>
                         </div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon in-progress"/>
-                            <div>9</div>
+                            <div>{inboxItem.contents.counts['in-progress']}</div>
                         </div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon done"/>
-                            <div>591</div>
+                            <div>{inboxItem.contents.counts.done}</div>
                         </div>
                     </div>
                     </div>

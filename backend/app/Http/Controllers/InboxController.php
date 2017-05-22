@@ -26,24 +26,38 @@ class InboxController extends Controller
     public function getInbox($inbox_id)
     {
         //todo: proper sorting
-        //todo: check permissions, maybe via middleware?
+        //todo: pagination
         $user = Auth::user();
         $user_inbox_ids = $user->getInboxIds();
         if ($inbox_id == 0) {
             //we want to combine all the user's Inbox to act as the fake 0 inbox
             $threads = Thread::getSorted($user_inbox_ids);
             $inboxName = 'All Inboxes';
+            //get the counts for each inbox
+            //todo: this is kinda slow i think, maybe if we lightly cache this?
+            $allCounts = Inbox::find($user_inbox_ids)->map(function ($item) { return $item->counts();});
+            //now sum up all the counts
+            $counts = [];
+            foreach($allCounts as $item) {
+                foreach($item as $k => $v) {
+                    if(array_key_exists($k, $counts)) $counts[$k] += $v;
+                    else $counts[$k] = $v;
+                }
+            };
         } else {
             if(!in_array($inbox_id,$user_inbox_ids))
                 return response()->error("You do not have permission to access this inbox.",null,403);
+            $inbox = Inbox::find($inbox_id);
             $inboxName = Inbox::find($inbox_id)->name;
             $threads = Thread::getSorted([$inbox_id]);
+            $counts = $inbox->counts();
         }
 
         return response()->success([
             'id'     => $inbox_id,
             'name'   => $inboxName,
             'threads'=> $threads,
+            'counts' => $counts
         ]);
     }
 
@@ -131,7 +145,7 @@ class InboxController extends Controller
         if(!in_array($thread->inbox_id,$user->getReadWriteInboxIds()))
             return response()->error("You do not have permission to create a draft in this inbox",null,403);
         //creating a draft will auto assign you to the thread
-        $thread->users()->attach($user->id);
+        $thread->users()->syncWithoutDetaching($user->id);
         $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $user->id);
 
         //Drafts just start as your signature.
