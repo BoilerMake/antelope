@@ -12,16 +12,13 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    public static function makeSeededInbox($numThreads = 5, $numMessagesPerThread = 3)
+    public static function makeSeededInbox($numThreads = 3, $numMessagesPerThread = 3)
     {
         $inbox = factory(Inbox::class)->create();
         for ($a = 0; $a < $numThreads; $a++) {
-            $thread = factory(Thread::class)->create();
-            for ($b = 0; $b < $numMessagesPerThread; $b++) {
-                $message = factory(Message::class)->create();
-                $thread->messages()->save($message);
-            }
-            $inbox->threads()->save($thread);
+            $thread = factory(Thread::class)->create(['inbox_id'=>$inbox->id]);
+            for ($b = 0; $b < $numMessagesPerThread; $b++)
+                factory(Message::class)->create(['thread_id'=>$thread->id]);
         }
 
         return $inbox->load('threads.messages');
