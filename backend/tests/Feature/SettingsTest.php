@@ -16,7 +16,7 @@ class SettingsTest extends TestCase
         $user->is_admin = true;
         $user->save();
         $token = $user->getToken();
-        $response = $this->json('GET', "/settings/inboxes", [], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('GET', '/settings/inboxes', [], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertJson([
                 'success' => true,
@@ -31,7 +31,7 @@ class SettingsTest extends TestCase
     {
         $user = factory(User::class)->create();
         $token = $user->getToken();
-        $response = $this->json('GET', "/settings/inboxes", [], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('GET', '/settings/inboxes', [], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(403)
             ->assertJson([
@@ -40,7 +40,7 @@ class SettingsTest extends TestCase
     }
 
     /**
-     * Should be able to change properties of an inbox, as well as create an inbox
+     * Should be able to change properties of an inbox, as well as create an inbox.
      */
     public function testCreateUpdateInboxSettings()
     {
@@ -49,7 +49,7 @@ class SettingsTest extends TestCase
         $user->is_admin = true;
         $user->save();
         $token = $user->getToken();
-        $response = $this->json('GET', "/settings/inboxes", [], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('GET', '/settings/inboxes', [], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertJson([
                 'success' => true,
@@ -57,29 +57,29 @@ class SettingsTest extends TestCase
         $data = $response->json()['data'];
         $changedInboxName = $faker->firstName;
         $newInboxName = $faker->userName;
-        $data[0]['name']=$changedInboxName;
-        $data[]=[
-            'id'=> null,
-            'name'=> $newInboxName,
-            'regex'=> "regex",
+        $data[0]['name'] = $changedInboxName;
+        $data[] = [
+            'id'             => null,
+            'name'           => $newInboxName,
+            'regex'          => 'regex',
             'primary_address'=> $faker->email,
         ];
-        $response = $this->json('PUT', "/settings/inboxes", $data, ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('PUT', '/settings/inboxes', $data, ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertJson([
                 'success' => true,
             ]);
-        $this->assertDatabaseHas('inboxes',['id'=>$data[0]['id'], 'name'=>$changedInboxName]);
-        $this->assertDatabaseHas('inboxes',['name'=>$newInboxName]);
-
+        $this->assertDatabaseHas('inboxes', ['id'=>$data[0]['id'], 'name'=>$changedInboxName]);
+        $this->assertDatabaseHas('inboxes', ['name'=>$newInboxName]);
     }
+
     public function testGetUserEvents()
     {
         $user = factory(User::class)->create();
         $user->is_admin = true;
         $user->save();
         $token = $user->getToken();
-        $response = $this->json('GET', "/settings/userevents", [], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('GET', '/settings/userevents', [], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertJson([
                 'success' => true,

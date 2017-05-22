@@ -99,6 +99,7 @@ class User extends Authenticatable
     {
         return self::getInboxIdsByPermission()['all_ids'];
     }
+
     public function getReadWriteInboxIds()
     {
         return self::getInboxIdsByPermission()['readWrite_ids'];

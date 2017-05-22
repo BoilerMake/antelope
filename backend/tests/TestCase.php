@@ -17,8 +17,9 @@ abstract class TestCase extends BaseTestCase
         $inbox = factory(Inbox::class)->create();
         for ($a = 0; $a < $numThreads; $a++) {
             $thread = factory(Thread::class)->create(['inbox_id'=>$inbox->id]);
-            for ($b = 0; $b < $numMessagesPerThread; $b++)
+            for ($b = 0; $b < $numMessagesPerThread; $b++) {
                 factory(Message::class)->create(['thread_id'=>$thread->id]);
+            }
         }
 
         return $inbox->load('threads.messages');
