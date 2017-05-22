@@ -7,7 +7,6 @@ use App\Models\Inbox;
 use App\Models\Thread;
 use App\Models\UserEvent;
 use Auth;
-use Log;
 use Request;
 
 /**
@@ -18,7 +17,8 @@ class InboxController extends Controller
 {
     /**
      * Gets contents of an inbox.
-     * PERMISSIONS: you can only get an inbox if you have read or readwrite permissions
+     * PERMISSIONS: you can only get an inbox if you have read or readwrite permissions.
+     *
      * @param $inbox_id
      *
      * @return mixed
@@ -35,18 +35,24 @@ class InboxController extends Controller
             $inboxName = 'All Inboxes';
             //get the counts for each inbox
             //todo: this is kinda slow i think, maybe if we lightly cache this?
-            $allCounts = Inbox::find($user_inbox_ids)->map(function ($item) { return $item->counts();});
+            $allCounts = Inbox::find($user_inbox_ids)->map(function ($item) {
+                return $item->counts();
+            });
             //now sum up all the counts
             $counts = [];
-            foreach($allCounts as $item) {
-                foreach($item as $k => $v) {
-                    if(array_key_exists($k, $counts)) $counts[$k] += $v;
-                    else $counts[$k] = $v;
+            foreach ($allCounts as $item) {
+                foreach ($item as $k => $v) {
+                    if (array_key_exists($k, $counts)) {
+                        $counts[$k] += $v;
+                    } else {
+                        $counts[$k] = $v;
+                    }
                 }
-            };
+            }
         } else {
-            if(!in_array($inbox_id,$user_inbox_ids))
-                return response()->error("You do not have permission to access this inbox.",null,403);
+            if (!in_array($inbox_id, $user_inbox_ids)) {
+                return response()->error('You do not have permission to access this inbox.', null, 403);
+            }
             $inbox = Inbox::find($inbox_id);
             $inboxName = Inbox::find($inbox_id)->name;
             $threads = Thread::getSorted([$inbox_id]);
@@ -57,13 +63,14 @@ class InboxController extends Controller
             'id'     => $inbox_id,
             'name'   => $inboxName,
             'threads'=> $threads,
-            'counts' => $counts
+            'counts' => $counts,
         ]);
     }
 
     /**
      * Gets contents of a thread.
-     * PERMISSIONS: you can only get a thread if you have read or readwrite permissions for its inbox
+     * PERMISSIONS: you can only get a thread if you have read or readwrite permissions for its inbox.
+     *
      * @param $thread_id
      *
      * @return mixed
@@ -78,38 +85,47 @@ class InboxController extends Controller
             'userEvents.user',
             'userEvents.target',
             'drafts')->find($thread_id);
-        if(!in_array($thread->inbox_id,$user->getInboxIds()))
-            return response()->error("You do not have permission to access this thread.",null,403);
+        if (!in_array($thread->inbox_id, $user->getInboxIds())) {
+            return response()->error('You do not have permission to access this thread.', null, 403);
+        }
+
         return response()->success($thread);
     }
 
     /**
      * Gets all the assigned users, as well as users who can potentially be assigned, for a thread.
      * PERMISSIONS: you can only get assignments for a thread if you have read or readwrite permissions for its inbox.
+     *
      * @param $thread_id
+     *
      * @return mixed
      */
     public function getAssignments($thread_id)
     {
         $user = Auth::user();
         $thread = Thread::find($thread_id);
-        if(!in_array($thread->inbox_id,$user->getInboxIds()))
-            return response()->error("You do not have permission to access this thread or its assignments.",null,403);
+        if (!in_array($thread->inbox_id, $user->getInboxIds())) {
+            return response()->error('You do not have permission to access this thread or its assignments.', null, 403);
+        }
+
         return response()->success($thread->getAssignedUsers());
     }
 
     /**
      * Updates the assignments, using the same data structure as getAssignments.
      * PERMISSIONS: you can only put assignments for a thread if you have readwrite permissions for its inbox.
+     *
      * @param $thread_id
+     *
      * @return mixed
      */
     public function putAssignments($thread_id)
     {
         $user = Auth::user();
         $thread = Thread::find($thread_id);
-        if(!in_array($thread->inbox_id,$user->getReadWriteInboxIds()))
-            return response()->error("You do not have permission to access this thread or its assignments.",null,403);
+        if (!in_array($thread->inbox_id, $user->getReadWriteInboxIds())) {
+            return response()->error('You do not have permission to access this thread or its assignments.', null, 403);
+        }
         $data = json_decode(Request::getContent(), true);
         foreach ($thread->getAssignedUsers() as $k => $assignedUser) {
             $currentState = $assignedUser['assigned_to_thread'];
@@ -117,7 +133,7 @@ class InboxController extends Controller
             if (!$currentState && $newState) {
                 $thread->users()->attach($k);
                 $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $k);
-                if($thread->state === Thread::STATE_NEW) {
+                if ($thread->state === Thread::STATE_NEW) {
                     $thread->state = Thread::STATE_ASSIGNED;
                     $thread->save();
                 }
@@ -133,17 +149,20 @@ class InboxController extends Controller
     /**
      * Create a draft tied to a thread
      * PERMISSIONS: you can only create a draft in a thread if you have readwrite permissions to that thread's inbox.
-     * TODO: support reply all, etc
+     * TODO: support reply all, etc.
+     *
      * @param $thread_id
      * @param string $mode
+     *
      * @return mixed
      */
     public function createDraft($thread_id, $mode = 'reply')
     {
         $thread = Thread::find($thread_id);
         $user = Auth::user();
-        if(!in_array($thread->inbox_id,$user->getReadWriteInboxIds()))
-            return response()->error("You do not have permission to create a draft in this inbox",null,403);
+        if (!in_array($thread->inbox_id, $user->getReadWriteInboxIds())) {
+            return response()->error('You do not have permission to create a draft in this inbox', null, 403);
+        }
         //creating a draft will auto assign you to the thread
         $thread->users()->syncWithoutDetaching($user->id);
         $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $user->id);
@@ -164,26 +183,28 @@ class InboxController extends Controller
      * Updates the Draft.
      * action parameter can specify save|send|delete
      * PERMISSIONS: you can only update a draft if you are it's creator.
-     * TODO: support deletion
+     * TODO: support deletion.
+     *
      * @param $draft_id
+     *
      * @return mixed
      */
     public function updateDraft($draft_id)
     {
         $draft = Draft::with('thread')->find($draft_id); //todo: fancy model hinting
         $user = Auth::user();
-        if($user->id !== $draft->user_id)
-            return response()->error("You can only update your own draft.",null,403);
+        if ($user->id !== $draft->user_id) {
+            return response()->error('You can only update your own draft.', null, 403);
+        }
         $data = json_decode(Request::getContent(), true);
         $draft->body = $data['body'];
         $draft->save();
 
         $action = Request::get('action');
-        if($action==="send") {
+        if ($action === 'send') {
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
             $message = $draft->thread->getLastMessage();
-            $message->reply($draft->user_id,$draft->body);
-
+            $message->reply($draft->user_id, $draft->body);
         }
 
         return response()->success($draft);

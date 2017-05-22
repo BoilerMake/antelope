@@ -21,12 +21,12 @@ class UserInboxTest extends TestCase
         $user = factory(User::class)->create();
         self::connectUserToInbox($user, $inbox);
         $token = $user->getToken();
-        $response = $this->json('GET', '/users/me/inboxes', [], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('GET', '/users/me/inboxes', [], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
                 'success' => true,
-                'data' => [['id' => 0], ['id' => $inbox->id]],
+                'data'    => [['id' => 0], ['id' => $inbox->id]],
             ]);
     }
 
@@ -38,10 +38,10 @@ class UserInboxTest extends TestCase
         $inbox = self::makeSeededInbox(4);
         $user = factory(User::class)->create();
         self::connectUserToInbox($user, $inbox);
-        $response = $this->json('GET', '/inbox/' . $inbox->id, [], ['Authorization' => 'Bearer ' . $user->getToken()]);
+        $response = $this->json('GET', '/inbox/'.$inbox->id, [], ['Authorization' => 'Bearer '.$user->getToken()]);
         $response
             ->assertStatus(200)
-            ->assertJson(['success' => true,]);
+            ->assertJson(['success' => true]);
 
         $this->assertEquals(4, count($response->json()['data']['threads']));
     }
@@ -54,10 +54,10 @@ class UserInboxTest extends TestCase
         $inbox = self::makeSeededInbox();
         $user = factory(User::class)->create();
         //not giving the user permissions for the inbox now
-        $response = $this->json('GET', '/inbox/' . $inbox->id, [], ['Authorization' => 'Bearer ' . $user->getToken()]);
+        $response = $this->json('GET', '/inbox/'.$inbox->id, [], ['Authorization' => 'Bearer '.$user->getToken()]);
         $response
             ->assertStatus(403)
-            ->assertJson(['success' => false,]);
+            ->assertJson(['success' => false]);
     }
 
     /**
@@ -71,7 +71,7 @@ class UserInboxTest extends TestCase
         self::connectUserToInbox($user, $inbox);
         self::connectUserToInbox($user, $inbox_2);
         $token = $user->getToken();
-        $response = $this->json('GET', '/inbox/0', [], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('GET', '/inbox/0', [], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -89,7 +89,7 @@ class UserInboxTest extends TestCase
         $inbox = self::makeSeededInbox(1, 5);
         $user = factory(User::class)->create();
         self::connectUserToInbox($user, $inbox);
-        $response = $this->json('GET', '/thread/' . $inbox->threads[0]->id, [], ['Authorization' => 'Bearer ' . $user->getToken()]);
+        $response = $this->json('GET', '/thread/'.$inbox->threads[0]->id, [], ['Authorization' => 'Bearer '.$user->getToken()]);
         $response
             ->assertStatus(200)
             ->assertJson(['success' => true]);
@@ -104,7 +104,7 @@ class UserInboxTest extends TestCase
         $inbox = self::makeSeededInbox(1, 5);
         $user = factory(User::class)->create();
         //no giving user inbox permission
-        $response = $this->json('GET', '/thread/' . $inbox->threads[0]->id, [], ['Authorization' => 'Bearer ' . $user->getToken()]);
+        $response = $this->json('GET', '/thread/'.$inbox->threads[0]->id, [], ['Authorization' => 'Bearer '.$user->getToken()]);
         $response
             ->assertStatus(403)
             ->assertJson(['success' => false]);
@@ -122,7 +122,7 @@ class UserInboxTest extends TestCase
         TestCase::connectUserToInbox($user1, $inbox);
         TestCase::connectUserToInbox($user2, $inbox);
         $thread_id = $inbox->threads[0]->id;
-        $response = $this->json('GET', "/thread/{$thread_id}/assignments", [], ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('GET', "/thread/{$thread_id}/assignments", [], ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -135,7 +135,7 @@ class UserInboxTest extends TestCase
 
         //assign user2 to the thread.
         $data[$user2->id]['assigned_to_thread'] = true;
-        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", $data, ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", $data, ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -147,7 +147,7 @@ class UserInboxTest extends TestCase
 
         //unassign user2 to the thread.
         $data[$user2->id]['assigned_to_thread'] = false;
-        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", $data, ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", $data, ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -158,7 +158,7 @@ class UserInboxTest extends TestCase
         $this->assertDatabaseHas('user_events', ['user_id' => $user1->id, 'thread_id' => $thread_id, 'target_user_id' => $user2->id, 'type' => UserEvent::TYPE_UNASSIGN_THREAD]);
 
         //get the thread and make sure the events are there.
-        $response = $this->json('GET', '/thread/' . $thread_id, [], ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('GET', '/thread/'.$thread_id, [], ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -169,14 +169,14 @@ class UserInboxTest extends TestCase
     }
 
     /**
-     * Test trying to change thread assignments sans permission
+     * Test trying to change thread assignments sans permission.
      */
     public function testChangeThreadAssignmentsNoPermission()
     {
         $user1 = factory(User::class)->create();
         $inbox = TestCase::makeSeededInbox();
         $thread_id = $inbox->threads[0]->id;
-        $response = $this->json('GET', "/thread/{$thread_id}/assignments", [], ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('GET', "/thread/{$thread_id}/assignments", [], ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(403)
             ->assertJson([
@@ -185,7 +185,7 @@ class UserInboxTest extends TestCase
 
         //assign user2 to the thread.
         $data[$user1->id]['assigned_to_thread'] = true;
-        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", ['somedata'], ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", ['somedata'], ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(403)
             ->assertJson([
@@ -196,7 +196,7 @@ class UserInboxTest extends TestCase
 
     /**
      * Test trying to change thread assignments with read only permission
-     * These assignments should thusly be read only
+     * These assignments should thusly be read only.
      */
     public function testChangeThreadAssignmentsWithReadOnlyPermission()
     {
@@ -204,7 +204,7 @@ class UserInboxTest extends TestCase
         $inbox = TestCase::makeSeededInbox();
         TestCase::connectUserToInbox($user1, $inbox, Group::INBOX_PERMISSION_READONLY);
         $thread_id = $inbox->threads[0]->id;
-        $response = $this->json('GET', "/thread/{$thread_id}/assignments", [], ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('GET', "/thread/{$thread_id}/assignments", [], ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -213,7 +213,7 @@ class UserInboxTest extends TestCase
 
         //assign user2 to the thread.
         $data[$user1->id]['assigned_to_thread'] = true;
-        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", ['somedata'], ['Authorization' => 'Bearer ' . $user1->getToken()]);
+        $response = $this->json('PUT', "/thread/{$thread_id}/assignments", ['somedata'], ['Authorization' => 'Bearer '.$user1->getToken()]);
         $response
             ->assertStatus(403)
             ->assertJson([
@@ -232,7 +232,7 @@ class UserInboxTest extends TestCase
         TestCase::connectUserToInbox($user, $inbox);
         $thread_id = $inbox->threads[0]->id;
         $token = $user->getToken();
-        $response = $this->json('POST', "/thread/{$thread_id}/drafts", [], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('POST', "/thread/{$thread_id}/drafts", [], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -247,7 +247,7 @@ class UserInboxTest extends TestCase
         //assign user2 to the thread.
         $data['body'] = '<p>newhtml</p>';
         $data['action'] = 'send';
-        $response = $this->json('PUT', "/drafts/{$data['id']}", $data, ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('PUT', "/drafts/{$data['id']}", $data, ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -269,11 +269,12 @@ class UserInboxTest extends TestCase
                 'success' => false,
             ]);
     }
+
     public function testCreateDrafttReadOnlyPermission()
     {
         $user = factory(User::class)->create();
         $inbox = TestCase::makeSeededInbox();
-        TestCase::connectUserToInbox($user,$inbox,Group::INBOX_PERMISSION_READONLY);
+        TestCase::connectUserToInbox($user, $inbox, Group::INBOX_PERMISSION_READONLY);
         $thread_id = $inbox->threads[0]->id;
         $token = $user->getToken();
         $response = $this->json('POST', "/thread/{$thread_id}/drafts", [], ['Authorization'=>'Bearer '.$token]);
@@ -283,12 +284,13 @@ class UserInboxTest extends TestCase
                 'success' => false,
             ]);
     }
+
     public function testSendDraftNotYours()
     {
         $user = factory(User::class)->create();
         $token = $user->getToken();
         $draft_id = Draft::first()->id;
-        $response = $this->json('PUT', "/drafts/{$draft_id}", ['randomdata'], ['Authorization' => 'Bearer ' . $token]);
+        $response = $this->json('PUT', "/drafts/{$draft_id}", ['randomdata'], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(403)
             ->assertJson([

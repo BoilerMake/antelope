@@ -118,8 +118,9 @@ class Thread extends Model
 
         return $users;
     }
+
     public function getLastMessage()
     {
-        return Message::where('thread_id',$this->id)->orderBy('created_at', 'desc')->first();
+        return Message::where('thread_id', $this->id)->orderBy('created_at', 'desc')->first();
     }
 }
