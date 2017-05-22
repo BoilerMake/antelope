@@ -28,6 +28,8 @@ $active-text: #F3F3F3;
   //column that the sidebar lives in
   flex: 0 0 150px;
   background-color: $sidebar-bg;
+  border-right: 1px solid white;
+
 }
 .col.center {
 //why 1 0 not 0 0
@@ -216,13 +218,6 @@ $active-text: #F3F3F3;
   flex-direction: row;
 }
 
-.threadview-footer {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-}
-
-
 /** MessageItem **/
 .message-item {
   margin: 1em 0;
@@ -261,6 +256,10 @@ $active-text: #F3F3F3;
   //width: 100%;
   display:flex;
   border-bottom: 1px solid white;
+}
+.sidebar-item-wrapper.bottomItem {
+  border-top: 1px solid white;
+  border-bottom: 0;
 }
 .sidebar-item-wrapper.active-item {
   background-color: $sidebar-bg-active;
@@ -334,27 +333,17 @@ $active-text: #F3F3F3;
 .btn-primary {
   background: $primary;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
+  //border: 1px solid rgba(0,0,0,0.30);
+  border: 0;
   border-radius: 5px;
   width: 150px;
   height: 30px;
   font-size: 13px;
   font-family: 'Lato', sans-serif;
   color: $active-text;
-  //letter-spacing: 0.16px;
+  letter-spacing: 0.16px;
   padding: 5px;
-  //-webkit-border
-  // -radius: 5;
-  //-moz-border-radius: 5;
-  //border-radius: 5px;
-  //-webkit-box-shadow: 0px 1px 3px #666666;
-  //-moz-box-shadow: 0px 1px 3px #666666;
-  //box-shadow: 0px 1px 3px #666666;
-  //font-family: 'Lato', sans-serif;
-  //color: #ffffff;
-  //font-size: 13px;
-  //background: #3498db;
-  //padding: 10px 20px 10px 20px;
-  //text-decoration: none;
+  margin: 2px;
 }
 .btn-primary:hover {
   background: darken($primary,10%);
@@ -374,4 +363,27 @@ $active-text: #F3F3F3;
 }
 .btn-secondary:active{
   background: darken($secondary,30%);
+}
+.textInput {
+  background: rgba(170, 175, 174, 0.7);
+  //border: 1px solid rgba(134,134,134,0.50);
+  border: 1px solid #a9a9af;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+  border-radius: 3px;
+  color: #444444;
+  width: 170px;
+  height: 30px;
+  box-sizing: content-box;
+  padding: 5px 10px;
+}
+.textInput_Dark {
+  @extend .textInput;
+  background: rgba(43,43,43,0.70);
+  color: $active-text;
+}
+
+/** Generic Layout Things **/
+.pullRight {
+  display: flex;
+  justify-content: flex-end;
 }

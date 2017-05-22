@@ -109,7 +109,7 @@ class ThreadView extends Component {
                             <div className="threadview-subject">{threadContents.snippet.subject}</div>
                             <div className="threadview-sender">{threadContents.snippet.from}</div>
                         </div>
-                        <div style={{"alignSelf":"flex-end"}}>
+                        <div className="pullRight">
                             <button className="btn-primary">Notes</button>
                             <button className="btn-primary" onClick={this.handleOpenAssignmentsModal}>Assignments</button>
                         </div>
@@ -117,7 +117,7 @@ class ThreadView extends Component {
 
                     <hr/>
                     {messageList}
-                    <div className="threadview-footer">
+                    <div className="pullRight">
                         <button className="btn-primary" onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
                         <button className="btn-primary" onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
                     </div>

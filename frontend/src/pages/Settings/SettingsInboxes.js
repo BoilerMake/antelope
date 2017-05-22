@@ -58,9 +58,9 @@ export class SettingsInboxes extends Component {
         let inboxList = this.state.inboxes.map((inbox,idx)=>{
             return(<tr key={idx}>
                 <td>#{inbox.id}</td>
-                <td><input type="text" onChange={this.handleInboxChange.bind(this, idx, "name")} value={inbox.name}/></td>
-                <td><input type="text" onChange={this.handleInboxChange.bind(this, idx, "regex")} value={inbox.regex}/></td>
-                <td><input type="text" onChange={this.handleInboxChange.bind(this, idx, "primary_address")} value={inbox.primary_address}/></td>
+                <td><input className="textInput_Dark" type="text" onChange={this.handleInboxChange.bind(this, idx, "name")} value={inbox.name}/></td>
+                <td><input className="textInput_Dark" type="text" onChange={this.handleInboxChange.bind(this, idx, "regex")} value={inbox.regex}/></td>
+                <td><input className="textInput_Dark" type="text" onChange={this.handleInboxChange.bind(this, idx, "primary_address")} value={inbox.primary_address}/></td>
                 <td>{inbox.is_default? 'yes' : 'no'}</td>
             </tr>);
         });
@@ -80,10 +80,11 @@ export class SettingsInboxes extends Component {
                     {inboxList}
                 </tbody>
             </table>
-            <button className="btn-secondary" disabled={isLoading} onClick={this.saveInboxes.bind(this)}>Save</button>
-            <br/>
-            <button className="btn-secondary" disabled={isLoading} onClick={this.addInbox.bind(this)}>Create Inbox</button>
-            <br/>
+            <div className="pullRight">
+                <button className="btn-secondary" disabled={isLoading} onClick={this.saveInboxes.bind(this)}>Save</button>
+                <button className="btn-secondary" disabled={isLoading} onClick={this.addInbox.bind(this)}>Create Inbox</button>
+            </div>
+
             todo: show good errors on this page (like non-unique primary address, bad regex, etc
             todo: allow changing default
             {/*<pre>{JSON.stringify(this.props.inboxes,null,2)}</pre>*/}

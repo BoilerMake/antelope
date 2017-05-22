@@ -48,7 +48,7 @@ class ThreadListView extends Component {
                             <div className="inboxlist-header-name">{inboxContents.name}</div>
                         </div>
                         <div className="inboxlist-header-row">
-                            <input type="text" name="search" placeholder="search..."/>
+                            <input className="textInput" type="text" name="search" placeholder="search..."/>
                         </div>
 
                     </div>

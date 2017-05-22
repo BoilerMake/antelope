@@ -26,16 +26,15 @@ class SettingsSidebar extends Component {
                         {inboxList}
                     </div>
                     <div id="sidebar-lower">
-                        <div className="sidebar-item-wrapper"
-                             style={{"borderTop":"1px solid white"}}
+                        <div className="sidebar-item-wrapper bottomItem"
                              onClick={()=>this.props.history.push('/inbox')}>
                             <div className="sidebar-item">
-                                <div>back to inbox</div>
+                                <div>Back to inbox</div>
                             </div>
                         </div>
-                        <div className="sidebar-item-wrapper" onClick={()=>this.props.logout()}>
+                        <div className="sidebar-item-wrapper bottomItem" onClick={()=>this.props.logout()}>
                             <div className="sidebar-item">
-                                <div>logout</div>
+                                <div>Logout</div>
                             </div>
                         </div>
                     </div>
