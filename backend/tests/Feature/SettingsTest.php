@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Inbox;
 use App\Models\User;
+use App\Models\UserEvent;
 use Faker\Factory;
 use Tests\TestCase;
 
@@ -71,5 +72,18 @@ class SettingsTest extends TestCase
         $this->assertDatabaseHas('inboxes',['id'=>$data[0]['id'], 'name'=>$changedInboxName]);
         $this->assertDatabaseHas('inboxes',['name'=>$newInboxName]);
 
+    }
+    public function testGetUserEvents()
+    {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+        $response = $this->json('GET', "/settings/userevents", [], ['Authorization' => 'Bearer ' . $token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+        $this->assertEquals(UserEvent::count(), count($response->json()['data']));
     }
 }

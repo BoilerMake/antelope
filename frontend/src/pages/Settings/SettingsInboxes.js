@@ -25,16 +25,6 @@ export class SettingsInboxes extends Component {
         stateCopy.inboxes[index] = Object.assign({}, stateCopy.inboxes[index]);
         stateCopy.inboxes[index][propName] = event.target.value;
         this.setState(stateCopy);
-
-        // this.setState({ inboxes:
-        //     {...this.state.inboxes,
-        //     [index]: {
-        //         ...this.state.inboxes[index],
-        //     }}
-        // })
-        // var emails = this.state.emails.slice(); // Make a copy of the emails first.
-        // emails[index] = event.target.value; // Update it with the modified email.
-        // this.setState({emails: emails}); // Update the state.
     }
     addInbox() {
         let stateCopy = Object.assign({}, this.state);
@@ -67,7 +57,7 @@ export class SettingsInboxes extends Component {
         return(<div>
             <SettingsHeader title="Inboxes"/>
             <table style={{width: "100%"}}>
-                <thead>
+                <thead style={{textAlign: "left", fontWeight: 700}}>
                     <tr>
                         <th>num</th>
                         <th>name</th>

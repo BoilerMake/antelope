@@ -39,3 +39,29 @@ export function putSettingsInboxes(inboxes) {
             .then((json) => dispatch(fetchSettingsInboxes()));
     };
 }
+
+export const REQUEST_SETTINGS_USER_EVENTS = 'REQUEST_SETTINGS_USER_EVENTS';
+export const RECEIVE_SETTINGS_USER_EVENTS = 'RECEIVE_SETTINGS_USER_EVENTS';
+
+export function fetchSettingsUserEvents () {
+    return (dispatch) => {
+        dispatch(requestSettingsUserEvents());
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/userevents?token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveSettingsUserEvents(json)));
+    };
+}
+
+function requestSettingsUserEvents () {
+    return {
+        type: REQUEST_SETTINGS_USER_EVENTS
+    };
+}
+
+function receiveSettingsUserEvents (json) {
+    return {
+        type: RECEIVE_SETTINGS_USER_EVENTS,
+        json
+    };
+}

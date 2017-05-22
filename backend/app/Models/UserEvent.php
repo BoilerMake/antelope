@@ -24,7 +24,7 @@ class UserEvent extends Model
 
     public function inbox()
     {
-        return $this->belongsTo('App\Models\Thread');
+        return $this->belongsTo('App\Models\Inbox');
     }
 
     public function message()

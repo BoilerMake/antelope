@@ -11,6 +11,7 @@
     "enzyme": "^2.8.1",
     "faker": "^4.1.0",
     "fetch-mock": "^5.10.0",
+    "fixed-data-table": "^0.6.4",
     "immutability-helper": "^2.2.0",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.2.0",

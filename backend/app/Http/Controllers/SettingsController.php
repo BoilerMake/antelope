@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inbox;
+use App\Models\UserEvent;
 use Log;
 use Request;
 
@@ -37,5 +38,14 @@ class SettingsController extends Controller
             }
         }
         return self::getInboxes();
+    }
+    public function getUserEvents()
+    {
+        //todo: pagination
+        return response()->success(UserEvent::with('user','target','inbox','message','thread')->get()->map(function ($item) {
+            $item = $item->toArray();
+            if(isset($item['thread'])) unset($item['thread']['snippet']);
+            return $item;
+        }));
     }
 }
