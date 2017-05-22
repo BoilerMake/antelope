@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import logo from '../../assets/images/logo.png'
 class SettingsSidebar extends Component {
     render () {
         const sidebarItems = [
@@ -19,7 +20,8 @@ class SettingsSidebar extends Component {
         return (
             <div className="col left">
                 <div className="col-top-left-brand">
-                    Antelope
+                    <img src={logo} alt="logo" className="sidebar-logo" />
+                    <div>Antelope</div>
                     {this.props.isMobile &&  <div onClick={this.props.toggleSidebar}>[hide sidebar]</div>}
                 </div>
                 <div className="col-bottom sidebar-wrapper">

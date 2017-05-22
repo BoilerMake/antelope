@@ -1,11 +1,10 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
     <div>
-        <label>{label}</label>
+        {/*<label>{label}</label>*/}
         <div>
-            <input {...input} placeholder={label} type={type}/>
+            <input {...input} placeholder={label} type={type} className="textInput_Dark"/>
             {touched && error && <span>{error}</span>}
         </div>
     </div>
@@ -19,8 +18,8 @@ const LoginForm = (props) => {
             <Field name="password" type="password" component={renderField} label="Password"/>
             {error && <strong>{error}</strong>}
             <div>
-                <button type="submit" disabled={submitting}>Login</button>
-                <button type="button" disabled={pristine || submitting} onClick={reset}>Clear Values</button>
+                <button className="btn-primary btn-wide" type="submit" disabled={submitting}>Login</button>
+                <button className="btn-primary btn-wide" type="button" disabled={pristine || submitting} onClick={reset}>Clear Values</button>
             </div>
         </form>
     )

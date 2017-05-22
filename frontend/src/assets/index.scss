@@ -12,9 +12,9 @@ body {
 
 $primary: #EC7B65;
 $secondary: #45A7B9;
-$sidebar-bg: #2D353A;
-$sidebar-bg-hover: #19232c;
-$sidebar-bg-active: #111a1f;
+$dark-bg: #2D353A;
+$dark-bg-hover: #19232c;
+$dark-bg-active: #111a1f;
 $light-bg: #EDECED;
 $active-text: #F3F3F3;
 
@@ -27,7 +27,7 @@ $active-text: #F3F3F3;
 .col.left {
   //column that the sidebar lives in
   flex: 0 0 150px;
-  background-color: $sidebar-bg;
+  background-color: $dark-bg;
   border-right: 1px solid white;
 
 }
@@ -52,7 +52,7 @@ $active-text: #F3F3F3;
 }
 .col-top-left-brand {
   flex-shrink: 0;
-  background-color: $sidebar-bg;
+  background-color: $dark-bg;
   color: white;
   height: 80px;
   padding: 20px;
@@ -262,10 +262,10 @@ $active-text: #F3F3F3;
   border-bottom: 0;
 }
 .sidebar-item-wrapper.active-item {
-  background-color: $sidebar-bg-active;
+  background-color: $dark-bg-active;
 }
 .sidebar-item-wrapper:hover {
-  background-color: $sidebar-bg-hover;
+  background-color: $dark-bg-hover;
 }
 .sidebar-item {
   width: 100%;
@@ -284,20 +284,38 @@ $active-text: #F3F3F3;
   text-align: center;
   line-height: 1;
 }
+.sidebar-logo {
+  width: 50px;
+}
 
 /** Login */
 .f {
   display: flex;
   width: 100%;
 }
-
+.login-header {
+  font-size: 32px;
+  color: #FFFFFF;
+  letter-spacing: -0.26px;
+  font-weight: 300;
+  margin-bottom: 5px;
+}
+.login-catchphrase {
+  @extend  .login-header;
+  font-size: 17px;
+}
+.login-logo {
+  width: 100px;
+}
 .login-container {
   display: flex;           /* establish flex container */
   flex-direction: column;  /* make main axis vertical */
   justify-content: center; /* center items vertically, in this case */
   align-items: center;     /* center items horizontally, in this case */
-  height: 70%;
+  height: 100%;
   width: 100%;
+  background: $dark-bg;
+  color: white;
 }
 .login {
   width: 300px;
@@ -349,8 +367,11 @@ $active-text: #F3F3F3;
   background: darken($primary,10%);
   text-decoration: none;
 }
-.btn-primary:active{
-  background: darken($primary,30%);
+.btn-primary:active {
+  background: darken($primary,20%);
+}
+.btn-primary:disabled {
+  background: lighten($primary,15%);
 }
 .btn-secondary {
  @extend .btn-primary;
@@ -364,6 +385,12 @@ $active-text: #F3F3F3;
 .btn-secondary:active{
   background: darken($secondary,30%);
 }
+.btn-secondary:disabled {
+  background: lighten($secondary,15%);
+}
+.btn-wide {
+  width: 190px;
+}
 .textInput {
   background: rgba(170, 175, 174, 0.7);
   //border: 1px solid rgba(134,134,134,0.50);
@@ -372,9 +399,10 @@ $active-text: #F3F3F3;
   border-radius: 3px;
   color: #444444;
   width: 170px;
-  height: 30px;
+  height: 20px;
   box-sizing: content-box;
   padding: 5px 10px;
+  margin: 5px;
 }
 .textInput_Dark {
   @extend .textInput;

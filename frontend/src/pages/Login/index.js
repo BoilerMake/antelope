@@ -3,6 +3,8 @@ import LoginForm from './LoginForm'
 import { SubmissionError } from 'redux-form'
 import { Redirect, Link } from 'react-router-dom'
 import { API_BASE_URL } from '../../config';
+import logo from '../../assets/images/logo.png'
+
 export class Login extends Component {
 
     constructor (props) {
@@ -51,13 +53,13 @@ export class Login extends Component {
         return (
             <div className="login-container">
                 <div className="login">
-                <h1>Login</h1>
-                <LoginForm onSubmit={this.handleSubmit}/>
-                <div>
-                    <Link to="/register">need an account?</Link>
-                    <br/>
-                    <Link to="/reset">forgot your password?</Link>
-                </div>
+                    <img src={logo} alt="logo" className="login-logo"/>
+                    <div className="login-header">Antelope</div>
+                    <div className="login-catchphrase">herd your email</div>
+                    <LoginForm onSubmit={this.handleSubmit}/>
+                    <div>
+                        <Link to="/reset" style={{color: "white"}}>forgot your password?</Link>
+                    </div>
                 </div>
             </div>
         );
