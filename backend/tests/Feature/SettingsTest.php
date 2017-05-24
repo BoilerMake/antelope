@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Group;
 use App\Models\Inbox;
+use App\Models\Thread;
 use App\Models\User;
 use App\Models\UserEvent;
 use Faker\Factory;
@@ -77,6 +78,7 @@ class SettingsTest extends TestCase
     public function testGetUserEvents()
     {
         $user = factory(User::class)->create();
+        $user->recordThreadEvent(factory(Thread::class)->create(),UserEvent::TYPE_UNASSIGN_THREAD);
         $user->is_admin = true;
         $user->save();
         $token = $user->getToken();
@@ -114,8 +116,8 @@ class SettingsTest extends TestCase
 
         $data = $response->json()['data'];
         $groupId = factory(Group::class)->create()->id;
-        $inboxId = Inbox::inRandomOrder()->first()->id;
-        $inboxId2 = Inbox::inRandomOrder()->first()->id;
+        $inboxId = factory(Inbox::class)->create()->id;
+        $inboxId2 = factory(Inbox::class)->create()->id;
 
         Inbox::find($inboxId)->groups()->sync([$groupId => ['permission' => Group::INBOX_PERMISSION_READWRITE]]);
         Inbox::find($inboxId2)->groups()->sync([$groupId => ['permission' => Group::INBOX_PERMISSION_READWRITE]]);

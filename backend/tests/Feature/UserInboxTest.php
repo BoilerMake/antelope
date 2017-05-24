@@ -36,6 +36,8 @@ class UserInboxTest extends TestCase
     public function testGetSingleInboxById()
     {
         $inbox = self::makeSeededInbox(4);
+        factory(Thread::class)->create(['inbox_id'=>$inbox->id]);
+
         $user = factory(User::class)->create();
         self::connectUserToInbox($user, $inbox);
         $response = $this->json('GET', '/inbox/'.$inbox->id, [], ['Authorization' => 'Bearer '.$user->getToken()]);
@@ -43,7 +45,7 @@ class UserInboxTest extends TestCase
             ->assertStatus(200)
             ->assertJson(['success' => true]);
 
-        $this->assertEquals(4, count($response->json()['data']['threads']));
+        $this->assertEquals(5, count($response->json()['data']['threads']));
     }
 
     /**
