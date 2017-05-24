@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SettingsHeader from './SettingsHeader';
-import {Table, Column, Cell} from 'fixed-data-table';
-import 'fixed-data-table/dist/fixed-data-table.css';
+import {Table, Column, Cell} from 'fixed-data-table-2';
+import 'fixed-data-table-2/dist/fixed-data-table.css';
 import moment from 'moment';
 export class SettingsPageUserEvents extends Component {
 
