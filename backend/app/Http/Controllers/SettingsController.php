@@ -6,12 +6,12 @@ use App\Models\Group;
 use App\Models\Inbox;
 use App\Models\User;
 use App\Models\UserEvent;
-use Illuminate\Validation\Rules\In;
+use Auth;
 use Log;
 use Request;
 
 /**
- * Class UsersController.
+ * Class SettingsController.
  */
 class SettingsController extends Controller
 {
@@ -85,13 +85,25 @@ class SettingsController extends Controller
         {
             $group = Group::find($groupId);
             foreach($groupData['permissions'] as $inboxId => $permission) {
-                if($group->getPermissionsForInbox($inboxId) != $permission) {
-                    Log::info("g: {$groupId} i: {$inboxId} p: {$permission}");
+                $oldPermission = $group->getPermissionsForInbox($inboxId);
+                if($oldPermission != $permission) {
+                    UserEvent::create([
+                        'user_id'       => Auth::user()->id,
+                        'inbox_id'      => $inboxId,
+                        'type'          => UserEvent::TYPE_UPDATE_GROUP_INBOX_PERMISSIONS,
+                        'meta'          => json_encode([
+                            'inbox_id' => $inboxId,
+                            'group_id' => $groupId,
+                            'old'      => $oldPermission,
+                            'new'      => $permission
+                        ])
+                    ]);
                     $inbox = Inbox::find($inboxId);
                     if ($permission === "none")
                         $inbox->groups()->detach($groupId);
                     else
                         $inbox->groups()->syncWithoutDetaching([$groupId => ['permission' => $permission]]);
+
                 }
             }
         }
