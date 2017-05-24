@@ -3,13 +3,14 @@ import { withRouter } from 'react-router-dom';
 import logo from '../../assets/images/logo.png'
 class SettingsSidebar extends Component {
     render () {
-        const sidebarItems = [
+        const sidebarItemsAdmin = [
             {name:'account', title: 'My Account'},
             {name:'inboxes', title: 'Inboxes'},
             {name:'users', title: 'Users'},
             {name:'userevents', title: 'User Events'},
             {name:'groups', title: 'Groups'},
             ];
+        const sidebarItems = this.props.user.me && this.props.user.me.is_admin ? sidebarItemsAdmin : [{name: 'account', title: 'My Account'}];
         //todo: only show admin items (this.props.user.me.is_admin + filter())
         let inboxList = sidebarItems.map((item,index) =>
             <div className={this.props.match.params.category === item.name ? 'sidebar-item-wrapper active-item' : 'sidebar-item-wrapper'}
