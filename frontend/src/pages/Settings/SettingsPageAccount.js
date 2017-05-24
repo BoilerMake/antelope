@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SettingsHeader from './SettingsHeader';
-export class SettingsAccount extends Component {
+export class SettingsPageAccount extends Component {
 
     componentDidMount() {
         this.props.fetchMe();
@@ -27,4 +27,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch(fetchMe());
     }
 });
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsAccount);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsPageAccount);

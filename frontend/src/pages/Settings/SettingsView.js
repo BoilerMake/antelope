@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Route,  Redirect } from 'react-router-dom';
-import SettingsAccount from './SettingsAccount';
-import SettingsInboxes from './SettingsInboxes';
+import SettingsPageAccount from './SettingsPageAccount';
+import SettingsPageInboxes from './SettingsPageInboxes';
 import SettingsPageUserEvents from './SettingsPageUserEvents';
 import SettingsPageGroups from './SettingsPageGroups';
 import SettingsPageUsers from './SettingsPageUsers';
@@ -15,8 +15,8 @@ class SettingsView extends Component {
                 <div className="col-bottom settingsWrapper" style={{padding: '50px 40px'}}>
                     <div>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>[toggle sidebar]</a>}</div>
                     <Route exact path="/settings/" render={() => (<Redirect to="/settings/account"/>)}/>
-                    <Route exact path="/settings/account" component={SettingsAccount}/>
-                    <Route exact path="/settings/inboxes" component={SettingsInboxes}/>
+                    <Route exact path="/settings/account" component={SettingsPageAccount}/>
+                    <Route exact path="/settings/inboxes" component={SettingsPageInboxes}/>
                     <Route exact path="/settings/userevents" component={SettingsPageUserEvents}/>
                     <Route exact path="/settings/groups" component={SettingsPageGroups}/>
                     <Route exact path="/settings/users" component={SettingsPageUsers}/>
