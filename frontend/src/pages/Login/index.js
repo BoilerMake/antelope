@@ -25,7 +25,6 @@ export class Login extends Component {
                     throw new SubmissionError({_error: json.message});
                 }
                 else {
-                    console.log(json.data.token);
                     this.props.loginFromJWT(json.data.token);
                 }
             });
@@ -42,10 +41,10 @@ export class Login extends Component {
 
     render () {
 
-        const { from } = this.props.location.state || { from: { pathname: '/dashboard' } };
+        const { from } = this.props.location.state || { from: { pathname: '/inbox' } };
 
         if (this.state.redirectToReferrer) {
-            //redirect them to the route they came from (or dashboard) on successful auth.
+            //redirect them to the route they came from (or inbox) on successful auth.
             return (
                 <Redirect to={from}/>
             )

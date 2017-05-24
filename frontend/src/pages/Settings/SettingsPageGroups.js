@@ -27,7 +27,7 @@ export class SettingsPageGroups extends Component {
             ...this.state.matrix,
             [groupId]: {
                 ...this.state.matrix[groupId],
-                ['permissions']: {
+                permissions: {
                     ...this.state.matrix[groupId]['permissions'],
                     [inboxId]: e.target.value
                 }

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SettingsHeader from './SettingsHeader';
 import {Table, Column, Cell} from 'fixed-data-table-2';
 import 'fixed-data-table-2/dist/fixed-data-table.css';
-import moment from 'moment';
 export class SettingsPageUsers extends Component {
 
     componentDidMount() {

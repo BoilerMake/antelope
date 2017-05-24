@@ -94,6 +94,6 @@ it('redirects when already logged in', () => {
             />
         </Provider>
     </MemoryRouter>);
-    expect(wrapper.instance().history.location.pathname).toEqual('/dashboard');
+    expect(wrapper.instance().history.location.pathname).toEqual('/inbox');
 
 })
