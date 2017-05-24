@@ -65,3 +65,54 @@ function receiveSettingsUserEvents (json) {
         json
     };
 }
+
+export const REQUEST_SETTINGS_GROUP_INBOX_MATRIX = 'REQUEST_SETTINGS_GROUP_INBOX_MATRIX';
+export const RECEIVE_SETTINGS_GROUP_INBOX_MATRIX = 'RECEIVE_SETTINGS_GROUP_INBOX_MATRIX';
+export function fetchSettingsGroupInboxMatrix () {
+    return (dispatch) => {
+        dispatch(requestSettingsGroupInboxMatrix());
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/groupinboxmatrix?token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveSettingsGroupInboxMatrix(json)));
+    };
+}
+
+function requestSettingsGroupInboxMatrix () {
+    return {
+        type: REQUEST_SETTINGS_GROUP_INBOX_MATRIX
+    };
+}
+
+function receiveSettingsGroupInboxMatrix (json) {
+    return {
+        type: RECEIVE_SETTINGS_GROUP_INBOX_MATRIX,
+        json
+    };
+}
+
+export function putSettingsGroupInboxMatrix(matrix) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/groupinboxmatrix?token=${token}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(matrix)
+            })
+            .then((response) => response.json())
+            .then((json) => dispatch(fetchSettingsGroupInboxMatrix()));
+    };
+}
+
+
+export function createGroup(name) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/groups?name=${name}&token=${token}`,
+            {
+                method: 'POST'
+            })
+            .then((response) => response.json())
+            .then((json) => dispatch(fetchSettingsGroupInboxMatrix()));
+    };
+}

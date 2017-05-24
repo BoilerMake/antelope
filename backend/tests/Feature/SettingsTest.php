@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Group;
 use App\Models\Inbox;
 use App\Models\User;
 use App\Models\UserEvent;
@@ -85,5 +86,53 @@ class SettingsTest extends TestCase
                 'success' => true,
             ]);
         $this->assertEquals(UserEvent::count(), count($response->json()['data']));
+    }
+    public function testChangeGroupInboxMatrix()
+    {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+        $response = $this->json('GET', '/settings/groupinboxmatrix', [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $data = $response->json()['data'];
+        $groupId = factory(Group::class)->create()->id;
+        $inboxId = Inbox::inRandomOrder()->first()->id;
+        $inboxId2 = Inbox::inRandomOrder()->first()->id;
+
+        Inbox::find($inboxId)->groups()->sync([$groupId => ['permission' => Group::INBOX_PERMISSION_READWRITE]]);
+        Inbox::find($inboxId2)->groups()->sync([$groupId => ['permission' => Group::INBOX_PERMISSION_READWRITE]]);
+
+        $data[$groupId]['permissions'][$inboxId] = Group::INBOX_PERMISSION_READONLY;
+        $data[$groupId]['permissions'][$inboxId2] = "none";
+
+        $response = $this->json('PUT', '/settings/groupinboxmatrix', $data, ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+        $this->assertDatabaseHas('group_inbox', [
+            'group_id'=>$groupId,
+            'inbox_id'=>$inboxId,
+            'permission'=>Group::INBOX_PERMISSION_READONLY,
+        ]);
+    }
+    public function testCreateGroup() {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+        $faker = Factory::create();
+        $name = $faker->userName;
+        $response = $this->json('POST', '/settings/groups', ['name'=>$name], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+        $this->assertDatabaseHas('groups',['name'=>$name]);
     }
 }

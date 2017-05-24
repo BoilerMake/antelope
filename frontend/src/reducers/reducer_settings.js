@@ -3,7 +3,9 @@ import {
     RECEIVE_SETTINGS_INBOX,
     REQUEST_SETTINGS_INBOX,
     REQUEST_SETTINGS_USER_EVENTS,
-    RECEIVE_SETTINGS_USER_EVENTS
+    RECEIVE_SETTINGS_USER_EVENTS,
+    REQUEST_SETTINGS_GROUP_INBOX_MATRIX,
+    RECEIVE_SETTINGS_GROUP_INBOX_MATRIX
 } from '../actions/settings';
 
 export const INITIAL_STATE = {
@@ -11,6 +13,8 @@ export const INITIAL_STATE = {
     inboxes_loading: false,
     user_events: [],
     user_events_loading: false,
+    groupInboxMatrix: {},
+    groupInboxMatrix_loading: false,
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -30,6 +34,15 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state,
                 user_events_loading: false,
                 user_events: action.json.data
+            };
+        case REQUEST_SETTINGS_GROUP_INBOX_MATRIX:
+            return { ...state, groupInboxMatrix_loading: true };
+        case RECEIVE_SETTINGS_GROUP_INBOX_MATRIX:
+            return {
+                ...state,
+                groupInboxMatrix: action.json.data,
+                groupInboxMatrix_loading: false,
+
             };
         default:
             return state;

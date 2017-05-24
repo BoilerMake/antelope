@@ -3,6 +3,7 @@ import { withRouter, Route,  Redirect } from 'react-router-dom';
 import SettingsAccount from './SettingsAccount';
 import SettingsInboxes from './SettingsInboxes';
 import SettingsPageUserEvents from './SettingsPageUserEvents';
+import SettingsPageGroups from './SettingsPageGroups';
 class SettingsView extends Component {
     componentDidMount() {
         this.props.fetchMe();
@@ -16,6 +17,7 @@ class SettingsView extends Component {
                     <Route exact path="/settings/account" component={SettingsAccount}/>
                     <Route exact path="/settings/inboxes" component={SettingsInboxes}/>
                     <Route exact path="/settings/userevents" component={SettingsPageUserEvents}/>
+                    <Route exact path="/settings/groups" component={SettingsPageGroups}/>
                 </div>
             </div>
         );

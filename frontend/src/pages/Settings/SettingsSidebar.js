@@ -7,6 +7,7 @@ class SettingsSidebar extends Component {
             {name:'account', title: 'My Account'},
             {name:'inboxes', title: 'Inboxes'},
             {name:'userevents', title: 'User Events'},
+            {name:'groups', title: 'Groups'},
             ];
         //todo: only show admin items (this.props.user.me.is_admin + filter())
         let inboxList = sidebarItems.map((item,index) =>
