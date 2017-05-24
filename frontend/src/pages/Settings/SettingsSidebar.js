@@ -6,6 +6,7 @@ class SettingsSidebar extends Component {
         const sidebarItems = [
             {name:'account', title: 'My Account'},
             {name:'inboxes', title: 'Inboxes'},
+            {name:'users', title: 'Users'},
             {name:'userevents', title: 'User Events'},
             {name:'groups', title: 'Groups'},
             ];

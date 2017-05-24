@@ -98,4 +98,8 @@ class SettingsController extends Controller
 
         return $this->getGroupInboxMatrix();
     }
+    public function getUserList()
+    {
+        return response()->success(User::with('groups')->get());
+    }
 }

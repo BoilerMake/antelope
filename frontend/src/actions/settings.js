@@ -116,3 +116,29 @@ export function createGroup(name) {
             .then((json) => dispatch(fetchSettingsGroupInboxMatrix()));
     };
 }
+
+
+export const REQUEST_SETTINGS_USERLIST = 'REQUEST_SETTINGS_USERLIST';
+export const RECEIVE_SETTINGS_USERLIST = 'RECEIVE_SETTINGS_USERLIST';
+export function fetchUserList () {
+    return (dispatch) => {
+        dispatch(requestUserList());
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/users?token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveUserList(json)));
+    };
+}
+
+function requestUserList () {
+    return {
+        type: REQUEST_SETTINGS_USERLIST
+    };
+}
+
+function receiveUserList (json) {
+    return {
+        type: RECEIVE_SETTINGS_USERLIST,
+        json
+    };
+}

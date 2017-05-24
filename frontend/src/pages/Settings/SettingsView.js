@@ -4,6 +4,7 @@ import SettingsAccount from './SettingsAccount';
 import SettingsInboxes from './SettingsInboxes';
 import SettingsPageUserEvents from './SettingsPageUserEvents';
 import SettingsPageGroups from './SettingsPageGroups';
+import SettingsPageUsers from './SettingsPageUsers';
 class SettingsView extends Component {
     componentDidMount() {
         this.props.fetchMe();
@@ -18,6 +19,7 @@ class SettingsView extends Component {
                     <Route exact path="/settings/inboxes" component={SettingsInboxes}/>
                     <Route exact path="/settings/userevents" component={SettingsPageUserEvents}/>
                     <Route exact path="/settings/groups" component={SettingsPageGroups}/>
+                    <Route exact path="/settings/users" component={SettingsPageUsers}/>
                 </div>
             </div>
         );

@@ -87,6 +87,19 @@ class SettingsTest extends TestCase
             ]);
         $this->assertEquals(UserEvent::count(), count($response->json()['data']));
     }
+    public function testGetUsers()
+    {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+        $response = $this->json('GET', '/settings/users', [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+        $this->assertEquals(User::count(), count($response->json()['data']));
+    }
     public function testChangeGroupInboxMatrix()
     {
         $user = factory(User::class)->create();
