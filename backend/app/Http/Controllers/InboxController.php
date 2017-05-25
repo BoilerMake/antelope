@@ -168,7 +168,7 @@ class InboxController extends Controller
         $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $user->id);
 
         //Drafts just start as your signature.
-        $signature = "user #{$user->id} signature"; //todo
+        $signature = $user->signature;
         $d = Draft::create([
             'user_id'  => $user->id,
             'thread_id'=> $thread_id,
