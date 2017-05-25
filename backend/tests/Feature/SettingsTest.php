@@ -150,4 +150,18 @@ class SettingsTest extends TestCase
             ]);
         $this->assertDatabaseHas('groups',['name'=>$name]);
     }
+    public function testCreateUser() {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+        $faker = Factory::create();
+        $email = $faker->email;
+        $response = $this->json('POST', '/settings/users', ['email'=>$email], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+        $this->assertDatabaseHas('users',['email'=>$email]);
+    }
 }

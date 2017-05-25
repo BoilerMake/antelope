@@ -60,6 +60,10 @@ class SettingsController extends Controller
     {
         return response()->success(Group::create(['name'=>Request::get('name')]));
     }
+    public function createUser()
+    {
+        return response()->success(User::addNew(Request::get('email')));
+    }
     public function getGroupInboxMatrix()
     {
         $inboxes = Inbox::all();

@@ -142,3 +142,14 @@ function receiveUserList (json) {
         json
     };
 }
+export function createUser(email) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/users?email=${email}&token=${token}`,
+            {
+                method: 'POST'
+            })
+            .then((response) => response.json())
+            .then((json) => dispatch(fetchUserList()));
+    };
+}
