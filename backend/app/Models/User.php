@@ -42,8 +42,17 @@ class User extends Authenticatable
         return "{$this->first_name} {$last}";
     }
 
+    /**
+     * Creates a new user
+     * @param $email
+     * @param bool $admin
+     * @param null $password
+     * @return User|bool
+     */
     public static function addNew($email, $admin = false, $password = null)
     {
+        if(self::where('email',$email)->first())
+            return false;
         $user = new self();
         $user->email = $email;
         $user->is_admin = $admin;

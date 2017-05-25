@@ -136,6 +136,26 @@ class SettingsTest extends TestCase
             'permission'=>Group::INBOX_PERMISSION_READONLY,
         ]);
     }
+    public function testUnChangedGroupInboxMatrix()
+    {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+        $response = $this->json('GET', '/settings/groupinboxmatrix', [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $data = $response->json()['data'];
+
+        $response = $this->json('PUT', '/settings/groupinboxmatrix', $data, ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+    }
     public function testCreateGroup() {
         $user = factory(User::class)->create();
         $user->is_admin = true;
@@ -163,5 +183,12 @@ class SettingsTest extends TestCase
                 'success' => true,
             ]);
         $this->assertDatabaseHas('users',['email'=>$email]);
+
+        //and we shouldn't be able to create a new user with used email.
+        $response = $this->json('POST', '/settings/users', ['email'=>$email], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => false,
+            ]);
     }
 }

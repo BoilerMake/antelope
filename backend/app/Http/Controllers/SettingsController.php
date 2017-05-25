@@ -62,7 +62,10 @@ class SettingsController extends Controller
     }
     public function createUser()
     {
-        return response()->success(User::addNew(Request::get('email')));
+        $user = User::addNew(Request::get('email'));
+        if($user)
+            return response()->success($user);
+        return response()->error('user exists with that email!');
     }
     public function getGroupInboxMatrix()
     {
@@ -85,6 +88,7 @@ class SettingsController extends Controller
     {
         $data = json_decode(Request::getContent(), true);
 
+        $humanDeltas = [];
         foreach ($data as $groupId => $groupData)
         {
             $group = Group::find($groupId);
@@ -103,16 +107,18 @@ class SettingsController extends Controller
                         ])
                     ]);
                     $inbox = Inbox::find($inboxId);
+                    $humanDeltas[]="Group {$group->name}'s permission for inbox {$inbox->name} is now {$permission}";
                     if ($permission === "none")
                         $inbox->groups()->detach($groupId);
                     else
                         $inbox->groups()->syncWithoutDetaching([$groupId => ['permission' => $permission]]);
-
                 }
             }
         }
 
-        return $this->getGroupInboxMatrix();
+        if(sizeof($humanDeltas)>0)
+            return response()->success($humanDeltas);
+        return response()->success(["No permissions were changed."]);
     }
     public function getUserList()
     {

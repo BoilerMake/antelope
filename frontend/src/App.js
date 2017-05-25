@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom'
-
+import 'react-redux-toastr/src/styles/index.scss'
 import Routes from './Routes';
+import ReduxToastr from 'react-redux-toastr'
 
 class App extends Component {
     componentWillMount() {
@@ -21,6 +22,14 @@ class App extends Component {
         return (<Router>
             <div className="f">
                 <Routes/>
+                <ReduxToastr
+                    timeOut={4000}
+                    newestOnTop={false}
+                    preventDuplicates
+                    position="top-center"
+                    transitionIn="fadeIn"
+                    transitionOut="fadeOut"
+                    progressBar/>
             </div>
         </Router>);
     }

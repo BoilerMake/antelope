@@ -1,6 +1,6 @@
 import cookie from 'react-cookie';
 import { API_BASE_URL } from '../config';
-
+import {toastr} from 'react-redux-toastr'
 export const REQUEST_SETTINGS_INBOX = 'REQUEST_SETTINGS_INBOX';
 export const RECEIVE_SETTINGS_INBOX = 'RECEIVE_SETTINGS_INBOX';
 
@@ -36,7 +36,11 @@ export function putSettingsInboxes(inboxes) {
                 body: JSON.stringify(inboxes)
             })
             .then((response) => response.json())
-            .then((json) => dispatch(fetchSettingsInboxes()));
+            .then((json) => {
+                if(json.success)
+                    toastr.success('Success!', 'Inbox settings updated');
+                dispatch(fetchSettingsInboxes())
+            });
     };
 }
 
@@ -100,7 +104,10 @@ export function putSettingsGroupInboxMatrix(matrix) {
                 body: JSON.stringify(matrix)
             })
             .then((response) => response.json())
-            .then((json) => dispatch(fetchSettingsGroupInboxMatrix()));
+            .then((json) => {
+                json.data.forEach(i=>toastr.success('Success!', i));
+                dispatch(fetchSettingsGroupInboxMatrix())
+        });
     };
 }
 
@@ -113,7 +120,11 @@ export function createGroup(name) {
                 method: 'POST'
             })
             .then((response) => response.json())
-            .then((json) => dispatch(fetchSettingsGroupInboxMatrix()));
+            .then((json) => {
+                if(json.success)
+                    toastr.success('Group Created!', `#${json.data.id}`);
+                dispatch(fetchSettingsGroupInboxMatrix())
+        });
     };
 }
 
@@ -150,6 +161,12 @@ export function createUser(email) {
                 method: 'POST'
             })
             .then((response) => response.json())
-            .then((json) => dispatch(fetchUserList()));
+            .then((json) => {
+            if(json.success)
+                toastr.success('User Created!', `#${json.data.id}`);
+            else
+                toastr.error('Error',json.message);
+            dispatch(fetchUserList())
+        });
     };
 }
