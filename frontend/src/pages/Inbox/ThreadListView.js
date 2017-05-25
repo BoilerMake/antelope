@@ -54,22 +54,21 @@ class ThreadListView extends Component {
                     </div>
                     <div className="inboxlist-header-rightcol">
                         <div>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>[toggle sidebar]</a>}</div>
-                        <div>hi</div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon new"/>
-                            <div>{inboxItem.contents.counts.new}</div>
+                            <div style={{paddingTop: '1px'}}>{inboxItem.contents.counts.new}</div>
                         </div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon assigned"/>
-                            <div>{inboxItem.contents.counts.assigned}</div>
+                            <div style={{paddingTop: '1px'}}>{inboxItem.contents.counts.assigned}</div>
                         </div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon in-progress"/>
-                            <div>{inboxItem.contents.counts['in-progress']}</div>
+                            <div style={{paddingTop: '1px'}}>{inboxItem.contents.counts['in-progress']}</div>
                         </div>
                         <div className="inboxlist-header-row">
                             <div className="state-icon done"/>
-                            <div>{inboxItem.contents.counts.done}</div>
+                            <div style={{paddingTop: '1px'}}>{inboxItem.contents.counts.done}</div>
                         </div>
                     </div>
                     </div>

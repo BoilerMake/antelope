@@ -189,6 +189,7 @@ $active-text: #F3F3F3;
   border-radius: 50%;
   width: 15px;
   height: 15px;
+  margin: 2px;
 }
 .state-icon.new{
   background: $secondary
@@ -392,10 +393,10 @@ $active-text: #F3F3F3;
   width: 190px;
 }
 .textInput {
-  background: rgba(170, 175, 174, 0.7);
+  background: rgba(209, 214, 213, 0.5);
   //border: 1px solid rgba(134,134,134,0.50);
-  border: 1px solid #a9a9af;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+  border: 1px solid #c4c4cb;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
   border-radius: 3px;
   color: #444444;
   width: 170px;
@@ -407,6 +408,8 @@ $active-text: #F3F3F3;
 .textInput_Dark {
   @extend .textInput;
   background: rgba(43,43,43,0.70);
+  border: 1px solid #a9a9af;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
   color: $active-text;
 }
 

@@ -1,6 +1,6 @@
 import cookie from 'react-cookie';
 import { API_BASE_URL } from '../config';
-
+import {toastr} from 'react-redux-toastr'
 
 export const LOGIN_FROM_JWT_SUCCESS = 'LOGIN_FROM_JWT_SUCCESS';
 export function loginFromJWT (token) {
@@ -85,5 +85,21 @@ function receiveUserInboxList (json) {
         type: RECEIVE_USER_INBOX_LIST,
         data: json,
         receivedAt: Date.now()
+    };
+}
+
+export function updateMe(me) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/users/me?token=${token}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(me)
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                toastr.success('Success!', 'Your information has been updated');
+                dispatch(fetchMe())
+            });
     };
 }

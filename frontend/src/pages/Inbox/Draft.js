@@ -24,11 +24,6 @@ export default class Draft extends Component {
         });
     }
     prefillWithHtml(html) {
-        // const blocksFromHTML = convertFromHTML(html);
-        // const editorState = ContentState.createFromBlockArray(
-        //     blocksFromHTML.contentBlocks,
-        //     blocksFromHTML.entityMap
-        // );
         const blocksFromHTML = convertFromHTML(html);
         const content = ContentState.createFromBlockArray(blocksFromHTML);
         const editorState =  EditorState.createWithContent(content);

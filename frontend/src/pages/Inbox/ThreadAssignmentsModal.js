@@ -49,7 +49,6 @@ export default class ThreadAssignmentsModal extends Component {
                     {l}
                 </ul>
                 {/*<pre>{JSON.stringify(this.props.thread.assignments,null, 2)}</pre>*/}
-                hi
                 <button className="btn-primary" onClick={this.props.close}>Close Modal</button>
                 <button className="btn-secondary" onClick={this.saveData.bind(this)}>Save</button>
 
