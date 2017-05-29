@@ -8,7 +8,9 @@ import {
     RECEIVE_SETTINGS_GROUP_INBOX_MATRIX,
     RECEIVE_SETTINGS_USERLIST,
     REQUEST_SETTINGS_USER_DETAIL,
-    RECEIVE_SETTINGS_USER_DETAIL
+    RECEIVE_SETTINGS_USER_DETAIL,
+    REQUEST_SETTINGS_GROUPLIST,
+    RECEIVE_SETTINGS_GROUPLIST
 } from '../actions/settings';
 
 export const INITIAL_STATE = {
@@ -18,6 +20,7 @@ export const INITIAL_STATE = {
     user_events_loading: false,
     groupInboxMatrix: {},
     groupInboxMatrix_loading: false,
+    groups: [],
     userList: [],
     userDetail: {}
 };
@@ -40,6 +43,11 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state,
                 user_events_loading: false,
                 user_events: action.json.data
+            };
+        case RECEIVE_SETTINGS_GROUPLIST:
+            //todo: error checking
+            return { ...state,
+                groups: action.json.data
             };
         case REQUEST_SETTINGS_GROUP_INBOX_MATRIX:
             return { ...state, groupInboxMatrix_loading: true };

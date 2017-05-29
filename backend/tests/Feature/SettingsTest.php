@@ -156,7 +156,7 @@ class SettingsTest extends TestCase
                 'success' => true,
             ]);
     }
-    public function testCreateGroup() {
+    public function testCreateGetGroup() {
         $user = factory(User::class)->create();
         $user->is_admin = true;
         $user->save();
@@ -169,6 +169,27 @@ class SettingsTest extends TestCase
                 'success' => true,
             ]);
         $this->assertDatabaseHas('groups',['name'=>$name]);
+
+        $id = $response->json()['data']['id'];
+        $response = $this->json('GET', '/settings/groups/'.$id, ['name'=>$name], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+                'data'=>['id'=>$id]
+            ]);
+    }
+    public function testGetGroups()
+    {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+        $response = $this->json('GET', '/settings/groups', [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+        $this->assertEquals(Group::count(), count($response->json()['data']));
     }
     public function testCreateUser() {
         $user = factory(User::class)->create();

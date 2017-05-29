@@ -56,6 +56,12 @@ class SettingsController extends Controller
             return $item;
         }));
     }
+    public function getGroups() {
+        return response()->success(Group::with('users')->get());
+    }
+    public function getGroup($id) {
+        return response()->success(Group::with('users')->find($id));
+    }
     public function createGroup()
     {
         return response()->success(Group::create(['name'=>Request::get('name')]));

@@ -56,11 +56,10 @@ export class SettingsPageGroups extends Component {
 
         if(this.props.user.me && !this.props.user.me.is_admin)
             return(<SettingsHeader title="Groups: Permission denied"/>);
+
         const matrix = this.state.matrix;
-
-        let tableHead = this.props.settings.inboxes.map(i=><td key={`h-${i.id}`}>{i.name}</td>);
-
-        let tableBody = Object.keys(matrix).map(groupId=>{
+        let matrixTableHead = this.props.settings.inboxes.map(i=><td key={`h-${i.id}`}>{i.name}</td>);
+        let matrixTableBody = Object.keys(matrix).map(groupId=>{
             let eachRow = Object.keys(matrix[groupId]['permissions']).map(inboxId=>
                 <td key={`td-${groupId}-${inboxId}`}>
                     <PermissionSelector value={matrix[groupId]['permissions'][inboxId]} handleChange={this.selectChange.bind(this,groupId,inboxId)} />
@@ -68,16 +67,31 @@ export class SettingsPageGroups extends Component {
             eachRow.unshift(<td key={`td-${groupId}`} className="settingsPageGroups-LeftTable">{matrix[groupId]['name']}</td>);
             return <tr key={`tr-${groupId}`}>{eachRow}</tr>;
         });
+
+        let groupListBody = this.props.settings.groups.map(g=><tr key={`g-${g.id}`}>
+            <td>{g.id}</td>
+            <td>{g.name}</td>
+            <td>{g.users.map(u=>u.displayName).join(', ')}</td>
+        </tr>);
         return(<div>
             <SettingsHeader title="Groups"/>
+            <table className="settingsPageGroupsTable">
+                <thead>
+                    <tr><td>#</td><td>name</td><td>users</td></tr>
+                </thead>
+                <tbody>
+                    {groupListBody}
+                </tbody>
+            </table>
+            <SettingsHeader title="Group Inbox Permissions"/>
             <p>Here's a matrix outlining each group's inbox permissions</p>
             <table className="settingsPageGroupsTable">
                 <thead>
                     <tr><td key="1" rowSpan="2" className="settingsPageGroups-LeftTable"><b>Group</b></td><td style={{textAlign: "center"}} colSpan={this.props.settings.inboxes.length}>Inbox Name</td></tr>
-                    <tr>{tableHead}</tr>
+                    <tr>{matrixTableHead}</tr>
                 </thead>
                 <tbody>
-                {tableBody}
+                {matrixTableBody}
                 </tbody>
             </table>
             <br/>
@@ -102,7 +116,7 @@ function mapStateToProps (state) {
 }
 
 import { fetchMe } from '../../actions/users'
-import { fetchSettingsGroupInboxMatrix, fetchSettingsInboxes, putSettingsGroupInboxMatrix, createGroup } from '../../actions/settings'
+import { fetchSettingsGroupInboxMatrix, fetchSettingsInboxes, putSettingsGroupInboxMatrix, createGroup, fetchGroupList } from '../../actions/settings'
 const mapDispatchToProps = (dispatch, ownProps) => ({
     fetchMe: () => {
         dispatch(fetchMe());
@@ -110,6 +124,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     loadData: () => {
         dispatch(fetchSettingsGroupInboxMatrix());
         dispatch(fetchSettingsInboxes());
+        dispatch(fetchGroupList());
     },
     putSettingsGroupInboxMatrix: (matrix) => {
         dispatch(putSettingsGroupInboxMatrix(matrix));

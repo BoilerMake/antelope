@@ -4,6 +4,10 @@ import {toastr} from 'react-redux-toastr'
 export const REQUEST_SETTINGS_INBOX = 'REQUEST_SETTINGS_INBOX';
 export const RECEIVE_SETTINGS_INBOX = 'RECEIVE_SETTINGS_INBOX';
 
+
+/**
+ *  GET and PUT settings/inboxes
+ **/
 export function fetchSettingsInboxes () {
     return (dispatch) => {
         dispatch(requestSettingsInbox());
@@ -43,6 +47,10 @@ export function putSettingsInboxes(inboxes) {
             });
     };
 }
+/**
+ *  GET settings/userevents
+ **/
+
 
 export const REQUEST_SETTINGS_USER_EVENTS = 'REQUEST_SETTINGS_USER_EVENTS';
 export const RECEIVE_SETTINGS_USER_EVENTS = 'RECEIVE_SETTINGS_USER_EVENTS';
@@ -69,6 +77,10 @@ function receiveSettingsUserEvents (json) {
         json
     };
 }
+
+/**
+ *  GET and PUT settings/groupinboxmatrix
+ **/
 
 export const REQUEST_SETTINGS_GROUP_INBOX_MATRIX = 'REQUEST_SETTINGS_GROUP_INBOX_MATRIX';
 export const RECEIVE_SETTINGS_GROUP_INBOX_MATRIX = 'RECEIVE_SETTINGS_GROUP_INBOX_MATRIX';
@@ -112,6 +124,36 @@ export function putSettingsGroupInboxMatrix(matrix) {
 }
 
 
+
+/**
+ *  GET and POST settings/groups
+ **/
+
+export const REQUEST_SETTINGS_GROUPLIST = 'REQUEST_SETTINGS_GROUPLIST';
+export const RECEIVE_SETTINGS_GROUPLIST = 'RECEIVE_SETTINGS_GROUPLIST';
+export function fetchGroupList () {
+    return (dispatch) => {
+        dispatch(requestGroupList());
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/groups?token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveGroupList(json)));
+    };
+}
+
+function requestGroupList () {
+    return {
+        type: REQUEST_SETTINGS_GROUPLIST
+    };
+}
+
+function receiveGroupList (json) {
+    return {
+        type: RECEIVE_SETTINGS_GROUPLIST,
+        json
+    };
+}
+
 export function createGroup(name) {
     return (dispatch) => {
         const token = cookie.load('token');
@@ -127,6 +169,9 @@ export function createGroup(name) {
         });
     };
 }
+/**
+ *  GET settings/users
+ **/
 
 
 export const REQUEST_SETTINGS_USERLIST = 'REQUEST_SETTINGS_USERLIST';
@@ -153,6 +198,10 @@ function receiveUserList (json) {
         json
     };
 }
+/**
+ *  POST settings/users
+ **/
+
 export function createUser(email) {
     return (dispatch) => {
         const token = cookie.load('token');
@@ -171,6 +220,9 @@ export function createUser(email) {
     };
 }
 
+/**
+ *  GET settings/users/:id
+ **/
 
 export const REQUEST_SETTINGS_USER_DETAIL = 'REQUEST_SETTINGS_USER_DETAIL';
 export const RECEIVE_SETTINGS_USER_DETAIL = 'RECEIVE_SETTINGS_USER_DETAIL';
@@ -200,6 +252,10 @@ function receiveSettingsUser (json,id) {
         receivedAt: Date.now()
     };
 }
+
+/**
+ *  PUT settings/users/:id
+ **/
 
 export function putSetttingsUser(user) {
     return (dispatch) => {
