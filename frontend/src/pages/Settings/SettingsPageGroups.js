@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SettingsHeader from './SettingsHeader';
+import { Link } from 'react-router-dom';
 export class SettingsPageGroups extends Component {
 
     constructor (props) {
@@ -69,15 +70,14 @@ export class SettingsPageGroups extends Component {
         });
 
         let groupListBody = this.props.settings.groups.map(g=><tr key={`g-${g.id}`}>
-            <td>{g.id}</td>
-            <td>{g.name}</td>
+            <td><Link style={{color: 'white'}} to={`/settings/groups/${g.id}/`}>{g.name}</Link></td>
             <td>{g.users.map(u=>u.displayName).join(', ')}</td>
         </tr>);
         return(<div>
             <SettingsHeader title="Groups"/>
-            <table className="settingsPageGroupsTable">
+            <table className="settingsPageTable">
                 <thead>
-                    <tr><td>#</td><td>name</td><td>users</td></tr>
+                    <tr><td>name</td><td>users</td></tr>
                 </thead>
                 <tbody>
                     {groupListBody}
@@ -85,7 +85,7 @@ export class SettingsPageGroups extends Component {
             </table>
             <SettingsHeader title="Group Inbox Permissions"/>
             <p>Here's a matrix outlining each group's inbox permissions</p>
-            <table className="settingsPageGroupsTable">
+            <table className="settingsPageTable">
                 <thead>
                     <tr><td key="1" rowSpan="2" className="settingsPageGroups-LeftTable"><b>Group</b></td><td style={{textAlign: "center"}} colSpan={this.props.settings.inboxes.length}>Inbox Name</td></tr>
                     <tr>{matrixTableHead}</tr>

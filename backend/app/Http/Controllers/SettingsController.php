@@ -66,6 +66,21 @@ class SettingsController extends Controller
     {
         return response()->success(Group::create(['name'=>Request::get('name')]));
     }
+    public function updateGroupMembership($group_id, $user_id)
+    {
+        $action = Request::get('action');
+        $group = Group::find($group_id);
+        $user = User::find($user_id);
+        if($action=="add") {
+            $group->users()->attach($user_id);
+            UserEvent::record(Auth::user(),$user,UserEvent::TYPE_GROUP_USER_ADD,['group_id'=>$group_id]);
+            return response()->success("Added {$user->displayName} to {$group->name}");
+        }
+        //else remove
+        $group->users()->detach($user_id);
+        UserEvent::record(Auth::user(),$user,UserEvent::TYPE_GROUP_USER_REMOVE,['group_id'=>$group_id]);
+        return response()->success("Removed {$user->displayName} from {$group->name}");
+    }
     public function createUser()
     {
         $user = User::addNew(Request::get('email'));

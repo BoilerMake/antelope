@@ -4,6 +4,7 @@ import SettingsPageAccount from './SettingsPageAccount';
 import SettingsPageInboxes from './SettingsPageInboxes';
 import SettingsPageUserEvents from './SettingsPageUserEvents';
 import SettingsPageGroups from './SettingsPageGroups';
+import SettingsPageGroupDetail from './SettingsPageGroupDetail';
 import SettingsPageUsers from './SettingsPageUsers';
 import SettingsPageUserDetail from './SettingsPageUserDetail';
 class SettingsView extends Component {
@@ -20,6 +21,7 @@ class SettingsView extends Component {
                     <Route exact path="/settings/inboxes" component={SettingsPageInboxes}/>
                     <Route exact path="/settings/userevents" component={SettingsPageUserEvents}/>
                     <Route exact path="/settings/groups" component={SettingsPageGroups}/>
+                    <Route exact path="/settings/groups/:groupId" component={SettingsPageGroupDetail}/>
                     <Route exact path="/settings/users" component={SettingsPageUsers}/>
                     <Route exact path="/settings/users/:userId" component={SettingsPageUserDetail}/>
                 </div>

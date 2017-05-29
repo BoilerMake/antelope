@@ -165,10 +165,81 @@ export function createGroup(name) {
             .then((json) => {
                 if(json.success)
                     toastr.success('Group Created!', `#${json.data.id}`);
-                dispatch(fetchSettingsGroupInboxMatrix())
+                dispatch(fetchSettingsGroupInboxMatrix());
+                dispatch(fetchGroupList());
         });
     };
 }
+
+
+
+/**
+ *  GET settings/groups/:id
+ **/
+
+export const REQUEST_SETTINGS_GROUP_DETAIL = 'REQUEST_SETTINGS_GROUP_DETAIL';
+export const RECEIVE_SETTINGS_GROUP_DETAIL = 'RECEIVE_SETTINGS_GROUP_DETAIL';
+
+export function fetchSettingsGroup (id) {
+    return (dispatch, getState) => {
+        dispatch(requestSettingsGroup(id));
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/groups/${id}?token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveSettingsGroup(json,id)));
+    };
+}
+
+function requestSettingsGroup (id) {
+    return {
+        type: REQUEST_SETTINGS_GROUP_DETAIL,
+        id
+    };
+}
+
+function receiveSettingsGroup (json,id) {
+    return {
+        type: RECEIVE_SETTINGS_GROUP_DETAIL,
+        json,
+        id
+    };
+}
+
+/**
+ *  PUT settings/groups/:id
+ **/
+
+export function putSetttingsGroup(group) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/groups/${group.id}?token=${token}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(group)
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                toastr.success('Success!', 'Group Updated');
+                dispatch(fetchSettingsGroup(group.id))
+            });
+    };
+}
+export function changeGroupUserMembership(groupId, userId, action) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/groups/${groupId}/users/${userId}?action=${action}&token=${token}`,
+            {
+                method: 'PUT'
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                toastr.success('Success!', json.data);
+                dispatch(fetchSettingsGroup(groupId))
+            });
+    };
+}
+
+
 /**
  *  GET settings/users
  **/
