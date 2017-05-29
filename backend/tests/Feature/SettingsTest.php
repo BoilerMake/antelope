@@ -66,11 +66,10 @@ class SettingsTest extends TestCase
         $this->assertDatabaseHas('inboxes', ['name'=>$newInboxName]);
     }
 
-
     public function testGetUserEvents()
     {
         $user = factory(User::class)->create();
-        $user->recordThreadEvent(factory(Thread::class)->create(),UserEvent::TYPE_UNASSIGN_THREAD);
+        $user->recordThreadEvent(factory(Thread::class)->create(), UserEvent::TYPE_UNASSIGN_THREAD);
         $user->is_admin = true;
         $user->save();
         $token = $user->getToken();
@@ -78,6 +77,7 @@ class SettingsTest extends TestCase
         $response->assertJson(['success' => true]);
         $this->assertEquals(UserEvent::count(), count($response->json()['data']));
     }
+
     public function testGetUsers()
     {
         $user = factory(User::class)->create();
@@ -88,6 +88,7 @@ class SettingsTest extends TestCase
         $response->assertJson(['success' => true]);
         $this->assertEquals(User::count(), count($response->json()['data']));
     }
+
     public function testChangeGroupInboxMatrix()
     {
         $user = factory(User::class)->create();
@@ -106,16 +107,17 @@ class SettingsTest extends TestCase
         Inbox::find($inboxId2)->groups()->sync([$groupId => ['permission' => Group::INBOX_PERMISSION_READWRITE]]);
 
         $data[$groupId]['permissions'][$inboxId] = Group::INBOX_PERMISSION_READONLY;
-        $data[$groupId]['permissions'][$inboxId2] = "none";
+        $data[$groupId]['permissions'][$inboxId2] = 'none';
 
         $response = $this->json('PUT', '/settings/groupinboxmatrix', $data, ['Authorization' => 'Bearer '.$token]);
         $response->assertJson(['success' => true]);
         $this->assertDatabaseHas('group_inbox', [
-            'group_id'=>$groupId,
-            'inbox_id'=>$inboxId,
-            'permission'=>Group::INBOX_PERMISSION_READONLY,
+            'group_id'  => $groupId,
+            'inbox_id'  => $inboxId,
+            'permission'=> Group::INBOX_PERMISSION_READONLY,
         ]);
     }
+
     public function testUnChangedGroupInboxMatrix()
     {
         $user = factory(User::class)->create();
@@ -130,7 +132,9 @@ class SettingsTest extends TestCase
         $response = $this->json('PUT', '/settings/groupinboxmatrix', $data, ['Authorization' => 'Bearer '.$token]);
         $response->assertJson(['success' => true]);
     }
-    public function testCreateGetGroup() {
+
+    public function testCreateGetGroup()
+    {
         $user = factory(User::class)->create();
         $user->is_admin = true;
         $user->save();
@@ -139,16 +143,17 @@ class SettingsTest extends TestCase
         $name = $faker->userName;
         $response = $this->json('POST', '/settings/groups', ['name'=>$name], ['Authorization' => 'Bearer '.$token]);
         $response->assertJson(['success' => true]);
-        $this->assertDatabaseHas('groups',['name'=>$name]);
+        $this->assertDatabaseHas('groups', ['name'=>$name]);
 
         $id = $response->json()['data']['id'];
         $response = $this->json('GET', '/settings/groups/'.$id, ['name'=>$name], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertJson([
                 'success' => true,
-                'data'=>['id'=>$id]
+                'data'    => ['id'=>$id],
             ]);
     }
+
     public function testGetGroups()
     {
         $user = factory(User::class)->create();
@@ -159,7 +164,9 @@ class SettingsTest extends TestCase
         $response->assertJson(['success' => true]);
         $this->assertEquals(Group::count(), count($response->json()['data']));
     }
-    public function testChangeGroupMembership() {
+
+    public function testChangeGroupMembership()
+    {
         $user = factory(User::class)->create();
         $group = factory(Group::class)->create();
         $user->is_admin = true;
@@ -167,12 +174,14 @@ class SettingsTest extends TestCase
         $token = $user->getToken();
         $response = $this->json('PUT', "/settings/groups/{$group->id}/users/{$user->id}", ['action'=>'add'], ['Authorization' => 'Bearer '.$token]);
         $response->assertJson(['success' => true]);
-        $this->assertDatabaseHas('group_user',['user_id'=>$user->id,'group_id'=>$group->id]);
+        $this->assertDatabaseHas('group_user', ['user_id'=>$user->id, 'group_id'=>$group->id]);
         $response = $this->json('PUT', "/settings/groups/{$group->id}/users/{$user->id}", ['action'=>'remove'], ['Authorization' => 'Bearer '.$token]);
         $response->assertJson(['success' => true]);
-        $this->assertDatabaseMissing('group_user',['user_id'=>$user->id,'group_id'=>$group->id]);
+        $this->assertDatabaseMissing('group_user', ['user_id'=>$user->id, 'group_id'=>$group->id]);
     }
-    public function testCreateUser() {
+
+    public function testCreateUser()
+    {
         $user = factory(User::class)->create();
         $user->is_admin = true;
         $user->save();
@@ -181,7 +190,7 @@ class SettingsTest extends TestCase
         $email = $faker->email;
         $response = $this->json('POST', '/settings/users', ['email'=>$email], ['Authorization' => 'Bearer '.$token]);
         $response->assertJson(['success' => true]);
-        $this->assertDatabaseHas('users',['email'=>$email]);
+        $this->assertDatabaseHas('users', ['email'=>$email]);
 
         //and we shouldn't be able to create a new user with used email.
         $response = $this->json('POST', '/settings/users', ['email'=>$email], ['Authorization' => 'Bearer '.$token]);
@@ -190,6 +199,7 @@ class SettingsTest extends TestCase
                 'success' => false,
             ]);
     }
+
     public function testGetSetUser()
     {
         $user = factory(User::class)->create();
@@ -207,6 +217,6 @@ class SettingsTest extends TestCase
         $response = $this->json('PUT', "/settings/users/{$user2->id}", $data, ['Authorization' => 'Bearer '.$token]);
         $response->assertJson(['success' => true]);
         $user2 = $user2->fresh();
-        self::assertEquals($user2->is_admin,1);
+        self::assertEquals($user2->is_admin, 1);
     }
 }
