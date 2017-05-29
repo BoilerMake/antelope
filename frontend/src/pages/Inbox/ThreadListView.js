@@ -35,7 +35,7 @@ class ThreadListView extends Component {
             if(!thread.snippet) return(null);
             return(
                 <div onClick={()=>{this.props.history.push(`/inbox/${this.props.inboxId}/${thread.id}`)}} key={thread.id}>
-                    <ThreadItem thread={thread} inboxId={inboxId} active={parseInt(this.props.threadId,10)===thread.id}/>
+                    <ThreadItem thread={thread} meId={this.props.user.me ? this.props.user.me.id : 0} inboxId={parseInt(inboxId,10)} active={parseInt(this.props.threadId,10)===thread.id}/>
                 </div>)
         });
 
