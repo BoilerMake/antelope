@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SettingsHeader from './SettingsHeader';
+import { Link } from 'react-router-dom';
 import {Table, Column, Cell} from 'fixed-data-table-2';
 import 'fixed-data-table-2/dist/fixed-data-table.css';
 
@@ -38,7 +39,9 @@ export class SettingsPageUsers extends Component {
                     header={<Cell>ID</Cell>}
                     cell={({rowIndex, ...props}) => (
                         <Cell {...props}>
+                            <Link to={`/settings/users/${users[rowIndex]['id']}`}>
                             #{users[rowIndex]['id']}
+                            </Link>
                         </Cell>
                     )}
                     width={50}

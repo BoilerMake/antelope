@@ -124,4 +124,18 @@ class SettingsController extends Controller
     {
         return response()->success(User::with('groups')->get());
     }
+    public function getUser($id)
+    {
+        return response()->success(User::with('groups')->find($id));
+    }
+    public function putUser($id)
+    {
+        $user = User::find($id);
+        foreach(json_decode(Request::getContent(), true) as $k => $v) {
+            if(in_array($k,['is_admin','email']))
+                $user->$k = $v;
+        }
+        $user->save();
+        return response()->success('ok');
+    }
 }

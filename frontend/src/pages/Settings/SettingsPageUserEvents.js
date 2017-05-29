@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import SettingsHeader from './SettingsHeader';
 import {Table, Column, Cell} from 'fixed-data-table-2';
 import 'fixed-data-table-2/dist/fixed-data-table.css';
@@ -33,8 +34,11 @@ export class SettingsPageUserEvents extends Component {
                     header={<Cell>User</Cell>}
                     cell={({rowIndex, ...props}) => (
                         <Cell {...props}>
-                            {events[rowIndex]['user']['displayName']} (#{events[rowIndex]['user']['id']})
+                            <Link to={`/settings/users/${events[rowIndex]['user']['id']}`}>
+                                {events[rowIndex]['user']['displayName']} (#{events[rowIndex]['user']['id']})
+                            </Link>
                         </Cell>
+
                     )}
                     width={150}
                 />
@@ -78,7 +82,9 @@ export class SettingsPageUserEvents extends Component {
                     header={<Cell>Target User</Cell>}
                     cell={({rowIndex, ...props}) => (
                         <Cell {...props}>
-                            {events[rowIndex]['target'] ? `${events[rowIndex]['target']['displayName']} (${events[rowIndex]['target']['id']})` : "n/a"}
+                            {events[rowIndex]['target']
+                                ? <Link to={`/settings/users/${events[rowIndex]['target']['id']}`}>{`${events[rowIndex]['target']['displayName']} (${events[rowIndex]['target']['id']})`}</Link>
+                                : "n/a"}
                         </Cell>
                     )}
                     width={150}

@@ -5,6 +5,7 @@ import SettingsPageInboxes from './SettingsPageInboxes';
 import SettingsPageUserEvents from './SettingsPageUserEvents';
 import SettingsPageGroups from './SettingsPageGroups';
 import SettingsPageUsers from './SettingsPageUsers';
+import SettingsPageUserDetail from './SettingsPageUserDetail';
 class SettingsView extends Component {
     componentDidMount() {
         this.props.fetchMe();
@@ -20,6 +21,7 @@ class SettingsView extends Component {
                     <Route exact path="/settings/userevents" component={SettingsPageUserEvents}/>
                     <Route exact path="/settings/groups" component={SettingsPageGroups}/>
                     <Route exact path="/settings/users" component={SettingsPageUsers}/>
+                    <Route exact path="/settings/users/:userId" component={SettingsPageUserDetail}/>
                 </div>
             </div>
         );

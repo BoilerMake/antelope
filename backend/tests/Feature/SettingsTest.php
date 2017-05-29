@@ -191,4 +191,29 @@ class SettingsTest extends TestCase
                 'success' => false,
             ]);
     }
+    public function testGetSetUser()
+    {
+        $user = factory(User::class)->create();
+        $user->is_admin = true;
+        $user->save();
+        $token = $user->getToken();
+
+        $user2 = factory(User::class)->create();
+        $response = $this->json('GET', "/settings/users/{$user2->id}", [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $data = $response->json()['data'];
+        $data['is_admin'] = true;
+
+        $response = $this->json('PUT', "/settings/users/{$user2->id}", $data, ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertJson([
+                'success' => true,
+            ]);
+        $user2 = $user2->fresh();
+        self::assertEquals($user2->is_admin,1);
+    }
 }

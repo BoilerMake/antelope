@@ -6,7 +6,9 @@ import {
     RECEIVE_SETTINGS_USER_EVENTS,
     REQUEST_SETTINGS_GROUP_INBOX_MATRIX,
     RECEIVE_SETTINGS_GROUP_INBOX_MATRIX,
-    RECEIVE_SETTINGS_USERLIST
+    RECEIVE_SETTINGS_USERLIST,
+    REQUEST_SETTINGS_USER_DETAIL,
+    RECEIVE_SETTINGS_USER_DETAIL
 } from '../actions/settings';
 
 export const INITIAL_STATE = {
@@ -16,10 +18,12 @@ export const INITIAL_STATE = {
     user_events_loading: false,
     groupInboxMatrix: {},
     groupInboxMatrix_loading: false,
-    userList: []
+    userList: [],
+    userDetail: {}
 };
 
 export default function (state = INITIAL_STATE, action) {
+    const id = action.id;
     switch (action.type) {
         case REQUEST_SETTINGS_INBOX:
             return { ...state, inboxes_loading: true };
@@ -50,6 +54,44 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 userList: action.json.data,
+
+            };
+        case REQUEST_SETTINGS_USER_DETAIL:
+            return {
+                ...state,
+                userDetail: {
+                    ...state.userDetail,
+                    [id]: {...state.userDetail[id], isFetching: true, isError: false}
+                }
+
+            };
+        case RECEIVE_SETTINGS_USER_DETAIL:
+            if(action.json.success) {
+                return {
+                    ...state,
+                    userDetail: {
+                        ...state.userDetail,
+                        [id]: {
+                            ...state.userDetail[id],
+                            contents: action.json.data,
+                            isFetching: false,
+                            isError: false,
+                            error_message: null
+                        }
+                    }
+                };
+            }
+            return {
+                ...state,
+                userDetail: {
+                    ...state.userDetail,
+                    [id]: {
+                        ...state.userDetail[id],
+                        isFetching: false,
+                        isError: true,
+                        error_message: action.json.message
+                    }
+                }
 
             };
         default:

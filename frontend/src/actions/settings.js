@@ -170,3 +170,49 @@ export function createUser(email) {
         });
     };
 }
+
+
+export const REQUEST_SETTINGS_USER_DETAIL = 'REQUEST_SETTINGS_USER_DETAIL';
+export const RECEIVE_SETTINGS_USER_DETAIL = 'RECEIVE_SETTINGS_USER_DETAIL';
+
+export function fetchSettingsUser (id) {
+    return (dispatch, getState) => {
+        dispatch(requestSettingsUser(id));
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/users/${id}?token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveSettingsUser(json,id)));
+    };
+}
+
+function requestSettingsUser (id) {
+    return {
+        type: REQUEST_SETTINGS_USER_DETAIL,
+        id
+    };
+}
+
+function receiveSettingsUser (json,id) {
+    return {
+        type: RECEIVE_SETTINGS_USER_DETAIL,
+        json,
+        id,
+        receivedAt: Date.now()
+    };
+}
+
+export function putSetttingsUser(user) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/users/${user.id}?token=${token}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(user)
+            })
+            .then((response) => response.json())
+            .then((json) => {
+                toastr.success('Success!', 'User Updated');
+                dispatch(fetchSettingsUser(user.id))
+            });
+    };
+}

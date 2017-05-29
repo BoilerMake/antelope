@@ -45,4 +45,6 @@ Route::group(['middleware'=>['jwt.auth', 'adminOnly'], 'prefix' => 'settings'], 
     Route::get('groupinboxmatrix', 'SettingsController@getGroupInboxMatrix');
     Route::put('groupinboxmatrix', 'SettingsController@putGroupInboxMatrix');
     Route::get('users','SettingsController@getUserList');
+    Route::get('users/{id}','SettingsController@getUser');
+    Route::put('users/{id}','SettingsController@putUser');
 });
