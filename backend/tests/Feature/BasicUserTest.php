@@ -34,11 +34,46 @@ class BasicUserTest extends TestCase
 
         $response = $this->json('POST', '/auth/login', ['email' => $user1->email, 'password'=>'invalidpassword']);
         $response
-//            ->assertStatus(200)
             ->assertJson([
                 'success' => false,
                 'message' => 'Invalid credentials',
             ]);
+    }
+    public function testOnboard()
+    {
+        $faker = Factory::create();
+        $user = User::addNew($faker->email);
+        $pw = $faker->password();
+        //do it with not all fields filled out
+        $response = $this->json('POST', '/auth/onboard', [
+            'confirmation_code' => $user->confirmation_code,
+            'password'=>$pw
+        ]);
+        $response->assertJson(['success' => false]);
+        //do it with invalid code
+        $response = $this->json('POST', '/auth/onboard', [
+            'confirmation_code' => 'asdf',
+            'password'=>$pw,
+            'first_name'=>$faker->firstName,
+            'last_name'=>$faker->lastName
+        ]);
+        $response->assertJson(['success' => false, 'message'=>'Invalid Confirmation Code.']);
+        //do it properly
+        $response = $this->json('POST', '/auth/onboard', [
+            'confirmation_code' => $user->confirmation_code,
+            'password'=>$pw,
+            'first_name'=>$faker->firstName,
+            'last_name'=>$faker->lastName
+        ]);
+        $response->assertJson(['success' => true]);
+        //try to do it as econd time
+        $response = $this->json('POST', '/auth/onboard', [
+            'confirmation_code' => $user->confirmation_code,
+            'password'=>$pw,
+            'first_name'=>$faker->firstName,
+            'last_name'=>$faker->lastName
+        ]);
+        $response->assertJson(['success' => false, "message" => "You've already signed up!"]);
     }
 
     public function testGetMe()

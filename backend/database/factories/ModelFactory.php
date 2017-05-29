@@ -17,15 +17,17 @@ use App\Models\Inbox;
 use App\Models\Message;
 use App\Models\Thread;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
-        'first_name'     => $faker->firstName,
-        'last_name'      => $faker->lastName,
-        'email'          => $faker->unique()->safeEmail,
-        'password'       => $password ?: $password = bcrypt('secret'),
+        'first_name'        => $faker->firstName,
+        'last_name'         => $faker->lastName,
+        'email'             => $faker->unique()->safeEmail,
+        'password'          => $password ?: $password = bcrypt('secret'),
+        'confirmation_code' => Str::random(10)
     ];
 });
 

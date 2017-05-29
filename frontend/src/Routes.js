@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 
 //
 import Login from './pages/Login';
+import Onboarding from './pages/Onboarding';
 import Inbox from './pages/Inbox';
 import Settings from './pages/Settings';
 
@@ -36,6 +37,7 @@ const Routes = () => (
     <div className="f">
         <Route exact path="/" render={() => (<Redirect to="/inbox/0"/>)}/>
         <Route path="/login" component={Login}/>
+        <Route path="/signup/:code" component={Onboarding}/>
 
         <Route exact path="/inbox/" render={() => (<Redirect to="/inbox/0"/>)}/>
         <UserRoute path="/inbox/:inboxId/:threadId?" component={Inbox}/>

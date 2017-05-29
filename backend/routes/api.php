@@ -11,6 +11,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //auth
 Route::post('auth/login', 'AuthController@login');
+Route::post('auth/onboard', 'AuthController@onboard');
 ROute::get('test', 'MailController@test');
 
 Route::post('mailgunhook', 'MailController@mailgunHook');

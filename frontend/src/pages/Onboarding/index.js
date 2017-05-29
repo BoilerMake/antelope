@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import LoginForm from './LoginForm'
+import OnboardingForm from './OnboardingForm'
 import { SubmissionError } from 'redux-form'
 import { Redirect, Link } from 'react-router-dom'
 import { API_BASE_URL } from '../../config';
 import logo from '../../assets/images/logo.png'
 import {toastr} from 'react-redux-toastr'
 
-export class Login extends Component {
+
+export class Onboarding extends Component {
 
     constructor (props) {
         super(props);
@@ -15,9 +16,11 @@ export class Login extends Component {
 
     handleSubmit = (values) => {
         let d = new FormData();
-        d.append('email', values.email);
-        d.append('password', values.password);
-        return fetch(`${API_BASE_URL}/auth/login`,{
+        d.append('password', values.password ? values.password : "");
+        d.append('first_name', values.first_name ? values.first_name : "");
+        d.append('last_name', values.last_name ? values.last_name : "");
+        d.append('confirmation_code', this.props.match.params.code);
+        return fetch(`${API_BASE_URL}/auth/onboard`,{
             method: 'POST',
             body: d
         }).then((response) => response.json())
@@ -38,7 +41,7 @@ export class Login extends Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.user.authenticated) {
             if (nextProps.user !== this.user)
-                toastr.success('Success!', "logged in!");
+                toastr.success('Success!', "signed up!");
             this.setState({redirectToReferrer: true});
         }
     }
@@ -59,9 +62,10 @@ export class Login extends Component {
                     <img src={logo} alt="logo" className="login-logo"/>
                     <div className="login-header">Antelope</div>
                     <div className="login-catchphrase">herd your email</div>
-                    <LoginForm onSubmit={this.handleSubmit}/>
+                    <p>Please provide your name, and pick a password!</p>
+                    <OnboardingForm onSubmit={this.handleSubmit}/>
                     <div>
-                        <Link to="/reset" style={{color: "white"}}>forgot your password?</Link>
+                        <Link to="/reset" style={{color: "white"}}>need an account?</Link>
                     </div>
                 </div>
             </div>
@@ -84,4 +88,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Onboarding);
