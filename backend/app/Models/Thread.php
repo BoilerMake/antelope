@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Thread extends Model
 {
+    use SoftDeletes;
     protected $fillable = ['inbox_id', 'state'];
     protected $appends = ['snippet', 'messageCount'];
 

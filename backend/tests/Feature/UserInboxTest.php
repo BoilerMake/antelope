@@ -28,6 +28,7 @@ class UserInboxTest extends TestCase
                 'success' => true,
                 'data'    => [['id' => 0], ['id' => $inbox->id]],
             ]);
+        $inbox->delete();
     }
 
     /**
@@ -46,6 +47,7 @@ class UserInboxTest extends TestCase
             ->assertJson(['success' => true]);
 
         $this->assertEquals(5, count($response->json()['data']['threads']));
+        $inbox->delete();
     }
 
     /**
@@ -60,6 +62,7 @@ class UserInboxTest extends TestCase
         $response
             ->assertStatus(403)
             ->assertJson(['success' => false]);
+        $inbox->delete();
     }
 
     /**
@@ -81,6 +84,8 @@ class UserInboxTest extends TestCase
             ]);
 
         $this->assertEquals(7, count($response->json()['data']['threads']));
+        $inbox_2->delete();
+        $inbox->delete();
     }
 
     /**
@@ -96,6 +101,7 @@ class UserInboxTest extends TestCase
             ->assertStatus(200)
             ->assertJson(['success' => true]);
         $this->assertEquals(5, count($response->json()['data']['messages']));
+        $inbox->delete();
     }
 
     /**
@@ -110,6 +116,7 @@ class UserInboxTest extends TestCase
         $response
             ->assertStatus(403)
             ->assertJson(['success' => false]);
+        $inbox->delete();
     }
 
     /**
@@ -168,6 +175,7 @@ class UserInboxTest extends TestCase
             ]);
 
         $this->assertEquals(2, count($response->json()['data']['user_events']));
+        $inbox->delete();
     }
 
     /**
@@ -194,6 +202,7 @@ class UserInboxTest extends TestCase
                 'success' => false,
             ]);
         $this->assertDatabaseMissing('thread_user', ['thread_id' => $thread_id, 'user_id' => $user1->id]);
+        $inbox->delete();
     }
 
     /**
@@ -222,6 +231,7 @@ class UserInboxTest extends TestCase
                 'success' => false,
             ]);
         $this->assertDatabaseMissing('thread_user', ['thread_id' => $thread_id, 'user_id' => $user1->id]);
+        $inbox->delete();
     }
 
     /**
@@ -256,6 +266,7 @@ class UserInboxTest extends TestCase
                 'success' => true,
             ]);
         $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'body' => $data['body']]);
+        $inbox->delete();
     }
 
     public function testCreateDrafttNoPermission()
@@ -270,9 +281,10 @@ class UserInboxTest extends TestCase
             ->assertJson([
                 'success' => false,
             ]);
+        $inbox->delete();
     }
 
-    public function testCreateDrafttReadOnlyPermission()
+    public function testCreateDraftReadOnlyPermission()
     {
         $user = factory(User::class)->create();
         $inbox = TestCase::makeSeededInbox();
@@ -285,6 +297,7 @@ class UserInboxTest extends TestCase
             ->assertJson([
                 'success' => false,
             ]);
+        $inbox->delete();
     }
 
     public function testSendDraftNotYours()

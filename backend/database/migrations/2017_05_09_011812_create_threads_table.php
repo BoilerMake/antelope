@@ -17,6 +17,7 @@ class CreateThreadsTable extends Migration
             $table->integer('inbox_id')->unsigned();
             $table->foreign('inbox_id')->references('id')->on('inboxes');
             $table->string('state');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -4,9 +4,10 @@ namespace App\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Group extends Model
 {
+    use SoftDeletes;
     const INBOX_PERMISSION_READONLY = 'read';
     const INBOX_PERMISSION_READWRITE = 'readwrite';
     protected $guarded = ['id'];

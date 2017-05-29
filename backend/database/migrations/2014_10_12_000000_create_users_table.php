@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->boolean('is_admin')->default(false);
             $table->string('confirmation_code')->nullable();
             $table->boolean('confirmed')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

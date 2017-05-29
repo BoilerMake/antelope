@@ -6,9 +6,10 @@ use Html2Text\Html2Text;
 use Illuminate\Database\Eloquent\Model;
 use Log;
 use Mailgun\Mailgun;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Message extends Model
 {
+    use SoftDeletes;
     protected $hidden = ['headers', 'raw'];
 
     public function thread()

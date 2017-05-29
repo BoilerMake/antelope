@@ -19,6 +19,7 @@ class CreateDraftsTable extends Migration
             $table->integer('thread_id')->unsigned();
             $table->foreign('thread_id')->references('id')->on('threads');
             $table->text('body');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

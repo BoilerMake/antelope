@@ -32,6 +32,7 @@ class CreateMessagesTable extends Migration
             $table->text('headers')->nullable();
             $table->text('raw')->nullable();
             $table->integer('timestamp')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
