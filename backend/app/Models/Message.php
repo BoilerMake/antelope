@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Html2Text\Html2Text;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
 use Mailgun\Mailgun;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Message extends Model
 {
     use SoftDeletes;

@@ -15,14 +15,16 @@ class UserEvent extends Model
     const TYPE_GROUP_USER_REMOVE = 'group_user_remove';
     protected $guarded = ['id'];
 
-    public static function record(User $user, User $target, $type, array $meta) {
+    public static function record(User $user, User $target, $type, array $meta)
+    {
         self::create([
-            'user_id'=> $user ? $user->id : null,
+            'user_id'        => $user ? $user->id : null,
             'target_user_id' => $target ? $target->id : null,
-            'type' => $type,
-            'meta' => $meta ? json_encode($meta) : null
+            'type'           => $type,
+            'meta'           => $meta ? json_encode($meta) : null,
         ]);
     }
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

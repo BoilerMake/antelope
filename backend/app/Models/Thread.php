@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Thread extends Model
 {
     use SoftDeletes;
@@ -74,8 +75,10 @@ class Thread extends Model
         $t = self::with('users')->whereIn('inbox_id', $inbox_ids)
             ->get()
             ->sortByDesc(function ($thread) {
-                if ($thread->snippet == null) //if thread has no messages, we use thread creation time.
+                if ($thread->snippet == null) { //if thread has no messages, we use thread creation time.
                     return $thread->created_at->toDateTimeString();
+                }
+
                 return $thread->snippet->created_at->toDateTimeString();
             });
 

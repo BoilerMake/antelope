@@ -39,6 +39,7 @@ class BasicUserTest extends TestCase
                 'message' => 'Invalid credentials',
             ]);
     }
+
     public function testOnboard()
     {
         $faker = Factory::create();
@@ -47,33 +48,33 @@ class BasicUserTest extends TestCase
         //do it with not all fields filled out
         $response = $this->json('POST', '/auth/onboard', [
             'confirmation_code' => $user->confirmation_code,
-            'password'=>$pw
+            'password'          => $pw,
         ]);
         $response->assertJson(['success' => false]);
         //do it with invalid code
         $response = $this->json('POST', '/auth/onboard', [
             'confirmation_code' => 'asdf',
-            'password'=>$pw,
-            'first_name'=>$faker->firstName,
-            'last_name'=>$faker->lastName
+            'password'          => $pw,
+            'first_name'        => $faker->firstName,
+            'last_name'         => $faker->lastName,
         ]);
         $response->assertJson(['success' => false, 'message'=>'Invalid Confirmation Code.']);
         //do it properly
         $response = $this->json('POST', '/auth/onboard', [
             'confirmation_code' => $user->confirmation_code,
-            'password'=>$pw,
-            'first_name'=>$faker->firstName,
-            'last_name'=>$faker->lastName
+            'password'          => $pw,
+            'first_name'        => $faker->firstName,
+            'last_name'         => $faker->lastName,
         ]);
         $response->assertJson(['success' => true]);
         //try to do it as econd time
         $response = $this->json('POST', '/auth/onboard', [
             'confirmation_code' => $user->confirmation_code,
-            'password'=>$pw,
-            'first_name'=>$faker->firstName,
-            'last_name'=>$faker->lastName
+            'password'          => $pw,
+            'first_name'        => $faker->firstName,
+            'last_name'         => $faker->lastName,
         ]);
-        $response->assertJson(['success' => false, "message" => "You've already signed up!"]);
+        $response->assertJson(['success' => false, 'message' => "You've already signed up!"]);
     }
 
     public function testGetMe()
@@ -89,6 +90,7 @@ class BasicUserTest extends TestCase
                 'data'    => ['id'=>$user1->id],
             ]);
     }
+
     public function testPutMe()
     {
         $user1 = factory(User::class)->create();
@@ -106,11 +108,10 @@ class BasicUserTest extends TestCase
         $faker = Factory::create();
         $name = $faker->firstName;
 
-
-        $data['first_name']=$name;
+        $data['first_name'] = $name;
         $response = $this->json('PUT', '/users/me', $data, ['Authorization'=>'Bearer '.$token]);
         $response
             ->assertStatus(200);
-        $this->assertDatabaseHas('users',['id'=>$user1->id,'first_name'=>$name]);
+        $this->assertDatabaseHas('users', ['id'=>$user1->id, 'first_name'=>$name]);
     }
 }

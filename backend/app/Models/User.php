@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Hash;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -44,16 +45,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Creates a new user
+     * Creates a new user.
+     *
      * @param $email
      * @param bool $admin
      * @param null $password
+     *
      * @return User|bool
      */
     public static function addNew($email, $admin = false, $password = null)
     {
-        if(self::where('email',$email)->first())
+        if (self::where('email', $email)->first()) {
             return false;
+        }
         $user = new self();
         $user->email = $email;
         $user->is_admin = $admin;

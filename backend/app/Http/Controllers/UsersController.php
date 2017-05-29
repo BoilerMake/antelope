@@ -21,15 +21,18 @@ class UsersController extends Controller
     {
         return response()->success(Auth::user());
     }
+
     public function updateMe()
     {
         $user = Auth::user();
         $data = json_decode(Request::getContent(), true);
-        foreach($data as $k => $v) {
-            if(in_array($k,['first_name','last_name','email','signature']))
+        foreach ($data as $k => $v) {
+            if (in_array($k, ['first_name', 'last_name', 'email', 'signature'])) {
                 $user->$k = $v;
+            }
         }
         $user->save();
+
         return response()->success('ok');
     }
 
