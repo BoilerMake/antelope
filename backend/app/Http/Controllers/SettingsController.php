@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserWelcome;
 use App\Models\Group;
 use App\Models\Inbox;
 use App\Models\User;
 use App\Models\UserEvent;
 use Auth;
 use Log;
+use Mail;
 use Request;
 
 /**
@@ -94,6 +96,7 @@ class SettingsController extends Controller
     {
         $user = User::addNew(Request::get('email'));
         if ($user) {
+            Mail::to($user)->queue(new UserWelcome($user));
             return response()->success($user);
         }
 
