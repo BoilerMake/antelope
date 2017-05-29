@@ -6,7 +6,6 @@ export class SettingsPageGroups extends Component {
         super(props);
         this.state = {
             matrix: {},
-            showCreateGroup: false,
             newGroupName: "",
         };
     }
@@ -37,16 +36,12 @@ export class SettingsPageGroups extends Component {
     saveMatrix() {
         this.props.putSettingsGroupInboxMatrix(this.state.matrix);
     }
-    toggleCreateGroup() {
-        this.setState({showCreateGroup: !this.state.showCreateGroup});
-    }
     changeNewGroupName(event) {
         this.setState({newGroupName: event.target.value});
     }
     createNewGroup() {
         this.props.createGroup(this.state.newGroupName);
         this.setState({newGroupName: ""});
-        this.toggleCreateGroup();
     }
 
     render () {
@@ -73,12 +68,6 @@ export class SettingsPageGroups extends Component {
             eachRow.unshift(<td key={`td-${groupId}`} className="settingsPageGroups-LeftTable">{matrix[groupId]['name']}</td>);
             return <tr key={`tr-${groupId}`}>{eachRow}</tr>;
         });
-
-        let createGroup = (<div>
-            <input className="textInput_Dark" type="text" value={this.state.newGroupName} onChange={this.changeNewGroupName.bind(this)}/>
-            <br/>
-            <button className="btn-secondary" onClick={this.createNewGroup.bind(this)}>Create</button>
-        </div>);
         return(<div>
             <SettingsHeader title="Groups"/>
             <p>Here's a matrix outlining each group's inbox permissions</p>
@@ -92,9 +81,13 @@ export class SettingsPageGroups extends Component {
                 </tbody>
             </table>
             <br/>
-            <button className="btn-primary" onClick={this.saveMatrix.bind(this)}>Update Permissions</button>
-            <button className="btn-secondary" onClick={this.toggleCreateGroup.bind(this)}>New Group</button>
-            {this.state.showCreateGroup ? createGroup : null}
+            <button className="btn-secondary" onClick={this.saveMatrix.bind(this)}>Update Permissions</button>
+            <SettingsHeader title="Create a new Group"/>
+            <div>
+                <input className="textInput_Dark" type="text" value={this.state.newGroupName} onChange={this.changeNewGroupName.bind(this)}/>
+                <br/>
+                <button className="btn-secondary" onClick={this.createNewGroup.bind(this)}>Create</button>
+            </div>
         </div>);
     }
 }

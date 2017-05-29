@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SettingsHeader from './SettingsHeader';
 import {Table, Column, Cell} from 'fixed-data-table-2';
 import 'fixed-data-table-2/dist/fixed-data-table.css';
-import {toastr} from 'react-redux-toastr'
 
 export class SettingsPageUsers extends Component {
 
@@ -89,9 +88,6 @@ export class SettingsPageUsers extends Component {
                 <input className="textInput_Dark" placeholder="email" type="text" value={this.state.newUserEmail} onChange={this.changeNewUserEmail.bind(this)}/>
                 <button className="btn-secondary" onClick={this.createNewUser.bind(this)}>Create User</button>
             </div>
-            <button
-                onClick={() => toastr.success('The title', 'The message')}
-                type="button">Toastr Success</button>
         </div>);
     }
 }

@@ -55,7 +55,7 @@ export class SettingsPageAccount extends Component {
         this.props.updateMe(this.state.me);
     }
     render () {
-        return(<div style={{width: '500px'}}>
+        return(<div>
             <SettingsHeader title="Account Settings"/>
             <p>Hi, {this.state.me.displayName}</p>
             {/*<pre>{JSON.stringify(this.state.me,null,2)}</pre>*/}
@@ -72,12 +72,15 @@ export class SettingsPageAccount extends Component {
                 <label>email</label>
                 <input className="textInput_Dark" value={this.state.me.email} onChange={this.textChange.bind(this,"email")}/>
             </div>
-            signature
+            <button className="btn-secondary" onClick={this.saveMe.bind(this)}>Save</button>
+
+            <SettingsHeader title="Your Signature"/>
             <Editor
+                wrapperStyle={{border: "1px solid white", width: '800px'}}
                 editorState={this.state.editorState}
                 onEditorStateChange={this.onEditorStateChange.bind(this)}
             />
-            <button className="btn-primary" onClick={this.saveMe.bind(this)}>Save</button>
+            <button className="btn-secondary" onClick={this.saveMe.bind(this)}>Save</button>
         </div>);
     }
 }
