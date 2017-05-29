@@ -1,13 +1,24 @@
 import React, { Component } from 'react';
+import { findDOMNode} from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import ThreadItem from './ThreadItem';
 class ThreadListView extends Component {
     componentDidMount() {
         this.props.fetchInbox(this.props.inboxId);
+        this.ensureActiveItemVisible();
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps.inboxId !== this.props.inboxId)
             this.props.fetchInbox(nextProps.inboxId);
+    }
+    componentDidUpdate(prevProps) {
+        // only scroll into view if the active item changed last render
+        if ((this.props.threadId !== prevProps.threadId) || this.props.inbox !== prevProps.inbox)
+            this.ensureActiveItemVisible();
+    }
+    ensureActiveItemVisible() {
+        const itemComponent = this.refs.activeItem;
+        if (itemComponent) findDOMNode(itemComponent).scrollIntoView();
     }
     render () {
         let inboxId = this.props.inboxId;
@@ -33,9 +44,10 @@ class ThreadListView extends Component {
 
         let threadList = inboxContents.threads.map((thread)=>{
             if(!thread.snippet) return(null);
+            const isActive = parseInt(this.props.threadId,10)===thread.id;
             return(
                 <div onClick={()=>{this.props.history.push(`/inbox/${this.props.inboxId}/${thread.id}`)}} key={thread.id}>
-                    <ThreadItem thread={thread} meId={this.props.user.me ? this.props.user.me.id : 0} inboxId={parseInt(inboxId,10)} active={parseInt(this.props.threadId,10)===thread.id}/>
+                    <ThreadItem thread={thread} meId={this.props.user.me ? this.props.user.me.id : 0} inboxId={parseInt(inboxId,10)} ref={isActive ? "activeItem" : null} active={isActive}/>
                 </div>)
         });
 
