@@ -88,7 +88,7 @@ class InboxController extends Controller
         if (!in_array($thread->inbox_id, $user->getInboxIds())) {
             return response()->error('You do not have permission to access this thread.', null, 403);
         }
-
+        $thread->readOnly = !in_array($thread->inbox_id, $user->getReadWriteInboxIds());
         return response()->success($thread);
     }
 

@@ -99,7 +99,23 @@ class UserInboxTest extends TestCase
         $response = $this->json('GET', '/thread/'.$inbox->threads[0]->id, [], ['Authorization' => 'Bearer '.$user->getToken()]);
         $response
             ->assertStatus(200)
-            ->assertJson(['success' => true]);
+            ->assertJson(['success' => true, 'data'=>['readOnly'=>false]]);
+        $this->assertEquals(5, count($response->json()['data']['messages']));
+        $inbox->delete();
+    }
+
+    /**
+     * Test GET thread/{id}.
+     */
+    public function testGetThreadByIdReadOnly()
+    {
+        $inbox = self::makeSeededInbox(1, 5);
+        $user = factory(User::class)->create();
+        self::connectUserToInbox($user, $inbox, Group::INBOX_PERMISSION_READONLY);
+        $response = $this->json('GET', '/thread/'.$inbox->threads[0]->id, [], ['Authorization' => 'Bearer '.$user->getToken()]);
+        $response
+            ->assertStatus(200)
+            ->assertJson(['success' => true, 'data'=>['readOnly'=>true]]);
         $this->assertEquals(5, count($response->json()['data']['messages']));
         $inbox->delete();
     }

@@ -74,21 +74,10 @@ class ThreadView extends Component {
                 </div>
             );
         let threadContents = thread.contents;
-        let messageList = threadContents.messages.map(message => {
-            return(
-                <MessageItem message={message} key={"m"+message.id}/>
-            )
-        });
-        let userEventList = threadContents.user_events.map(e => {
-            return(
-                <UserEvent event={e} key={"e"+e.id}/>
-            )
-        });
-        let draftList = threadContents.drafts.map(d => {
-            return(
-                <Draft draft={d} update={this.props.updateDraft} key={"d"+d.id}/>
-            )
-        });
+        const { readOnly } = threadContents;
+        let messageList = threadContents.messages.map(message => <MessageItem message={message} key={"m"+message.id}/>);
+        let userEventList = threadContents.user_events.map(e => <UserEvent event={e} key={"e"+e.id}/>);
+        let draftList = threadContents.drafts.map(d => <Draft draft={d} update={this.props.updateDraft} key={"d"+d.id}/>);
 
         let AssignmentsModal = (<ThreadAssignmentsModal
             isOpen={this.state.showAssignmentsModal}
@@ -102,6 +91,7 @@ class ThreadView extends Component {
                 <div className="col-bottom" style={{padding: '20px'}}>
                     {mobileBackLink}
                     {this.props.threadId ? null : 'no threaad selected'}
+                    {readOnly ? <i>NOTE: you have read-only permissions for this inbox</i> : null}
 
                     {AssignmentsModal}
                     <div className="threadview-header">
@@ -118,8 +108,8 @@ class ThreadView extends Component {
                     <hr/>
                     {messageList}
                     <div className="pullRight">
-                        <button className="btn-primary" onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
-                        <button className="btn-primary" onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
+                        <button className="btn-primary" disabled={readOnly} onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
+                        <button className="btn-primary" disabled={readOnly} onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
                     </div>
                     {userEventList}
                     {draftList}
