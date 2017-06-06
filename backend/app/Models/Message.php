@@ -29,7 +29,7 @@ class Message extends Model
      * @param $user_id - who sent the message
      * @param $body_html - the message body
      * TODO: allow changing subject? you can only change so much to work with email threading
-     * TODO: allow changing the 'from' address?
+     * TODO: allow changing the 'from' address?- this breaks threading if it's not the same address as the initial mail was sent to
      *
      * @return Message|false
      */

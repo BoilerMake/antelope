@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { DEV_MODE }  from '../../config';
 import moment from 'moment'
 export default class MessageItem extends Component {
 
@@ -12,10 +13,13 @@ export default class MessageItem extends Component {
                     <div className="message-item-header-right">{date.calendar()}</div>
                 </div>
                 <hr/>
-                <div className="message-item-body" dangerouslySetInnerHTML={{__html: message.body_html}} />
-                {/*<pre style={{width: '80%', "whiteSpace":"pre-wrap"}}>*/}
-                    {/*{JSON.stringify(message,null, 2)}*/}
-                {/*</pre>*/}
+                    <div className="message-item-body" dangerouslySetInnerHTML={{__html: message.body_html}}/>
+                {DEV_MODE ?
+                    <pre style={{width: '90%', "whiteSpace": "pre-wrap", backgroundColor: 'grey'}}>
+                        debug data<br/>
+                        {JSON.stringify(message, null, 2)}
+                    </pre> : null}
+                }
             </div>
         );
     }

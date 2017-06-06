@@ -32,10 +32,11 @@ class MailBasicTest extends TestCase
         $fromEmail = $faker->email;
         $messageId1 = "<{$faker->uuid}@mail.domain.com>";
         $response = $this->json('POST', '/mailgunhook', [
-            'from'            => "{$faker->name} <{$fromEmail}>",
+            'From'            => "{$faker->name} <{$fromEmail}>",
             'sender'          => $fromEmail,
             'subject'         => $faker->sentence(),
             'recipient'       => $faker->email,
+            'To'              => $faker->email,
             'Message-Id'      => $messageId1,
             'body-plain'      => 'txt',
             'body-html'       => $faker->randomHtml(),
@@ -53,10 +54,11 @@ class MailBasicTest extends TestCase
         $fromEmail = $faker->email;
         $messageId2 = "<{$faker->uuid}@mail.domain.com>";
         $response = $this->json('POST', '/mailgunhook', [
-            'from'            => "{$faker->name} <{$fromEmail}>",
+            'From'            => "{$faker->name} <{$fromEmail}>",
             'sender'          => $fromEmail,
             'subject'         => "Re: {$faker->sentence()}",
             'recipient'       => $faker->email,
+            'To'              => $faker->email,
             'Message-Id'      => $messageId2,
             'body-plain'      => 'txt',
             'body-html'       => $faker->randomHtml(),

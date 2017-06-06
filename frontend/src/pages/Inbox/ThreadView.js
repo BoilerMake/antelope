@@ -42,6 +42,11 @@ class ThreadView extends Component {
                     return (<div><strong>{event.user.displayName}</strong> {event.type} {dateString}</div>);
             }
         };
+        const MessageEvent = ({event}) => {
+            const date = moment.utc(event.created_at,'YYYY-MM-DD HH:mm:ss').local();
+            let dateString = date.calendar();
+            return(<div>{event.recipient} | {event.name} message#: {event.message_id} | {dateString}</div>)
+        };
         const mobileBackLink = (this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>);
         const threadId = this.props.threadId;
         let thread = this.props.thread[threadId];
@@ -75,9 +80,10 @@ class ThreadView extends Component {
             );
         let threadContents = thread.contents;
         const { readOnly } = threadContents;
-        let messageList = threadContents.messages.map(message => <MessageItem message={message} key={"m"+message.id}/>);
-        let userEventList = threadContents.user_events.map(e => <UserEvent event={e} key={"e"+e.id}/>);
-        let draftList = threadContents.drafts.map(d => <Draft draft={d} update={this.props.updateDraft} key={"d"+d.id}/>);
+        let messageList = threadContents.messages.map(x => <MessageItem message={x} key={"m"+x.id}/>);
+        let userEventList = threadContents.user_events.map(x => <UserEvent event={x} key={"ue"+x.id}/>);
+        let messageEventList = threadContents.messages[0].events.map(x => <MessageEvent event={x} key={"me"+x.id}/>);
+        let draftList = threadContents.drafts.map(x => <Draft draft={x} update={this.props.updateDraft} key={"d"+x.id}/>);
 
         let AssignmentsModal = (<ThreadAssignmentsModal
             isOpen={this.state.showAssignmentsModal}
@@ -112,6 +118,7 @@ class ThreadView extends Component {
                         <button className="btn-primary" disabled={readOnly} onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
                     </div>
                     {userEventList}
+                    <p>Drafts</p>
                     {draftList}
 
                     {/*<pre>{JSON.stringify(thread.contents.user_events,null, 2)}</pre>*/}

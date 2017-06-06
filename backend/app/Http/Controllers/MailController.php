@@ -71,11 +71,16 @@ class MailController extends Controller
 
         //summary on from vs. sender: https://cr.yp.to/immhf/sender.html
         //tl;dr: "It is unclear why Sender is supposed to be useful."
-        $m->from = Request::get('from');
+        $m->from = Request::get('From');
         $m->sender = Request::get('sender');
 
-        $m->subject = Request::get('subject');
         $m->recipient = Request::get('recipient'); //this is the address the message was sent 'to'
+        $m->to = Request::get('To');
+
+        $m->cc = Request::get('Cc');
+        $m->bcc = Request::get('Bcc');
+
+        $m->subject = Request::get('subject');
         $m->message_id = Request::get('Message-Id');
 
         $m->body_plain = Request::get('body-plain');

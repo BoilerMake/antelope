@@ -23,6 +23,7 @@ class CreateMessagesTable extends Migration
             $table->string('recipient');
             $table->string('from');
             $table->string('sender');
+            $table->string('to');
             $table->string('cc')->nullable();
             $table->string('bcc')->nullable();
             $table->string('references')->nullable();
