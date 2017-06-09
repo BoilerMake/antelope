@@ -5,12 +5,4 @@
 [![StyleCI](https://styleci.io/repos/89496415/shield?branch=master)](https://styleci.io/repos/89496415)
 
 ## Development:
-Requirements: php with composer, mysql, yarn
-### Frontend:
-* `cd frontend`
-* `yarn install` to get packages
-* `yarn run start` to start the webpack dev server on :3000
-* `yarn run test` to start the test suite watcher
-### Backend
-* `cd backend`
-* `composer install`
+[see the wiki](https://github.com/BoilerMake/antelope/wiki/Developer-Setup)
