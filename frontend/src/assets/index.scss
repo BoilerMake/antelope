@@ -54,9 +54,13 @@ $active-text: #F3F3F3;
   flex-shrink: 0;
   background-color: $dark-bg;
   color: white;
-  height: 80px;
-  padding: 20px;
+  height: 100px;
+  padding: 0;
   border-bottom: 1px solid white;
+  display: flex;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+
 }
 .col-top-right {
   display: inline-flex;
@@ -183,6 +187,9 @@ $active-text: #F3F3F3;
   font-size: 12px;
   text-align: right;
 }
+.threaditem--userEventItem {
+  text-align: center;
+}
 
 .state-icon {
   /* Oval: */
@@ -286,7 +293,7 @@ $active-text: #F3F3F3;
   line-height: 1;
 }
 .sidebar-logo {
-  width: 50px;
+  height: 100%;
 }
 
 /** Login */

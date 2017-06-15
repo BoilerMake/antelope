@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import logo from '../../assets/images/logo.png'
+import Sidebar from '../../components/Sidebar';
+
 class InboxSidebar extends Component {
     componentDidMount() {
         this.props.fetchUserInboxList();
@@ -15,32 +16,24 @@ class InboxSidebar extends Component {
                     <div className="sidebar-badge"><div>{inbox.countNew}</div></div>
                 </div>
             </div>);
+        let lowerSidebar = [
+            (
+                <div className="sidebar-item-wrapper bottomItem" onClick={()=>this.props.history.push('/settings')}>
+                    <div className="sidebar-item">
+                        <div>Settings</div>
+                    </div>
+                </div>
+            ),
+            (
+                <div className="sidebar-item-wrapper bottomItem" onClick={()=>this.props.logout()}>
+                    <div className="sidebar-item">
+                        <div>Logout</div>
+                    </div>
+                </div>
+            )
+        ];
         return (
-            <div className="col left">
-                <div className="col-top-left-brand">
-                    <img src={logo} alt="logo" className="sidebar-logo" />
-                    <div>Antelope</div>
-                    {this.props.isMobile &&  <div onClick={this.props.toggleSidebar}>[hide sidebar]</div>}
-                </div>
-                <div className="col-bottom sidebar-wrapper">
-                    <div id="sidebar-upper">
-                        {inboxList}
-                    </div>
-                    <div id="sidebar-lower">
-                        <div className="sidebar-item-wrapper bottomItem"
-                             onClick={()=>this.props.history.push('/settings')}>
-                            <div className="sidebar-item">
-                                <div>Settings</div>
-                            </div>
-                        </div>
-                        <div className="sidebar-item-wrapper bottomItem" onClick={()=>this.props.logout()}>
-                            <div className="sidebar-item">
-                                <div>Logout</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Sidebar upper={inboxList} lower={lowerSidebar} isMobile={this.props.isMobile} toggleSidebar={this.props.toggleSidebar}/>
         );
     }
 }
