@@ -68,6 +68,19 @@ class InboxController extends Controller
     }
 
     /**
+     * Used to chronologically sort the UserEvent and Messages objects so that they can be shown inline.
+     * @param $a
+     * @param $b
+     * @return int
+     */
+    private static function  cmp($a, $b) {
+        if ($a['content']['created_at'] == $b['content']['created_at']) {
+            return 0;
+        }
+        return ($a['content']['created_at'] < $b['content']['created_at']) ? -1 : 1;
+    }
+
+    /**
      * Gets contents of a thread.
      * PERMISSIONS: you can only get a thread if you have read or readwrite permissions for its inbox.
      *
@@ -84,12 +97,23 @@ class InboxController extends Controller
             'users',
             'userEvents.user',
             'userEvents.target',
-            'drafts')->find($thread_id);
+            'drafts.user')->find($thread_id);
         if (!in_array($thread->inbox_id, $user->getInboxIds())) {
             return response()->error('You do not have permission to access this thread.', null, 403);
         }
         $thread->readOnly = !in_array($thread->inbox_id, $user->getReadWriteInboxIds());
 
+        $combo = [];
+        foreach ($thread->userEvents as $userEvent)
+            $combo[]=['type'=>'user_event','content'=>$userEvent];
+        foreach ($thread->messages as $message)
+            $combo[]=['type'=>'message','content'=>$message];
+
+        usort($combo,"self::cmp");
+        $thread->combo = $combo;
+        $thread = $thread->toArray();
+//        unset($thread['messages']);
+        unset($thread['userEvents']);
         return response()->success($thread);
     }
 

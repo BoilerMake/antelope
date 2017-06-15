@@ -272,6 +272,14 @@ class UserInboxTest extends TestCase
         $data = $response->json()['data'];
         //todo: check user signature is in there
 
+
+
+        //todo: make sure the draft is in there
+        $response = $this->json('GET', "/thread/{$thread_id}", [], ['Authorization' => 'Bearer '.$token]);
+        $response->assertStatus(200);
+
+
+
         //assign user2 to the thread.
         $data['body'] = '<p>newhtml</p>';
         $data['action'] = 'send';

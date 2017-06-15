@@ -31,16 +31,20 @@ class ThreadView extends Component {
     render () {
         const UserEvent = ({event}) => {
             const date = moment.utc(event.created_at,'YYYY-MM-DD HH:mm:ss').local();
-            let dateString = date.calendar();
+            const dateString = date.format("ddd, MMMM Do YYYY, h:mm:ss a");
 
-            switch (event.type) {
-                case 'assign_thread':
-                    return (<div><strong>{event.user.displayName}</strong> <i>assigned</i> the thread to <strong>{event.target.displayName}</strong> {dateString}</div>)
-                case 'unassign_thread':
-                    return (<div><strong>{event.user.displayName}</strong> <i>unassigned</i> the thread to <strong>{event.target.displayName}</strong> {dateString}</div>)
-                default:
-                    return (<div><strong>{event.user.displayName}</strong> {event.type} {dateString}</div>);
-            }
+            let context;
+            if (event.type === 'assign_thread')
+                context = (<span><i>assigned</i> the thread to <strong>{event.target.displayName}</strong></span>);
+            else if (event.type === 'unassign_thread')
+                context = (<span><i>unassigned</i> the thread to <strong>{event.target.displayName}</strong></span>);
+            else if (event.type === 'create_draft')
+                context = (<span><i>created a draft</i></span>);
+            else if (event.type === 'send_draft')
+                context = (<span><i>sent a draft</i></span>);
+            else
+                context = (<span>{event.type}</span>);
+            return (<div className="threaditem--userEventItem"><strong>{event.user.displayName}</strong> {context} on {dateString}</div>);
         };
         const MessageEvent = ({event}) => {
             const date = moment.utc(event.created_at,'YYYY-MM-DD HH:mm:ss').local();
@@ -80,8 +84,15 @@ class ThreadView extends Component {
             );
         let threadContents = thread.contents;
         const { readOnly } = threadContents;
-        let messageList = threadContents.messages.map(x => <MessageItem message={x} key={"m"+x.id}/>);
-        let userEventList = threadContents.user_events.map(x => <UserEvent event={x} key={"ue"+x.id}/>);
+        let comboList = [];
+        for(let item of threadContents.combo) {
+            console.log(item);
+            let x =  item.content;
+            if(item.type==="message")
+                comboList.push(<MessageItem message={x} key={"m"+x.id}/>);
+            if(item.type==="user_event")
+                comboList.push(<UserEvent event={x} key={"ue"+x.id}/>);
+        }
         let messageEventList = threadContents.messages[0].events.map(x => <MessageEvent event={x} key={"me"+x.id}/>);
         let draftList = threadContents.drafts.map(x => <Draft draft={x} update={this.props.updateDraft} key={"d"+x.id}/>);
 
@@ -112,12 +123,11 @@ class ThreadView extends Component {
                     </div>
 
                     <hr/>
-                    {messageList}
+                    {comboList}
                     <div className="pullRight">
                         <button className="btn-primary" disabled={readOnly} onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
                         <button className="btn-primary" disabled={readOnly} onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
                     </div>
-                    {userEventList}
                     <p>Drafts</p>
                     {draftList}
 

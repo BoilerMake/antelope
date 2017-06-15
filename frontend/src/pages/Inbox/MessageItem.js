@@ -10,7 +10,7 @@ export default class MessageItem extends Component {
             <div className="message-item">
                 <div className="message-item-header">
                     <div className="message-item-header-left">{message.from}</div>
-                    <div className="message-item-header-right">{date.calendar()}</div>
+                    <div className="message-item-header-right">{date.format("ddd, MMMM Do YYYY, h:mm:ss a")}</div>
                 </div>
                 <hr/>
                     <div className="message-item-body" dangerouslySetInnerHTML={{__html: message.body_html}}/>
@@ -19,7 +19,6 @@ export default class MessageItem extends Component {
                         debug data<br/>
                         {JSON.stringify(message, null, 2)}
                     </pre> : null}
-                }
             </div>
         );
     }
