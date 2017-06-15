@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use App\Http\Middleware\AdminOnly;
+use Barryvdh\Cors\HandleCors;
+use Clockwork\Support\Laravel\ClockworkMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -15,7 +17,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \Barryvdh\Cors\HandleCors::class,
+        HandleCors::class,
+        ClockworkMiddleware::class
     ];
 
     /**
