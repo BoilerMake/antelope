@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Draft;
 use App\Models\Inbox;
+use App\Models\Message;
 use App\Models\Thread;
 use App\Models\UserEvent;
 use Auth;
+use Log;
 use Request;
 
 /**
@@ -189,19 +191,32 @@ class InboxController extends Controller
             return response()->error('You do not have permission to create a draft in this inbox', null, 403);
         }
         //creating a draft will auto assign you to the thread
-        $thread->users()->syncWithoutDetaching($user->id);
-        $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $user->id);
+        $thread->assignUser($user);
+
 
         //Drafts just start as your signature.
         $signature = $user->signature;
-        $d = Draft::create([
+        $draft = Draft::create([
             'user_id'  => $user->id,
             'thread_id'=> $thread_id,
             'body'     => '<br/><br/>'.$signature,
         ]);
+
+
+        $lastIncomingMessage = $thread->getLastMessage(true);
+        if($lastIncomingMessage) {
+            $draft->reply_to_message_id = $lastIncomingMessage->id;
+            $draft->save();
+            Log::info("Creating draft # {$draft->id} - it is a reply to message {$lastIncomingMessage->id} in thread {$thread_id}");
+        }
+        else {
+            //there are no messages in the thread.
+            Log::info("Creating draft # {$draft->id} - it is the first message in thread {$thread_id}");
+        }
+
         $user->recordThreadEvent($thread, UserEvent::TYPE_CREATE_DRAFT);
 
-        return response()->success($d);
+        return response()->success($draft);
     }
 
     /**
@@ -228,8 +243,14 @@ class InboxController extends Controller
         $action = Request::get('action');
         if ($action === 'send') {
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
-            $message = $draft->thread->getLastMessage();
-            $message->reply($draft->user_id, $draft->body);
+            if($draft->reply_to_message_id) {
+                Message::find($draft->reply_to_message_id)->reply($draft->user_id, $draft->body);
+            }
+            else {
+                //first message in a thread
+
+            }
+            $draft->delete();//delete the draft because we sent it
         }
 
         return response()->success($draft);

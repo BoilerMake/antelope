@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Log;
 
 class Thread extends Model
 {
@@ -95,8 +97,25 @@ class Thread extends Model
                 return $group->users->pluck('id');
             })->flatten()->unique()->values()->all();
     }
+    public static function invalidateCache($thread_id) {
+        Cache::tags("thread-{$thread_id}")->flush();
+    }
 
-    public function getAssignedUsers()
+    public function assignUser(User $user) {
+        $this->users()->syncWithoutDetaching($user->id);
+        $user->recordThreadEvent($this, UserEvent::TYPE_ASSIGN_THREAD, $user->id);
+    }
+
+    public function getAssignedUsers() {
+//        $cacheKey = "thread-assignments-{$this->id}";
+//        $value = Cache::tags(['thread',"thread-{$this->id}"])->remember($cacheKey, 10, function () {
+//            return $this->getAssignedUsersFresh();
+//        });
+//        return $value;
+        return $this->getAssignedUsersFresh();
+
+    }
+    private function getAssignedUsersFresh()
     {
         $thread = self::with('users')->find($this->id);
         $user_ids_assigned = $thread->users->pluck('id')->toArray();
