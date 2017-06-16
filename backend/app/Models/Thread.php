@@ -121,8 +121,12 @@ class Thread extends Model
         return $users;
     }
 
-    public function getLastMessage()
+    public function getLastMessage($onlyIncoming = false)
     {
-        return Message::where('thread_id', $this->id)->orderBy('created_at', 'desc')->first();
+        if($onlyIncoming) {
+            //todo: better way of determining incoming vs. outgoing then checking if user_id is null...
+            return Message::where('thread_id', $this->id)->where('user_id',null)->orderBy('id', 'desc')->first();
+        }
+        return Message::where('thread_id', $this->id)->orderBy('id', 'desc')->first();
     }
 }
