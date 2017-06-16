@@ -59,6 +59,9 @@ export default class Draft extends Component {
                 <Editor
                 editorState={this.state.editorState}
                 onEditorStateChange={this.onEditorStateChange}
+                toolbarClassName="draft-toolbar"
+                wrapperClassName="draft-wrapper"
+                editorClassName="draft-editor"
                 />
                 <button className="btn-primary" onClick={this.saveDraft}>Save</button>
                 <button className="btn-primary" onClick={this.toggleEditing}>Close</button>
@@ -70,7 +73,7 @@ export default class Draft extends Component {
                 <button className="btn-primary" onClick={this.toggleEditing}>Edit</button>
             </div>);
         return (
-            <div style={{"border": "1px solid green"}}>
+            <div>
                 { this.state.isEditing ? editingView : displayView}
             </div>
         );
