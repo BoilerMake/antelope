@@ -10,6 +10,7 @@ use Log;
 class Inbox extends Model
 {
     use SoftDeletes;
+    use CacheableModel;
     protected $appends = ['countNew'];
     protected $guarded = ['id'];
 
@@ -24,7 +25,7 @@ class Inbox extends Model
      */
     public function counts()
     {
-        return Cache::tags(["inbox-{$this->id}"])
+        return Cache::tags([$this->getCacheTag()])
             ->rememberForever("inbox-counts-{$this->id}", function () {
                 return [
                     Thread::STATE_NEW         => $this->threads()->where('state', Thread::STATE_NEW)->count(),
@@ -40,11 +41,10 @@ class Inbox extends Model
      * @param $inbox_id
      */
     public static function invalidateCacheById($inbox_id) {
-        Log::info("invalidating caches for inbox #{$inbox_id}");
-        Cache::tags("inbox-{$inbox_id}")->flush();
+        Inbox::find($inbox_id)->invalidateCache();
     }
     public function reBuildCache() {
-        self::invalidateCacheById($this->id);
+        $this->invalidateCache();
         $this->counts();
     }
 

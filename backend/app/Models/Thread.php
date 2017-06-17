@@ -10,6 +10,7 @@ use Log;
 class Thread extends Model
 {
     use SoftDeletes;
+    use CacheableModel;
     protected $fillable = ['inbox_id', 'state'];
     protected $appends = ['snippet'];
 
@@ -20,12 +21,7 @@ class Thread extends Model
 
     public static function invalidateCacheById($thread_id)
     {
-        Log::info("invalidating caches for thread #{$thread_id}");
-        Cache::tags("thread-{$thread_id}")->flush();
-    }
-    public function invalidateCache() {
-        Log::info("invalidating caches for thread #{$this->id}");
-        Cache::tags("thread-{$this->id}")->flush();
+        self::find($thread_id)->invalidateCache();
     }
     public function reBuildCache() {
         $this->invalidateCache();
@@ -67,7 +63,7 @@ class Thread extends Model
     public function getSnippetAttribute()
     {
         //need to invalidate this when the messages in a thread change.
-        return Cache::tags(["thread-{$this->id}"])
+        return Cache::tags([$this->getCacheTag()])
             ->rememberForever("thread-snippet-{$this->id}", function () {
                 return $this->getSnippetAttributeFresh();
             });
@@ -139,7 +135,7 @@ class Thread extends Model
      * @return mixed
      */
     public function getAssignedUsers() {
-        return Cache::tags(["permissions","thread-{$this->id}","inbox-{$this->inbox_id}"])
+        return Cache::tags(["permissions",$this->getCacheTag(),"inboxes-{$this->inbox_id}"])
             ->rememberForever("thread-assignments-{$this->id}", function () {
             return $this->getAssignedUsersFresh();
         });

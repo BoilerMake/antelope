@@ -15,6 +15,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
+    use CacheableModel;
 
     /**
      * The attributes that are mass assignable.
@@ -80,10 +81,6 @@ class User extends Authenticatable
         return JWTAuth::fromUser($this, ['exp' => strtotime('+1 year')]);
     }
 
-    public function invalidateCache() {
-        Log::info("invalidating caches for thread #{$this->id}");
-        Cache::tags("user-{$this->id}")->flush();
-    }
     public function reBuildCache() {
         $this->invalidateCache();
         self::permissionsWereTangentiallyUpdated(__METHOD__);
@@ -91,7 +88,7 @@ class User extends Authenticatable
     }
 
     private function getInboxIdsByPermission() {
-        return Cache::tags(["permissions","user-{$this->id}"])
+        return Cache::tags(["permissions",$this->getCacheTag()])
             ->rememberForever("user-inbox-permissions-{$this->id}", function () {
                 return $this->getInboxIdsByPermissionFresh();
             });
