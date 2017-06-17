@@ -9,7 +9,7 @@ export default class MessageItem extends Component {
         return (
             <div className="message-item">
                 <div className="message-item-header">
-                    <div className="message-item-header-left">mid: {message.id} | s{message.from}</div>
+                    <div className="message-item-header-left">mid: {message.id} | from: {message.from} | sub: {message.subject}</div>
                     <div className="message-item-header-right">{date.format("ddd, MMMM Do YYYY, h:mm:ss a")}</div>
                 </div>
                 <hr/>

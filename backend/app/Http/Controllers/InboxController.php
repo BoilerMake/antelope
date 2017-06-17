@@ -177,6 +177,8 @@ class InboxController extends Controller
      * Create a draft tied to a thread
      * PERMISSIONS: you can only create a draft in a thread if you have readwrite permissions to that thread's inbox.
      * TODO: support reply all, etc.
+     * TODO: allow changing subject? you can only change so much to work with email threading
+     * TODO: allow changing the 'from' address?- this breaks threading if it's not the same address as the initial mail was sent to
      *
      * @param $thread_id
      * @param string $mode
@@ -185,7 +187,7 @@ class InboxController extends Controller
      */
     public function createDraft($thread_id, $mode = 'reply')
     {
-        $thread = Thread::find($thread_id);
+        $thread = Thread::with('inbox')->find($thread_id);
         $user = Auth::user();
         if (!in_array($thread->inbox_id, $user->getReadWriteInboxIds())) {
             return response()->error('You do not have permission to create a draft in this inbox', null, 403);
@@ -194,18 +196,25 @@ class InboxController extends Controller
         $thread->assignUser($user);
 
 
-        //Drafts just start as your signature.
+
+
         $signature = $user->signature;
         $draft = Draft::create([
             'user_id'  => $user->id,
             'thread_id'=> $thread_id,
-            'body'     => '<br/><br/>'.$signature,
+            'body'     => '<br/><br/>'.$signature,//Drafts just start as your signature.
+            'from'     => $thread->inbox->primary_address,
         ]);
 
 
         $lastIncomingMessage = $thread->getLastMessage(true);
         if($lastIncomingMessage) {
             $draft->reply_to_message_id = $lastIncomingMessage->id;
+            //replies should be sent to the from address
+            $draft->to = $lastIncomingMessage->from;
+            $draft->subject = (substr($lastIncomingMessage->subject, 0, 3) === 'Re:')
+                ? $lastIncomingMessage->subject
+                : ('Re: '.$lastIncomingMessage->subject); //i think we *need* this for gmail threading
             $draft->save();
             Log::info("Creating draft # {$draft->id} - it is a reply to message {$lastIncomingMessage->id} in thread {$thread_id}");
         }
@@ -231,7 +240,7 @@ class InboxController extends Controller
      */
     public function updateDraft($draft_id)
     {
-        $draft = Draft::with('thread')->find($draft_id); //todo: fancy model hinting
+        $draft = Draft::with('thread')->find($draft_id);
         $user = Auth::user();
         if ($user->id !== $draft->user_id) {
             return response()->error('You can only update your own draft.', null, 403);
@@ -243,13 +252,7 @@ class InboxController extends Controller
         $action = Request::get('action');
         if ($action === 'send') {
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
-            if($draft->reply_to_message_id) {
-                Message::find($draft->reply_to_message_id)->reply($draft->user_id, $draft->body);
-            }
-            else {
-                //first message in a thread
-
-            }
+            $draft->send();
             $draft->delete();//delete the draft because we sent it
         }
 
