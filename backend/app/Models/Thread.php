@@ -98,30 +98,41 @@ class Thread extends Model
 
     public function getUserIdsWithReadWriteAccess()
     {
-        return self::with('inbox.groups.users')
-            ->find($this->id)->inbox->groups
+        $thisThread = self::with('inbox.groups.users')->find($this->id);
+        if(!$thisThread->inbox || !$thisThread->inbox->groups)
+            return [];
+        return $thisThread->inbox->groups
             ->filter(function ($group) {
                 return $group->pivot->permission === Group::INBOX_PERMISSION_READWRITE;
             })->transform(function ($group) {
                 return $group->users->pluck('id');
             })->flatten()->unique()->values()->all();
     }
-    public static function invalidateCache($thread_id) {
-        Cache::tags("thread-{$thread_id}")->flush();
+
+    /**
+     * TODO: invalidate assignments cache when group_user or group_inbox membership changes
+     */
+    public function invalidateCache() {
+        Log::info("invalidating caches for thread #{$this->id}");
+        Cache::tags("thread-{$this->id}")->flush();
     }
 
-    public function assignUser(User $user) {
-        $this->users()->syncWithoutDetaching($user->id);
-        $user->recordThreadEvent($this, UserEvent::TYPE_ASSIGN_THREAD, $user->id);
+    public function assignUser($userId, $changedById) {
+        $this->users()->syncWithoutDetaching($userId);
+        User::find($changedById)->recordThreadEvent($this, UserEvent::TYPE_ASSIGN_THREAD, $userId);
+        $this->invalidateCache();
+    }
+    public function unAssignUser($userId, $changedById) {
+        $this->users()->detach($userId);
+        User::find($changedById)->recordThreadEvent($this, UserEvent::TYPE_UNASSIGN_THREAD, $userId);
+        $this->invalidateCache();
     }
 
     public function getAssignedUsers() {
-//        $cacheKey = "thread-assignments-{$this->id}";
-//        $value = Cache::tags(['thread',"thread-{$this->id}"])->remember($cacheKey, 10, function () {
-//            return $this->getAssignedUsersFresh();
-//        });
-//        return $value;
-        return $this->getAssignedUsersFresh();
+        return Cache::tags(["permissions","thread-{$this->id}"])
+            ->rememberForever("thread-assignments-{$this->id}", function () {
+            return $this->getAssignedUsersFresh();
+        });
 
     }
     private function getAssignedUsersFresh()

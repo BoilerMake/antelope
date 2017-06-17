@@ -167,20 +167,19 @@ class InboxController extends Controller
         if (!in_array($thread->inbox_id, $user->getReadWriteInboxIds())) {
             return response()->error('You do not have permission to access this thread or its assignments.', null, 403);
         }
+        $changedByUserId = $user->id;
         $data = json_decode(Request::getContent(), true);
         foreach ($thread->getAssignedUsers() as $k => $assignedUser) {
             $currentState = $assignedUser['assigned_to_thread'];
             $newState = $data[$k]['assigned_to_thread'];
             if (!$currentState && $newState) {
-                $thread->users()->attach($k);
-                $user->recordThreadEvent($thread, UserEvent::TYPE_ASSIGN_THREAD, $k);
+                $thread->assignUser($k, $changedByUserId);
                 if ($thread->state === Thread::STATE_NEW) {
                     $thread->state = Thread::STATE_ASSIGNED;
                     $thread->save();
                 }
             } elseif ($currentState && !$newState) {
-                $thread->users()->detach($k);
-                $user->recordThreadEvent($thread, UserEvent::TYPE_UNASSIGN_THREAD, $k);
+                $thread->unAssignUser($k, $changedByUserId);
             }
         }
 
@@ -207,7 +206,7 @@ class InboxController extends Controller
             return response()->error('You do not have permission to create a draft in this inbox', null, 403);
         }
         //creating a draft will auto assign you to the thread
-        $thread->assignUser($user);
+        $thread->assignUser($user->id,$user->id);
 
         $signature = $user->signature;
         $draft = Draft::create([

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Cache;
 use Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class User extends Authenticatable
@@ -129,5 +131,9 @@ class User extends Authenticatable
             'target_user_id'=> $target_user_id,
             'type'          => $type,
         ]);
+    }
+    public static function permissionsWereTangentiallyUpdated($triggeredBy) {
+        Log::info("going to invalidate caches related to user permissions (because of {$triggeredBy})");
+        Cache::tags("permissions")->flush();
     }
 }

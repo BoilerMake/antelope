@@ -87,7 +87,6 @@ class ThreadView extends Component {
         let comboList = [];
         let numMessages = 0;
         for(let item of threadContents.combo) {
-            console.log(item);
             let x =  item.content;
             if(item.type==="message") {
                 comboList.push(<MessageItem message={x} key={"m" + x.id}/>);

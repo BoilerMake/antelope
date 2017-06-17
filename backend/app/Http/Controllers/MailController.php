@@ -15,6 +15,10 @@ use Request;
  */
 class MailController extends Controller
 {
+    public function test() {
+        $thread = Thread::find(38);
+        return $thread->getAssignedUsers();
+    }
     /**
      * Given a recipient address, will determine which inbox it should be routed to
      * todo: Use some sort of regex based on Inbox table columns
