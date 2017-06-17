@@ -18,6 +18,11 @@ class Draft extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    /**
+     * Sends a draft.
+     * TODO: cc and bcc
+     */
     public function send() {
         $to = $this->to;
         $from = $this->from;

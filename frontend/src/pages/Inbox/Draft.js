@@ -8,13 +8,18 @@ export default class Draft extends Component {
         super();
         this.state = {
             editorState: null,
-            markup: null,
-            isEditing: false
+            markup:      null,
+            isEditing:   false,
+            to:          "",
+            subject:     "",
+            cc:          "",
+            bcc:         "",
+            from:        "",
         };
         this.onEditorStateChange = this.onEditorStateChange.bind(this);
-        this.toggleEditing = this.toggleEditing.bind(this);
-        this.saveDraft = this.saveDraft.bind(this);
-        this.sendDraft = this.sendDraft.bind(this);
+        this.toggleEditing       = this.toggleEditing.bind(this);
+        this.saveDraft           = this.saveDraft.bind(this);
+        this.sendDraft           = this.sendDraft.bind(this);
     }
     onEditorStateChange(editorState) {
         const markup = draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -23,35 +28,45 @@ export default class Draft extends Component {
             markup
         });
     }
-    prefillWithHtml(html) {
-        const blocksFromHTML = convertFromHTML(html);
-        const content = ContentState.createFromBlockArray(blocksFromHTML);
-        const editorState =  EditorState.createWithContent(content);
-        const markup = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-        this.setState({editorState,markup});
+    seedState(draft) {
+
+        let {to, subject, cc, bcc, from} = draft;
+        //prefill with html:
+        let blocksFromHTML = convertFromHTML(draft.body);
+        let content = ContentState.createFromBlockArray(blocksFromHTML);
+        let editorState =  EditorState.createWithContent(content);
+        let markup = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        this.setState({editorState, markup, to, subject, cc, bcc, from});
     }
     componentDidMount() {
         if(this.props.draft)
-            this.prefillWithHtml(this.props.draft.body);
+            this.seedState(this.props.draft);
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps.draft !== this.props.draft)
-            this.prefillWithHtml(nextProps.draft.body);
+            this.seedState(nextProps.draft);
     }
     toggleEditing() {
         this.setState({isEditing: !this.state.isEditing});
     }
     saveDraft() {
-        let draft = this.props.draft;
-        draft.body = this.state.markup;
-        console.log(draft);
-        this.props.update(draft,"save");
+        this.update("save");
     }
     sendDraft() {
-        let draft = this.props.draft;
-        draft.body = this.state.markup;
-        console.log(draft);
-        this.props.update(draft,"send");
+        this.update("send");
+    }
+    update(action) {
+        let draft     = this.props.draft;
+        draft.body    = this.state.markup;
+        draft.to      = this.state.to;
+        draft.subject = this.state.subject;
+        draft.cc      = this.state.cc;
+        draft.bcc     = this.state.bcc;
+        draft.from    = this.state.from;
+        this.props.update(draft,action);
+    }
+    textChange(event) {
+        this.setState({[event.target.name]: event.target.value})
     }
     render () {
         let editingView = (
@@ -63,8 +78,12 @@ export default class Draft extends Component {
                 wrapperClassName="draft-wrapper"
                 editorClassName="draft-editor"
                 />
-                <button className="btn-primary" onClick={this.saveDraft}>Save</button>
-                <button className="btn-primary" onClick={this.toggleEditing}>Close</button>
+                <input className="textInput" type="email" name="from" placeholder="From" value={this.state.from} onChange={this.textChange.bind(this)}/>
+                <input className="textInput" type="email" name="to" placeholder="To" value={this.state.to} onChange={this.textChange.bind(this)}/>
+                <input className="textInput" type="text" name="subject" placeholder="Subject" value={this.state.subject} onChange={this.textChange.bind(this)}/>
+                <hr/>
+                <button className="btn-secondary" onClick={this.saveDraft}>Save</button>
+                <button className="btn-secondary" onClick={this.toggleEditing}>Close</button>
                 <button className="btn-primary" onClick={this.sendDraft}>Send</button>
         </div>);
         let displayView = (

@@ -246,7 +246,12 @@ class InboxController extends Controller
             return response()->error('You can only update your own draft.', null, 403);
         }
         $data = json_decode(Request::getContent(), true);
-        $draft->body = $data['body'];
+        $draft->body    = $data['body'];
+        $draft->to      = $data['to'];
+        $draft->subject = $data['subject'];
+        $draft->cc      = $data['cc'];
+        $draft->bcc     = $data['bcc'];
+        $draft->from    = $data['from'];
         $draft->save();
 
         $action = Request::get('action');
