@@ -46,11 +46,6 @@ class ThreadView extends Component {
                 context = (<span>{event.type}</span>);
             return (<div className="threaditem--userEventItem"><strong>{event.user.displayName}</strong> {context} on {dateString}</div>);
         };
-        const MessageEvent = ({event}) => {
-            const date = moment.utc(event.created_at,'YYYY-MM-DD HH:mm:ss').local();
-            let dateString = date.calendar();
-            return(<div>{event.recipient} | {event.name} message#: {event.message_id} | {dateString}</div>)
-        };
         const mobileBackLink = (this.props.isMobile && <Link to={`/inbox/${this.props.inboxId}`}>back to inbox</Link>);
         const threadId = this.props.threadId;
         let thread = this.props.thread[threadId];

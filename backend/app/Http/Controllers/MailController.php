@@ -119,9 +119,12 @@ class MailController extends Controller
             }
         }
 
-        Log::info('email #'.Request::get('antelope-message-id').' was:'.Request::get('event'));
+        $message_id = Request::get('antelope-message-id');
+        if(!$message_id)
+            return response()->success('message does not exist locally');
+        Log::info('email #'.$message_id.' was:'.Request::get('event'));
         MessageEvent::create([
-            'message_id' => Request::get('antelope-message-id'),
+            'message_id' => $message_id,
             'name'       => Request::get('event'),
             'timestamp'  => Request::get('timestamp'),
             'recipient'  => Request::get('recipient'),
