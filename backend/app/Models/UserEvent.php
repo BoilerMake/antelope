@@ -13,6 +13,7 @@ class UserEvent extends Model
     const TYPE_UPDATE_GROUP_INBOX_PERMISSIONS = 'update_group_inbox_permissions';
     const TYPE_GROUP_USER_ADD = 'group_user_add';
     const TYPE_GROUP_USER_REMOVE = 'group_user_remove';
+    const TYPE_CREATE_THREAD = 'create_thread';
     protected $guarded = ['id'];
 
     public static function record(User $user, User $target, $type, array $meta)

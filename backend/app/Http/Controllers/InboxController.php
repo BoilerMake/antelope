@@ -68,6 +68,21 @@ class InboxController extends Controller
             'counts' => $counts,
         ]);
     }
+    public function createThread($inbox_id) {
+        if($inbox_id == 0)
+            return response()->error('You must create a thread in a specific inbox.');
+        $user = Auth::user();
+        if (!in_array($inbox_id, $user->getInboxIds())) {
+            return response()->error('You do not have permission to access this inbox.', null, 403);
+        }
+        $thread = Thread::create([
+            'inbox_id' => $inbox_id,
+            'state'    => Thread::STATE_NEW,
+        ]);
+        $user->recordThreadEvent($thread, UserEvent::TYPE_CREATE_THREAD);
+        $this->createDraft($thread->id);
+        return response()->success($thread);
+    }
 
     /**
      * Used to chronologically sort the UserEvent and Messages objects so that they can be shown inline.
@@ -92,7 +107,6 @@ class InboxController extends Controller
      */
     public function getThread($thread_id)
     {
-        //todo: check permissions, maybe via middleware?
         $user = Auth::user();
         $thread = Thread::with(
             'messages.events',
@@ -195,9 +209,6 @@ class InboxController extends Controller
         //creating a draft will auto assign you to the thread
         $thread->assignUser($user);
 
-
-
-
         $signature = $user->signature;
         $draft = Draft::create([
             'user_id'  => $user->id,
@@ -225,7 +236,8 @@ class InboxController extends Controller
 
         $user->recordThreadEvent($thread, UserEvent::TYPE_CREATE_DRAFT);
 
-        return response()->success($draft);
+        //temp hack: we need to get a fresh model from the database so that we have cc and bcc in there so tests don't fail
+        return response()->success($draft->fresh());
     }
 
     /**

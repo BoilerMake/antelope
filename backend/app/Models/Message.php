@@ -78,10 +78,9 @@ class Message extends Model
         $m->message_id = $mailgunMessageId;
 
         $m->save();
-        Log::info("sent message #{$m->id}, mailgun id of {$mailgunMessageId}");
+        Log::info("sent message #{$m->id}, mailgun id of {$mailgunMessageId}, response={$sent->getMessage()}");
 
         return $m;
     }
 
-//    public static function sendMessage($)
 }

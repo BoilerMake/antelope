@@ -19,6 +19,7 @@ Route::post('mailgunevent', 'MailController@mailgunEvent');
 
 Route::group(['middleware'=>['jwt.auth']], function () {
     Route::get('inbox/{id}', 'InboxController@getInbox');
+    Route::post('inbox/{inbox_id}/threads','InboxController@createThread');
 
     Route::get('thread/{id}', 'InboxController@getThread');
 

@@ -12,6 +12,7 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+use App\Models\Draft;
 use App\Models\Group;
 use App\Models\Inbox;
 use App\Models\Message;
@@ -49,6 +50,18 @@ $factory->define(Thread::class, function (Faker\Generator $faker) {
         'inbox_id'           => function () {
             return factory(Inbox::class)->create()->id;
         },
+    ];
+});
+$factory->define(Draft::class, function (Faker\Generator $faker) {
+    return [
+        'user_id'            => function () {
+            return factory(User::class)->create()->id;
+        },
+        'thread_id'          => function () {
+            return factory(Thread::class)->create()->id;
+        },
+        'body'               => '<br/>some signature<br/>',
+        'from'               => $faker->safeEmail,
     ];
 });
 $factory->define(Message::class, function (Faker\Generator $faker) {

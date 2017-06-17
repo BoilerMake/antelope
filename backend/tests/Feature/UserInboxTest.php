@@ -328,12 +328,27 @@ class UserInboxTest extends TestCase
     {
         $user = factory(User::class)->create();
         $token = $user->getToken();
-        $draft_id = Draft::first()->id;
+        $draft_id = factory(Draft::class)->create()->id;
         $response = $this->json('PUT', "/drafts/{$draft_id}", ['randomdata'], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(403)
             ->assertJson([
                 'success' => false,
             ]);
+    }
+    public function testCreateThreadAndDraft() {
+        $user = factory(User::class)->create();
+        $inbox = TestCase::makeSeededInbox();
+        TestCase::connectUserToInbox($user, $inbox);
+        $token = $user->getToken();
+
+        //make a thread
+        $response = $this->json('POST', "/inbox/{$inbox->id}/threads", [], ['Authorization' => 'Bearer '.$token]);
+        $response->assertStatus(200);
+        $newThreadId = $response->json()['data']['id'];
+
+
+        $response = $this->json('POST', "/thread/{$newThreadId}/drafts", [], ['Authorization' => 'Bearer '.$token]);
+        $response->assertStatus(200);
     }
 }

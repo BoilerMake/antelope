@@ -43,7 +43,7 @@ class ThreadListView extends Component {
 
 
         let threadList = inboxContents.threads.map((thread)=>{
-            if(!thread.snippet) return(null);
+            // if(!thread.snippet) return(null);
             const isActive = parseInt(this.props.threadId,10)===thread.id;
             return(
                 <div onClick={()=>{this.props.history.push(`/inbox/${this.props.inboxId}/${thread.id}`)}} key={thread.id}>

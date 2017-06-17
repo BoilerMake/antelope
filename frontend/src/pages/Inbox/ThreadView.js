@@ -85,15 +85,17 @@ class ThreadView extends Component {
         let threadContents = thread.contents;
         const { readOnly } = threadContents;
         let comboList = [];
+        let numMessages = 0;
         for(let item of threadContents.combo) {
             console.log(item);
             let x =  item.content;
-            if(item.type==="message")
-                comboList.push(<MessageItem message={x} key={"m"+x.id}/>);
+            if(item.type==="message") {
+                comboList.push(<MessageItem message={x} key={"m" + x.id}/>);
+                numMessages++;
+            }
             if(item.type==="user_event")
                 comboList.push(<UserEvent event={x} key={"ue"+x.id}/>);
         }
-        let messageEventList = threadContents.messages[0].events.map(x => <MessageEvent event={x} key={"me"+x.id}/>);
         let draftList = threadContents.drafts.map(x => <Draft draft={x} update={this.props.updateDraft} key={"d"+x.id}/>);
 
         let AssignmentsModal = (<ThreadAssignmentsModal
@@ -125,8 +127,8 @@ class ThreadView extends Component {
                     <hr/>
                     {comboList}
                     <div className="pullRight">
-                        <button className="btn-primary" disabled={readOnly} onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
-                        <button className="btn-primary" disabled={readOnly} onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
+                        <button className="btn-primary" disabled={readOnly || numMessages === 0} onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
+                        <button className="btn-primary" disabled={readOnly || numMessages === 0} onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
                     </div>
                     <p>Drafts</p>
                     {draftList}

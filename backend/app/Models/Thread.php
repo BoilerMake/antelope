@@ -51,7 +51,16 @@ class Thread extends Model
      */
     public function getSnippetAttribute()
     {
-        return $this->messages()->orderBy('created_at', 'desc')->first();
+        $latestMessage =  $this->messages()->orderBy('created_at', 'desc')->first();
+        if($latestMessage)
+            return $latestMessage;
+        return [
+            "created_at" => $this->created_at,
+            "subject" => "[new thread]",
+            "from" => "",
+            "body_plain" => "",
+            "empty" => true,
+        ];
     }
 
     /**
@@ -77,7 +86,7 @@ class Thread extends Model
         $t = self::with('users')->whereIn('inbox_id', $inbox_ids)
             ->get()
             ->sortByDesc(function ($thread) {
-                if ($thread->snippet == null) { //if thread has no messages, we use thread creation time.
+                if ($thread->snippet['empty']) { //if thread has no messages, we use thread creation time.
                     return $thread->created_at->toDateTimeString();
                 }
 
