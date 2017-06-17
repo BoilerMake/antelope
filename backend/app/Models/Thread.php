@@ -23,6 +23,15 @@ class Thread extends Model
         Log::info("invalidating caches for thread #{$thread_id}");
         Cache::tags("thread-{$thread_id}")->flush();
     }
+    public function invalidateCache() {
+        Log::info("invalidating caches for thread #{$this->id}");
+        Cache::tags("thread-{$this->id}")->flush();
+    }
+    public function reBuildCache() {
+        $this->invalidateCache();
+        $this->getSnippetAttribute();
+        $this->getAssignedUsers();
+    }
 
     public function inbox()
     {
@@ -49,6 +58,12 @@ class Thread extends Model
         return $this->hasMany('App\Models\Draft');
     }
 
+    /**
+     * Provides a snippet, to be used for the thread list.
+     * This is the most recent message in the thread (chronologically).
+     * isCached
+     * @return mixed
+     */
     public function getSnippetAttribute()
     {
         //need to invalidate this when the messages in a thread change.
@@ -57,12 +72,7 @@ class Thread extends Model
                 return $this->getSnippetAttributeFresh();
             });
     }
-    /**
-     * Provides a snippet, to be used for the thread list.
-     * This is the most recent message in the thread (chronologically).
-     *
-     * @return mixed
-     */
+
     private function getSnippetAttributeFresh()
     {
         $latestMessage =  $this->messages()->orderBy('created_at', 'desc')->first();
@@ -113,14 +123,6 @@ class Thread extends Model
             })->flatten()->unique()->values()->all();
     }
 
-    /**
-     * TODO: invalidate assignments cache when group_user or group_inbox membership changes
-     */
-    public function invalidateCache() {
-        Log::info("invalidating caches for thread #{$this->id}");
-        Cache::tags("thread-{$this->id}")->flush();
-    }
-
     public function assignUser($userId, $changedById) {
         $this->users()->syncWithoutDetaching($userId);
         User::find($changedById)->recordThreadEvent($this, UserEvent::TYPE_ASSIGN_THREAD, $userId);
@@ -132,6 +134,10 @@ class Thread extends Model
         $this->invalidateCache();
     }
 
+    /**
+     * isCached
+     * @return mixed
+     */
     public function getAssignedUsers() {
         return Cache::tags(["permissions","thread-{$this->id}","inbox-{$this->inbox_id}"])
             ->rememberForever("thread-assignments-{$this->id}", function () {

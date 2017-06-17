@@ -18,6 +18,10 @@ class Inbox extends Model
         return $this->counts()[Thread::STATE_NEW];
     }
 
+    /**
+     * isCached
+     * @return mixed
+     */
     public function counts()
     {
         return Cache::tags(["inbox-{$this->id}"])
@@ -38,6 +42,10 @@ class Inbox extends Model
     public static function invalidateCacheById($inbox_id) {
         Log::info("invalidating caches for inbox #{$inbox_id}");
         Cache::tags("inbox-{$inbox_id}")->flush();
+    }
+    public function reBuildCache() {
+        self::invalidateCacheById($this->id);
+        $this->counts();
     }
 
     public function groups()

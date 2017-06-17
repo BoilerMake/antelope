@@ -84,13 +84,17 @@ class User extends Authenticatable
         Log::info("invalidating caches for thread #{$this->id}");
         Cache::tags("user-{$this->id}")->flush();
     }
+    public function reBuildCache() {
+        $this->invalidateCache();
+        self::permissionsWereTangentiallyUpdated(__METHOD__);
+        $this->getInboxIdsByPermission();
+    }
 
     private function getInboxIdsByPermission() {
         return Cache::tags(["permissions","user-{$this->id}"])
             ->rememberForever("user-inbox-permissions-{$this->id}", function () {
                 return $this->getInboxIdsByPermissionFresh();
             });
-
     }
 
     /**

@@ -41,14 +41,19 @@ class ThreadListView extends Component {
             </div>);
         let inboxContents = inboxItem.contents;
 
-
         let threadList = inboxContents.threads.map((thread)=>{
-            // if(!thread.snippet) return(null);
             const isActive = parseInt(this.props.threadId,10)===thread.id;
             return(
-                <div onClick={()=>{this.props.history.push(`/inbox/${this.props.inboxId}/${thread.id}`)}} key={thread.id}>
-                    <ThreadItem thread={thread} meId={this.props.user.me ? this.props.user.me.id : 0} inboxId={parseInt(inboxId,10)} ref={isActive ? "activeItem" : null} active={isActive}/>
-                </div>)
+                <ThreadItem
+                    thread  = {thread}
+                    meId    = {this.props.user.me ? this.props.user.me.id : 0}
+                    inboxId = {parseInt(inboxId,10)}
+                    ref     = {isActive ? "activeItem" : null}
+                    active  = {isActive}
+                    key     = {thread.id}
+                    onClick = {()=>{this.props.history.push(`/inbox/${this.props.inboxId}/${thread.id}`)}}
+                />
+            );
         });
 
         return (

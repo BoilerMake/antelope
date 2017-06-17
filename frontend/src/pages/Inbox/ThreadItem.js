@@ -14,7 +14,7 @@ export default class ThreadItem extends Component {
         let threadUsers = thread.users.map(u=>u.displayName).join(", ");
         const AmIAssigned = thread.users.map(u=>u.id).includes(this.props.meId);
         return(
-            <div className={style} key={thread.id}>
+            <div className={style} key={thread.id} onClick={this.props.onClick}>
                 <div className="inbox-thread-list-item">
                     <div className="threaditem-leftcol">
                         <div className={`state-icon ${thread.state}`}/>
@@ -43,5 +43,6 @@ ThreadItem.propTypes = {
     thread: PropTypes.object.isRequired,
     meId: PropTypes.number.isRequired,
     inboxId: PropTypes.number.isRequired,
-    active: PropTypes.bool
+    active: PropTypes.bool,
+    onClick: PropTypes.func
 };
