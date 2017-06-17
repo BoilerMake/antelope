@@ -62,6 +62,7 @@ class ThreadListView extends Component {
                         <div className="inboxlist-header-row">
                             <input className="textInput" type="text" name="search" placeholder="search..."/>
                         </div>
+                        {parseInt(inboxId,10) !== 0 && (<button className="btn-primary" onClick={this.props.createThread}>Create Thread</button>)}
 
                     </div>
                     <div className="inboxlist-header-rightcol">
@@ -95,7 +96,7 @@ class ThreadListView extends Component {
 
 //now the redux integration layer
 import { connect } from 'react-redux'
-import { fetchInbox } from '../../actions/inbox';
+import { fetchInbox, createThread } from '../../actions/inbox';
 function mapStateToProps (state) {
     return {
         user: state.user,
@@ -106,6 +107,9 @@ function mapStateToProps (state) {
 const mapDispatchToProps = (dispatch, ownProps) => ({
     fetchInbox: (inboxId) => {
         dispatch(fetchInbox(inboxId));
+    },
+    createThread: () => {
+        dispatch(createThread(ownProps.inboxId));
     }
 });
 

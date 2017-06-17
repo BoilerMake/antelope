@@ -29,3 +29,15 @@ function receiveInbox (json,id) {
         receivedAt: Date.now()
     };
 }
+
+export function createThread(inbox_id) {
+    return (dispatch) => {
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/inbox/${inbox_id}/threads?token=${token}`,
+            {
+                method: 'POST',
+            })
+            .then((response) => response.json())
+            .then((json) => {dispatch(fetchInbox(inbox_id))});
+    };
+}

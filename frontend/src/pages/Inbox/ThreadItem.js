@@ -6,7 +6,6 @@ export default class ThreadItem extends Component {
         let thread = this.props.thread;
         let snippet = thread.snippet;
         let date = moment.utc(snippet.created_at,'YYYY-MM-DD HH:mm:ss').local();
-        console.log(date,snippet.created_at);
         let style = "inbox-thread-list-item-wrapper";
         if(this.props.unread)
             style = "inbox-thread-list-item-wrapper unread";

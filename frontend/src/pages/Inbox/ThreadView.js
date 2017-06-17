@@ -100,7 +100,7 @@ class ThreadView extends Component {
         let AssignmentsModal = (<ThreadAssignmentsModal
             isOpen={this.state.showAssignmentsModal}
             close={this.handleCloseAssignmentsModal}
-            fetch={()=>{this.props.fetchThreadAssignments(threadId)}}
+            fetch={this.props.fetchThreadAssignments}
             updateAssignments={(data)=>{this.props.updateThreadAssignments(threadId,data)}}
             thread={thread}/>);
 
@@ -153,8 +153,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     fetchThread: (threadId) => {
         dispatch(fetchThread(threadId));
     },
-    fetchThreadAssignments: (threadId) => {
-        dispatch(fetchThreadAssignments(threadId));
+    fetchThreadAssignments: () => {
+        dispatch(fetchThreadAssignments(ownProps.threadId));
     },
     updateThreadAssignments: (threadId,data) => {
         dispatch(updateThreadAssignments(threadId,data));

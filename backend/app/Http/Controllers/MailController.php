@@ -62,11 +62,14 @@ class MailController extends Controller
             //it might have been set to don previously, so we need to 'reopen' if need be.
             //todo: log the state changing if it changes?
             Thread::find($thread_id)->update(['state', Thread::STATE_ASSIGNED]);
+            Log::info("mailgun message incoming, is a reply to thread {$thread_id}");
         } else {
+            $targetInboxId = self::getInboxIdForIncoming(Request::get('recipient'));
             $thread_id = Thread::create([
-                'inbox_id' => self::getInboxIdForIncoming(Request::get('recipient')),
+                'inbox_id' => $targetInboxId,
                 'state'    => Thread::STATE_NEW,
             ])->id;
+            Log::info("mailgun message incoming, routing to new thread in inbox {$targetInboxId}");
         }
 
         //Persist message to DB;
