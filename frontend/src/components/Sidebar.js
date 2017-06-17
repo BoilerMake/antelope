@@ -19,8 +19,6 @@ const Sidebar = ({upper, lower, isMobile, toggleSidebar}) =>
     </div>;
 
 Sidebar.propTypes = {
-    upper: PropTypes.Array,
-    lower: PropTypes.Array,
     isMobile: PropTypes.bool,
     toggleSidebar: PropTypes.func,
 };

@@ -22,14 +22,14 @@ class SettingsSidebar extends Component {
             </div>);
         let lowerSidebar = [
             (
-                <div className="sidebar-item-wrapper bottomItem" onClick={()=>this.props.history.push('/inbox')}>
+                <div className="sidebar-item-wrapper bottomItem" key="backtoinbox" onClick={()=>this.props.history.push('/inbox')}>
                     <div className="sidebar-item">
                         <div>Back to inbox</div>
                     </div>
                 </div>
             ),
             (
-                <div className="sidebar-item-wrapper bottomItem" onClick={()=>this.props.logout()}>
+                <div className="sidebar-item-wrapper bottomItem" key="logout" onClick={()=>this.props.logout()}>
                     <div className="sidebar-item">
                         <div>Logout</div>
                     </div>
