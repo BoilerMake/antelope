@@ -56,7 +56,7 @@ class InboxController extends Controller
                 return response()->error('You do not have permission to access this inbox.', null, 403);
             }
             $inbox = Inbox::find($inbox_id);
-            $inboxName = Inbox::find($inbox_id)->name;
+            $inboxName = $inbox->name;
             $threads = Thread::getSorted([$inbox_id]);
             $counts = $inbox->counts();
         }

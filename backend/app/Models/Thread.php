@@ -11,12 +11,18 @@ class Thread extends Model
 {
     use SoftDeletes;
     protected $fillable = ['inbox_id', 'state'];
-    protected $appends = ['snippet', 'messageCount'];
+    protected $appends = ['snippet'];
 
     const STATE_NEW = 'new';
     const STATE_ASSIGNED = 'assigned';
     const STATE_IN_PROGRESS = 'in-progress';
     const STATE_DONE = 'done';
+
+    public static function invalidateCacheById($thread_id)
+    {
+        Log::info("invalidating caches for thread #{$thread_id}");
+        Cache::tags("thread-{$thread_id}")->flush();
+    }
 
     public function inbox()
     {
@@ -43,13 +49,21 @@ class Thread extends Model
         return $this->hasMany('App\Models\Draft');
     }
 
+    public function getSnippetAttribute()
+    {
+        //need to invalidate this when the messages in a thread change.
+        return Cache::tags(["thread-{$this->id}"])
+            ->rememberForever("thread-snippet-{$this->id}", function () {
+                return $this->getSnippetAttributeFresh();
+            });
+    }
     /**
      * Provides a snippet, to be used for the thread list.
      * This is the most recent message in the thread (chronologically).
      *
      * @return mixed
      */
-    public function getSnippetAttribute()
+    private function getSnippetAttributeFresh()
     {
         $latestMessage =  $this->messages()->orderBy('created_at', 'desc')->first();
         if($latestMessage)
@@ -61,16 +75,6 @@ class Thread extends Model
             "body_plain" => "",
             "empty" => true,
         ];
-    }
-
-    /**
-     * Gets the number of messages in a thread.
-     *
-     * @return int count
-     */
-    public function getMessageCountAttribute()
-    {
-        return $this->messages()->count();
     }
 
     /**
@@ -129,7 +133,7 @@ class Thread extends Model
     }
 
     public function getAssignedUsers() {
-        return Cache::tags(["permissions","thread-{$this->id}"])
+        return Cache::tags(["permissions","thread-{$this->id}","inbox-{$this->inbox_id}"])
             ->rememberForever("thread-assignments-{$this->id}", function () {
             return $this->getAssignedUsersFresh();
         });

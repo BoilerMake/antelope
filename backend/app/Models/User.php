@@ -80,13 +80,26 @@ class User extends Authenticatable
         return JWTAuth::fromUser($this, ['exp' => strtotime('+1 year')]);
     }
 
+    public function invalidateCache() {
+        Log::info("invalidating caches for thread #{$this->id}");
+        Cache::tags("user-{$this->id}")->flush();
+    }
+
+    private function getInboxIdsByPermission() {
+        return Cache::tags(["permissions","user-{$this->id}"])
+            ->rememberForever("user-inbox-permissions-{$this->id}", function () {
+                return $this->getInboxIdsByPermissionFresh();
+            });
+
+    }
+
     /**
      * Gets inbox ids based on permission levels, taking into account readwrite > write precedence.
      * TODO: clean this up, do we want to handle 0 inboxes differently? (mainly for users/me/inboxes).
      *
      * @return array
      */
-    private function getInboxIdsByPermission()
+    private function getInboxIdsByPermissionFresh()
     {
         $user = self::with('groups.inboxes')->find($this->id);
         $inboxes_by_permission = [];
