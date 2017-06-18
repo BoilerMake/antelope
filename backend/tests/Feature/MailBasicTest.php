@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\MailController;
 use App\Models\Message;
 use Tests\TestCase;
 
@@ -19,7 +20,7 @@ class MailBasicTest extends TestCase
         $response
             ->assertJson([
                 'success' => false,
-                'message' => 'mailgun signature invalid',
+                'message' => MailController::ERR_MAILGUN_SIGNATURE_INVALID,
             ]);
     }
 
@@ -85,7 +86,7 @@ class MailBasicTest extends TestCase
         $response
             ->assertJson([
                 'success' => false,
-                'message' => 'mailgun signature invalid',
+                'message' => MailController::ERR_MAILGUN_SIGNATURE_INVALID,
             ]);
     }
 
@@ -104,4 +105,33 @@ class MailBasicTest extends TestCase
                 'success' => true,
             ]);
     }
+    public function testMailgunEventBadRef()
+    {
+        putenv('MAILGUN_IGNORE_SIGNATURE=true');
+        $faker = \Faker\Factory::create();
+        $response = $this->json('POST', '/mailgunevent', [
+            'antelope-message-id' => 9999999,//unrealistic
+            'recipient'           => $faker->email,
+            'event'               => 'opened',
+            'timestamp'           => '123',
+        ]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => false,
+                'message' => MailController::ERR_MAILGUN_REF_DNE
+            ]);
+        $response = $this->json('POST', '/mailgunevent', [
+            'recipient'           => $faker->email,
+            'event'               => 'opened',
+            'timestamp'           => '123',
+        ]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => false,
+                'message' => MailController::ERR_MAILGUN_REF_DNE
+            ]);
+    }
+
 }

@@ -28,7 +28,7 @@ Artisan::command('user:create {email} {--admin}', function ($email, $admin) {
     $user = User::addNew($email, $admin);
     $this->info($user->getToken());
 });
-Artisan::command('cache:build', function () {
+Artisan::command('cache:rebuild', function () {
     $this->info("Building caches!");
     foreach (User::all() as $obj)
         $obj->reBuildCache();

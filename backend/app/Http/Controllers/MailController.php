@@ -15,10 +15,9 @@ use Request;
  */
 class MailController extends Controller
 {
-    public function test() {
-        $thread = Thread::find(38);
-        return $thread->getAssignedUsers();
-    }
+    const ERR_MAILGUN_SIGNATURE_INVALID = "mailgun signature invalid";
+    const ERR_MAILGUN_REF_DNE = "mailgun reference thread does not exist";
+
     /**
      * Given a recipient address, will determine which inbox it should be routed to
      * todo: Use some sort of regex based on Inbox table columns
@@ -43,14 +42,14 @@ class MailController extends Controller
      *
      * @return mixed
      */
-    public function mailgunHook(Request $request)
+    public function mailgunHook()
     {
 
         //Need to verify that the POST request is authentic from Mailgun, not spoofed
         $mg = Mailgun::create(env('MAILGUN_APIKEY'));
         if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
             if (!env('MAILGUN_IGNORE_SIGNATURE')) {//so we can override signature validation for testing
-                return response()->error('mailgun signature invalid');
+                return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
             }
         }
 
@@ -115,13 +114,13 @@ class MailController extends Controller
         $mg = Mailgun::create(env('MAILGUN_APIKEY'));
         if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
             if (!env('MAILGUN_IGNORE_SIGNATURE')) {//so we can override signature validation for testing
-                return response()->error('mailgun signature invalid');
+                return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
             }
         }
 
         $message_id = Request::get('antelope-message-id');
-        if(!$message_id)
-            return response()->success('message does not exist locally');
+        if(!$message_id || !Message::find($message_id))
+            return response()->error(self::ERR_MAILGUN_REF_DNE,null,200);
         Log::info('email #'.$message_id.' was:'.Request::get('event'));
         MessageEvent::create([
             'message_id' => $message_id,
