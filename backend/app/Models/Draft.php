@@ -14,6 +14,7 @@ class Draft extends Model
     {
         return $this->belongsTo('App\Models\Thread');
     }
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');
@@ -21,14 +22,15 @@ class Draft extends Model
 
     /**
      * Sends a draft.
-     * TODO: cc and bcc
+     * TODO: cc and bcc.
      */
-    public function send() {
+    public function send()
+    {
         $to = $this->to;
         $from = $this->from;
         $cc = $this->cc;
         $bcc = $this->bcc;
-        $subject= $this->subject;
+        $subject = $this->subject;
         $body_html = $this->body;
         $threadId = $this->thread_id;
         $userId = $this->user_id;

@@ -105,12 +105,13 @@ class MailBasicTest extends TestCase
                 'success' => true,
             ]);
     }
+
     public function testMailgunEventBadRef()
     {
         putenv('MAILGUN_IGNORE_SIGNATURE=true');
         $faker = \Faker\Factory::create();
         $response = $this->json('POST', '/mailgunevent', [
-            'antelope-message-id' => 9999999,//unrealistic
+            'antelope-message-id' => 9999999, //unrealistic
             'recipient'           => $faker->email,
             'event'               => 'opened',
             'timestamp'           => '123',
@@ -119,7 +120,7 @@ class MailBasicTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'success' => false,
-                'message' => MailController::ERR_MAILGUN_REF_DNE
+                'message' => MailController::ERR_MAILGUN_REF_DNE,
             ]);
         $response = $this->json('POST', '/mailgunevent', [
             'recipient'           => $faker->email,
@@ -130,8 +131,7 @@ class MailBasicTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'success' => false,
-                'message' => MailController::ERR_MAILGUN_REF_DNE
+                'message' => MailController::ERR_MAILGUN_REF_DNE,
             ]);
     }
-
 }

@@ -68,9 +68,12 @@ class InboxController extends Controller
             'counts' => $counts,
         ]);
     }
-    public function createThread($inbox_id) {
-        if($inbox_id == 0)
+
+    public function createThread($inbox_id)
+    {
+        if ($inbox_id == 0) {
             return response()->error('You must create a thread in a specific inbox.');
+        }
         $user = Auth::user();
         if (!in_array($inbox_id, $user->getInboxIds())) {
             return response()->error('You do not have permission to access this inbox.', null, 403);
@@ -81,19 +84,24 @@ class InboxController extends Controller
         ]);
         $user->recordThreadEvent($thread, UserEvent::TYPE_CREATE_THREAD);
         $this->createDraft($thread->id);
+
         return response()->success($thread);
     }
 
     /**
      * Used to chronologically sort the UserEvent and Messages objects so that they can be shown inline.
+     *
      * @param $a
      * @param $b
+     *
      * @return int
      */
-    private static function  cmp($a, $b) {
+    private static function cmp($a, $b)
+    {
         if ($a['content']['created_at'] == $b['content']['created_at']) {
             return 0;
         }
+
         return ($a['content']['created_at'] < $b['content']['created_at']) ? -1 : 1;
     }
 
@@ -120,16 +128,19 @@ class InboxController extends Controller
         $thread->readOnly = !in_array($thread->inbox_id, $user->getReadWriteInboxIds());
 
         $combo = [];
-        foreach ($thread->userEvents as $userEvent)
-            $combo[]=['type'=>'user_event','content'=>$userEvent];
-        foreach ($thread->messages as $message)
-            $combo[]=['type'=>'message','content'=>$message];
+        foreach ($thread->userEvents as $userEvent) {
+            $combo[] = ['type'=>'user_event', 'content'=>$userEvent];
+        }
+        foreach ($thread->messages as $message) {
+            $combo[] = ['type'=>'message', 'content'=>$message];
+        }
 
-        usort($combo,"self::cmp");
+        usort($combo, 'self::cmp');
         $thread->combo = $combo;
         $thread = $thread->toArray();
 //        unset($thread['messages']);
         unset($thread['userEvents']);
+
         return response()->success($thread);
     }
 
@@ -191,7 +202,7 @@ class InboxController extends Controller
      * PERMISSIONS: you can only create a draft in a thread if you have readwrite permissions to that thread's inbox.
      * TODO: support reply all, etc.
      * TODO: allow changing subject? you can only change so much to work with email threading
-     * TODO: allow changing the 'from' address?- this breaks threading if it's not the same address as the initial mail was sent to
+     * TODO: allow changing the 'from' address?- this breaks threading if it's not the same address as the initial mail was sent to.
      *
      * @param $thread_id
      * @param string $mode
@@ -206,19 +217,18 @@ class InboxController extends Controller
             return response()->error('You do not have permission to create a draft in this inbox', null, 403);
         }
         //creating a draft will auto assign you to the thread
-        $thread->assignUser($user->id,$user->id);
+        $thread->assignUser($user->id, $user->id);
 
         $signature = $user->signature;
         $draft = Draft::create([
             'user_id'  => $user->id,
             'thread_id'=> $thread_id,
-            'body'     => '<br/><br/>'.$signature,//Drafts just start as your signature.
+            'body'     => '<br/><br/>'.$signature, //Drafts just start as your signature.
             'from'     => $thread->inbox->primary_address,
         ]);
 
-
         $lastIncomingMessage = $thread->getLastMessage(true);
-        if($lastIncomingMessage) {
+        if ($lastIncomingMessage) {
             $draft->reply_to_message_id = $lastIncomingMessage->id;
             //replies should be sent to the from address
             $draft->to = $lastIncomingMessage->from;
@@ -227,8 +237,7 @@ class InboxController extends Controller
                 : ('Re: '.$lastIncomingMessage->subject); //i think we *need* this for gmail threading
             $draft->save();
             Log::info("Creating draft # {$draft->id} - it is a reply to message {$lastIncomingMessage->id} in thread {$thread_id}");
-        }
-        else {
+        } else {
             //there are no messages in the thread.
             Log::info("Creating draft # {$draft->id} - it is the first message in thread {$thread_id}");
         }
@@ -257,19 +266,19 @@ class InboxController extends Controller
             return response()->error('You can only update your own draft.', null, 403);
         }
         $data = json_decode(Request::getContent(), true);
-        $draft->body    = $data['body'];
-        $draft->to      = $data['to'];
+        $draft->body = $data['body'];
+        $draft->to = $data['to'];
         $draft->subject = $data['subject'];
-        $draft->cc      = $data['cc'];
-        $draft->bcc     = $data['bcc'];
-        $draft->from    = $data['from'];
+        $draft->cc = $data['cc'];
+        $draft->bcc = $data['bcc'];
+        $draft->from = $data['from'];
         $draft->save();
 
         $action = Request::get('action');
         if ($action === 'send') {
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
             $draft->send();
-            $draft->delete();//delete the draft because we sent it
+            $draft->delete(); //delete the draft because we sent it
         }
 
         return response()->success($draft);

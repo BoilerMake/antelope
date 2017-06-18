@@ -33,8 +33,8 @@ class Message extends Model
      * @param null|int $replying_to_message_id
      *
      * @return Message|false
-     * TODO: return false on failure, maybe error somehow cleanly
-     * TODO: BCC and CC
+     *                       TODO: return false on failure, maybe error somehow cleanly
+     *                       TODO: BCC and CC
      */
     public static function sendMessage($to, $from, $subject, $body_html, $threadId, $user_id, $replying_to_message_id = null)
     {
@@ -50,7 +50,7 @@ class Message extends Model
         $m->message_id = 'pending';
         $m->body_plain = $body_plain;
         $m->body_html = $body_html;
-        $m->timestamp = 0;//TODO
+        $m->timestamp = 0; //TODO
         if ($replying_to_message_id) {
             $m->references = $replying_to_message_id;
             $m->in_reply_to = $replying_to_message_id;
@@ -74,7 +74,7 @@ class Message extends Model
             $params['References'] = $replying_to_message_id;
         }
         $sent = $mg->messages()->send(env('MAILGUN_DOMAIN'), $params);
-        $mailgunMessageId =  $sent->getId();
+        $mailgunMessageId = $sent->getId();
         $m->message_id = $mailgunMessageId;
 
         $m->save();
@@ -82,5 +82,4 @@ class Message extends Model
 
         return $m;
     }
-
 }

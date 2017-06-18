@@ -33,6 +33,7 @@ class CommandsTest extends TestCase
         ]);
         $this->assertDatabaseHas('users', ['email'=>$email, 'is_admin'=>true]);
     }
+
     public function testRebuildCache()
     {
         $this->artisan('cache:rebuild');

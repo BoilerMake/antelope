@@ -73,7 +73,7 @@ $factory->define(Message::class, function (Faker\Generator $faker) {
         'sender'         => $fromEmail,
         'subject'        => $faker->sentence(),
         'recipient'      => $faker->email,
-        'to'      => $faker->email,
+        'to'             => $faker->email,
         'message_id'     => $messageId1,
         'body_plain'     => 'plain:'.$faker->sentence(10),
         'body_html'      => $faker->randomHtml(2, 3),

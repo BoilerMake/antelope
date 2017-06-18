@@ -15,8 +15,8 @@ use Request;
  */
 class MailController extends Controller
 {
-    const ERR_MAILGUN_SIGNATURE_INVALID = "mailgun signature invalid";
-    const ERR_MAILGUN_REF_DNE = "mailgun reference thread does not exist";
+    const ERR_MAILGUN_SIGNATURE_INVALID = 'mailgun signature invalid';
+    const ERR_MAILGUN_REF_DNE = 'mailgun reference thread does not exist';
 
     /**
      * Given a recipient address, will determine which inbox it should be routed to
@@ -119,8 +119,9 @@ class MailController extends Controller
         }
 
         $message_id = Request::get('antelope-message-id');
-        if(!$message_id || !Message::find($message_id))
-            return response()->error(self::ERR_MAILGUN_REF_DNE,null,200);
+        if (!$message_id || !Message::find($message_id)) {
+            return response()->error(self::ERR_MAILGUN_REF_DNE, null, 200);
+        }
         Log::info('email #'.$message_id.' was:'.Request::get('event'));
         MessageEvent::create([
             'message_id' => $message_id,

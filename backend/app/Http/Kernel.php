@@ -18,7 +18,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         HandleCors::class,
-        ClockworkMiddleware::class
+        ClockworkMiddleware::class,
     ];
 
     /**

@@ -5,7 +5,6 @@ namespace App\Models;
 use Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Log;
 
 class Inbox extends Model
 {
@@ -20,7 +19,8 @@ class Inbox extends Model
     }
 
     /**
-     * isCached
+     * isCached.
+     *
      * @return mixed
      */
     public function counts()
@@ -38,12 +38,16 @@ class Inbox extends Model
 
     /**
      * Invalidate the thread cache: basically when the state of a thread changes.
+     *
      * @param $inbox_id
      */
-    public static function invalidateCacheById($inbox_id) {
-        Inbox::find($inbox_id)->invalidateCache();
+    public static function invalidateCacheById($inbox_id)
+    {
+        self::find($inbox_id)->invalidateCache();
     }
-    public function reBuildCache() {
+
+    public function reBuildCache()
+    {
         $this->invalidateCache();
         $this->counts();
     }
