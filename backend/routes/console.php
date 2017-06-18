@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Inbox;
-use App\Models\User;
 use App\Models\Thread;
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 
 /*
@@ -29,14 +29,17 @@ Artisan::command('user:create {email} {--admin}', function ($email, $admin) {
     $this->info($user->getToken());
 });
 Artisan::command('cache:rebuild', function () {
-    $this->info("Building caches!");
-    foreach (User::all() as $obj)
+    $this->info('Building caches!');
+    foreach (User::all() as $obj) {
         $obj->reBuildCache();
-    $this->info("Rebuild cache for User");
-    foreach (Thread::all() as $obj)
+    }
+    $this->info('Rebuild cache for User');
+    foreach (Thread::all() as $obj) {
         $obj->reBuildCache();
-    $this->info("Rebuild cache for Thread");
-    foreach (Inbox::all() as $obj)
+    }
+    $this->info('Rebuild cache for Thread');
+    foreach (Inbox::all() as $obj) {
         $obj->reBuildCache();
-    $this->info("Rebuild cache for Inbox");
+    }
+    $this->info('Rebuild cache for Inbox');
 });

@@ -272,13 +272,9 @@ class UserInboxTest extends TestCase
         $data = $response->json()['data'];
         //todo: check user signature is in there
 
-
-
         //todo: make sure the draft is in there
         $response = $this->json('GET', "/thread/{$thread_id}", [], ['Authorization' => 'Bearer '.$token]);
         $response->assertStatus(200);
-
-
 
         //assign user2 to the thread.
         $data['body'] = '<p>newhtml</p>';
@@ -336,7 +332,9 @@ class UserInboxTest extends TestCase
                 'success' => false,
             ]);
     }
-    public function testCreateThreadAndDraft() {
+
+    public function testCreateThreadAndDraft()
+    {
         $user = factory(User::class)->create();
         $inbox = TestCase::makeSeededInbox();
         TestCase::connectUserToInbox($user, $inbox);
@@ -346,7 +344,6 @@ class UserInboxTest extends TestCase
         $response = $this->json('POST', "/inbox/{$inbox->id}/threads", [], ['Authorization' => 'Bearer '.$token]);
         $response->assertStatus(200);
         $newThreadId = $response->json()['data']['id'];
-
 
         $response = $this->json('POST', "/thread/{$newThreadId}/drafts", [], ['Authorization' => 'Bearer '.$token]);
         $response->assertStatus(200);

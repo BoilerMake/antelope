@@ -182,7 +182,7 @@ return [
         Spatie\Tail\TailServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Clockwork\Support\Laravel\ClockworkServiceProvider::class
+        Clockwork\Support\Laravel\ClockworkServiceProvider::class,
 
     ],
 

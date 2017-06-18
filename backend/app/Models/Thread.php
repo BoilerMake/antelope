@@ -5,7 +5,6 @@ namespace App\Models;
 use Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Log;
 
 class Thread extends Model
 {
@@ -23,7 +22,9 @@ class Thread extends Model
     {
         self::find($thread_id)->invalidateCache();
     }
-    public function reBuildCache() {
+
+    public function reBuildCache()
+    {
         $this->invalidateCache();
         $this->getSnippetAttribute();
         $this->getAssignedUsers();
@@ -57,7 +58,8 @@ class Thread extends Model
     /**
      * Provides a snippet, to be used for the thread list.
      * This is the most recent message in the thread (chronologically).
-     * isCached
+     * isCached.
+     *
      * @return mixed
      */
     public function getSnippetAttribute()
@@ -71,15 +73,17 @@ class Thread extends Model
 
     private function getSnippetAttributeFresh()
     {
-        $latestMessage =  $this->messages()->orderBy('created_at', 'desc')->first();
-        if($latestMessage)
+        $latestMessage = $this->messages()->orderBy('created_at', 'desc')->first();
+        if ($latestMessage) {
             return $latestMessage;
+        }
+
         return [
-            "created_at" => $this->created_at,
-            "subject" => "[new thread]",
-            "from" => "",
-            "body_plain" => "",
-            "empty" => true,
+            'created_at' => $this->created_at,
+            'subject'    => '[new thread]',
+            'from'       => '',
+            'body_plain' => '',
+            'empty'      => true,
         ];
     }
 
@@ -109,8 +113,10 @@ class Thread extends Model
     public function getUserIdsWithReadWriteAccess()
     {
         $thisThread = self::with('inbox.groups.users')->find($this->id);
-        if(!$thisThread->inbox || !$thisThread->inbox->groups)
+        if (!$thisThread->inbox || !$thisThread->inbox->groups) {
             return [];
+        }
+
         return $thisThread->inbox->groups
             ->filter(function ($group) {
                 return $group->pivot->permission === Group::INBOX_PERMISSION_READWRITE;
@@ -119,28 +125,33 @@ class Thread extends Model
             })->flatten()->unique()->values()->all();
     }
 
-    public function assignUser($userId, $changedById) {
+    public function assignUser($userId, $changedById)
+    {
         $this->users()->syncWithoutDetaching($userId);
         User::find($changedById)->recordThreadEvent($this, UserEvent::TYPE_ASSIGN_THREAD, $userId);
         $this->invalidateCache();
     }
-    public function unAssignUser($userId, $changedById) {
+
+    public function unAssignUser($userId, $changedById)
+    {
         $this->users()->detach($userId);
         User::find($changedById)->recordThreadEvent($this, UserEvent::TYPE_UNASSIGN_THREAD, $userId);
         $this->invalidateCache();
     }
 
     /**
-     * isCached
+     * isCached.
+     *
      * @return mixed
      */
-    public function getAssignedUsers() {
-        return Cache::tags(["permissions",$this->getCacheTag(),"inboxes-{$this->inbox_id}"])
+    public function getAssignedUsers()
+    {
+        return Cache::tags(['permissions', $this->getCacheTag(), "inboxes-{$this->inbox_id}"])
             ->rememberForever("thread-assignments-{$this->id}", function () {
-            return $this->getAssignedUsersFresh();
-        });
-
+                return $this->getAssignedUsersFresh();
+            });
     }
+
     private function getAssignedUsersFresh()
     {
         $thread = self::with('users')->find($this->id);
@@ -168,10 +179,11 @@ class Thread extends Model
 
     public function getLastMessage($onlyIncoming = false)
     {
-        if($onlyIncoming) {
+        if ($onlyIncoming) {
             //todo: better way of determining incoming vs. outgoing then checking if user_id is null...
-            return Message::where('thread_id', $this->id)->where('user_id',null)->orderBy('id', 'desc')->first();
+            return Message::where('thread_id', $this->id)->where('user_id', null)->orderBy('id', 'desc')->first();
         }
+
         return Message::where('thread_id', $this->id)->orderBy('id', 'desc')->first();
     }
 }

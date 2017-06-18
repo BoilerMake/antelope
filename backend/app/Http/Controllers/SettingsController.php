@@ -83,12 +83,14 @@ class SettingsController extends Controller
             $group->users()->attach($user_id);
             UserEvent::record(Auth::user(), $user, UserEvent::TYPE_GROUP_USER_ADD, ['group_id'=>$group_id]);
             User::permissionsWereTangentiallyUpdated(__METHOD__);
+
             return response()->success("Added {$user->displayName} to {$group->name}");
         }
         //else remove
         $group->users()->detach($user_id);
         UserEvent::record(Auth::user(), $user, UserEvent::TYPE_GROUP_USER_REMOVE, ['group_id'=>$group_id]);
         User::permissionsWereTangentiallyUpdated(__METHOD__);
+
         return response()->success("Removed {$user->displayName} from {$group->name}");
     }
 
@@ -97,6 +99,7 @@ class SettingsController extends Controller
         $user = User::addNew(Request::get('email'));
         if ($user) {
             Mail::to($user)->queue(new UserWelcome($user));
+
             return response()->success($user);
         }
 
@@ -156,6 +159,7 @@ class SettingsController extends Controller
 
         if (count($humanDeltas) > 0) {
             User::permissionsWereTangentiallyUpdated(__METHOD__);
+
             return response()->success($humanDeltas);
         }
 

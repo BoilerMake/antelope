@@ -31,7 +31,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'confirmation_code'
+        'confirmation_code',
     ];
     protected $appends = ['displayName'];
 
@@ -81,14 +81,16 @@ class User extends Authenticatable
         return JWTAuth::fromUser($this, ['exp' => strtotime('+1 year')]);
     }
 
-    public function reBuildCache() {
+    public function reBuildCache()
+    {
         $this->invalidateCache();
         self::permissionsWereTangentiallyUpdated(__METHOD__);
         $this->getInboxIdsByPermission();
     }
 
-    private function getInboxIdsByPermission() {
-        return Cache::tags(["permissions",$this->getCacheTag()])
+    private function getInboxIdsByPermission()
+    {
+        return Cache::tags(['permissions', $this->getCacheTag()])
             ->rememberForever("user-inbox-permissions-{$this->id}", function () {
                 return $this->getInboxIdsByPermissionFresh();
             });
@@ -146,8 +148,10 @@ class User extends Authenticatable
             'type'          => $type,
         ]);
     }
-    public static function permissionsWereTangentiallyUpdated($triggeredBy) {
+
+    public static function permissionsWereTangentiallyUpdated($triggeredBy)
+    {
         Log::info("going to invalidate caches related to user permissions (because of {$triggeredBy})");
-        Cache::tags("permissions")->flush();
+        Cache::tags('permissions')->flush();
     }
 }
