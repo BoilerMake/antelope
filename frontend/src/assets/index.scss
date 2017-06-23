@@ -10,13 +10,18 @@ body {
   display: flex;
 }
 
-$primary: #EC7B65;
-$secondary: #45A7B9;
-$dark-bg: #2D353A;
-$dark-bg-hover: #20272B;
-$dark-bg-active: #19232c;
+$primary: #EA5455;
+$secondary: #008AFF;
+$dark-bg: #20272B;
+$dark-bg-hover: #34374A;
+$dark-bg-active: #2c2f40;
 $light-bg: #EDECED;
 $active-text: #F3F3F3;
+
+
+.box-shadow-1 {
+  box-shadow: 0px 0px 51px 0px rgba(0, 0, 0, 0.08), 0px 6px 18px 0px rgba(0, 0, 0, 0.05);
+}
 
 /** 3 COLUMN LAYOUT **/
 .col {
@@ -28,7 +33,7 @@ $active-text: #F3F3F3;
   //column that the sidebar lives in
   flex: 0 0 150px;
   background-color: $dark-bg;
-  border-right: 1px solid white;
+  border-right: 1px solid $light-bg;
 
 }
 .col.center {
@@ -37,7 +42,7 @@ $active-text: #F3F3F3;
 }
 .col.right {
   background-color: $light-bg;
-  flex: 1 1 50%;
+  flex: 1 2 50%;
 }
 
 @media only screen and (max-width: 500px) {
@@ -202,13 +207,13 @@ $active-text: #F3F3F3;
   background: $secondary
 }
 .state-icon.assigned{
-  background: #EFA043;
+  background: #F96F3A;
 }
 .state-icon.in-progress{
-  background: #9977CE;
+  background: #B360E4;
 }
 .state-icon.done{
-  background: #7ED321;
+  background: #56D868;
 }
 
 /** ThreadView **/
@@ -228,12 +233,12 @@ $active-text: #F3F3F3;
 
 /** MessageItem **/
 .message-item {
-  margin: 1em 0;
-  padding: 10px 20px;
+  margin: 1.5em 0;
+  padding: 20px;
   background: #FFFFFF;
-  border: 1px solid #D7D8D8;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
-  border-radius: 2px;
+  //border: 1px solid #D7D8D8;
+  @extend .box-shadow-1;
+  border-radius: 0;
 }
 .message-item-header {
   display: flex;
@@ -335,7 +340,7 @@ $active-text: #F3F3F3;
 /** SETTINGS **/
 
 .settingsWrapper {
-  background-color: #20272B;
+  background-color: $dark-bg;
   color: $active-text;
 }
 
@@ -358,7 +363,7 @@ $active-text: #F3F3F3;
 }
 .btn-primary {
   background: $primary;
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.30);
+  @extend .box-shadow-1;
   //border: 1px solid rgba(0,0,0,0.30);
   border: 0;
   border-radius: 5px;

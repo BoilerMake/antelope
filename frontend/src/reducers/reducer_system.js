@@ -15,9 +15,9 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, sidebar: !state.sidebar };
         case SYSTEM_UPDATE_SCREEN_WIDTH:
             let layout = 'desktop';
-            if(action.width <= 500)
+            if(action.width <= 600)
                 layout = 'mobile';
-            else if(action.width <= 800)
+            else if(action.width <= 1000)
                 layout = 'condensed';
             return {...state, layout};
         default:
