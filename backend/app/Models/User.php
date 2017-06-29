@@ -154,4 +154,9 @@ class User extends Authenticatable
         Log::info("going to invalidate caches related to user permissions (because of {$triggeredBy})");
         Cache::tags('permissions')->flush();
     }
+
+    public function getSignupUrl()
+    {
+       return env('FRONTEND_URI')."/signup/{$this->confirmation_code}";
+    }
 }

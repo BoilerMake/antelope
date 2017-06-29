@@ -21,6 +21,7 @@
         "tymon/jwt-auth": "dev-master"
     },
     "require-dev": {
+        "doctrine/dbal": "~2.3",
         "fzaninotto/faker": "dev-master",
         "laracasts/generators": "dev-master",
         "mockery/mockery": "0.9.*",

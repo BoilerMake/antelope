@@ -26,7 +26,7 @@ Artisan::command('user:create {email} {--admin}', function ($email, $admin) {
         $this->info('Admin user');
     }
     $user = User::addNew($email, $admin);
-    $this->info($user->getToken());
+    $this->info("Complete Signup at ".$user->getSignupUrl());
 });
 Artisan::command('cache:rebuild', function () {
     $this->info('Building caches!');
