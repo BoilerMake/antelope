@@ -46,6 +46,10 @@ class SettingsController extends Controller
 
         return self::getInboxes();
     }
+    public function destinationCheck()
+    {
+        return response()->success(MailController::getInboxForIncoming(Request::get('email'))->name);
+    }
 
     public function getUserEvents()
     {

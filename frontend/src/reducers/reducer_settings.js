@@ -11,7 +11,9 @@ import {
     RECEIVE_SETTINGS_USER_DETAIL,
     RECEIVE_SETTINGS_GROUPLIST,
     REQUEST_SETTINGS_GROUP_DETAIL,
-    RECEIVE_SETTINGS_GROUP_DETAIL
+    RECEIVE_SETTINGS_GROUP_DETAIL,
+    REQUEST_INBOX_DESTINATION_CHECK,
+    RECEIVE_INBOX_DESTINATION_CHECK
 } from '../actions/settings';
 
 export const INITIAL_STATE = {
@@ -24,7 +26,8 @@ export const INITIAL_STATE = {
     groups: [],
     groupDetail: {},
     userList: [],
-    userDetail: {}
+    userDetail: {},
+    inboxDestinationCheck: ''
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -38,6 +41,10 @@ export default function (state = INITIAL_STATE, action) {
                 inboxes_loading: false,
                 inboxes: action.json.data
             };
+        case REQUEST_INBOX_DESTINATION_CHECK:
+            return { ...state, inboxDestinationCheck: 'loading...'};
+        case RECEIVE_INBOX_DESTINATION_CHECK:
+            return { ...state, inboxDestinationCheck: action.json.data};
         case REQUEST_SETTINGS_USER_EVENTS:
             return { ...state, user_events_loading: true };
         case RECEIVE_SETTINGS_USER_EVENTS:

@@ -5,6 +5,7 @@ export class SettingsPageInboxes extends Component {
         super(props);
         this.state = {
             inboxes: [],
+            destinationCheck: ''
         };
     }
     componentDidMount() {
@@ -40,6 +41,12 @@ export class SettingsPageInboxes extends Component {
     saveInboxes() {
         console.log('hji');
         this.props.putSettingsInboxes(this.state.inboxes);
+    }
+    handleDestinationCheckChange(event) {
+        this.setState({...this.state, destinationCheck: event.target.value});
+    }
+    submitDestinationCheck() {
+        this.props.fetchInboxDestinationCheck(this.state.destinationCheck);
     }
     render () {
         if(this.props.user.me && !this.props.user.me.is_admin)
@@ -77,6 +84,9 @@ export class SettingsPageInboxes extends Component {
 
             todo: show good errors on this page (like non-unique primary address, bad regex, etc
             todo: allow changing default
+            <input className="textInput_Dark" type="email" onChange={this.handleDestinationCheckChange.bind(this)} value={this.state.destinationCheck}/>
+            <button className="btn-secondary" onClick={this.submitDestinationCheck.bind(this)}>Check</button>
+            <p>{this.props.settings.inboxDestinationCheck}</p>
             {/*<pre>{JSON.stringify(this.props.inboxes,null,2)}</pre>*/}
         </div>);
     }
@@ -92,7 +102,7 @@ function mapStateToProps (state) {
 }
 
 import { fetchMe } from '../../actions/users'
-import { fetchSettingsInboxes, putSettingsInboxes } from '../../actions/settings'
+import { fetchSettingsInboxes, putSettingsInboxes, fetchInboxDestinationCheck } from '../../actions/settings'
 const mapDispatchToProps = (dispatch, ownProps) => ({
     fetchMe: () => {
         dispatch(fetchMe());
@@ -102,6 +112,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     },
     putSettingsInboxes: (d) => {
         dispatch(putSettingsInboxes(d));
+    },
+    fetchInboxDestinationCheck: (email) => {
+        dispatch(fetchInboxDestinationCheck(email))
     }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsPageInboxes);

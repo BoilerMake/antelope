@@ -31,6 +31,33 @@ function receiveSettingsInbox (json) {
     };
 }
 
+
+export const REQUEST_INBOX_DESTINATION_CHECK = 'REQUEST_INBOX_DESTINATION_CHECK';
+export const RECEIVE_INBOX_DESTINATION_CHECK = 'RECEIVE_INBOX_DESTINATION_CHECK';
+export function fetchInboxDestinationCheck (email) {
+    return (dispatch) => {
+        dispatch(requestInboxDestinationCheck());
+        const token = cookie.load('token');
+        return fetch(`${API_BASE_URL}/settings/destinationCheck?email=${email}&token=${token}`)
+            .then((response) => response.json())
+            .then((json) => dispatch(receiveInboxDestinationCheck(json)));
+    };
+}
+
+function requestInboxDestinationCheck () {
+    return {
+        type: REQUEST_INBOX_DESTINATION_CHECK
+    };
+}
+
+function receiveInboxDestinationCheck (json) {
+    return {
+        type: RECEIVE_INBOX_DESTINATION_CHECK,
+        json
+    };
+}
+
+
 export function putSettingsInboxes(inboxes) {
     return (dispatch) => {
         const token = cookie.load('token');

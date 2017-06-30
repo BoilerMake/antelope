@@ -21,19 +21,21 @@ class MailController extends Controller
     /**
      * Given a recipient address, will determine which inbox it should be routed to
      *
-     * @param $recipientAddress
-     *
-     * @return int Inbox id
+     * @param $recipient
+     * @return Inbox
      */
-    public function getInboxIdForIncoming($recipient)
+    public static function getInboxForIncoming($recipient)
     {
         $recipientAddress = self::extractAddress($recipient);
-        $match = Inbox::where('regex', 'LIKE', "%{$recipientAddress}%")->first();
-        if($match)
-            return $match->id;
+        foreach(Inbox::all() as $eachInbox) {
+            $noWhite = str_replace(' ', '', $eachInbox->regex);
+            //strip whitespace, then explode
+            foreach(explode(",",$noWhite) as $eachAddress)
+                if($recipientAddress===$eachAddress)
+                    return $eachInbox;
+        }
         //if no match, fall back to default
-        return Inbox::where('is_default',true)->first()->id;
-
+        return Inbox::where('is_default',true)->first();
     }
 
     /**
@@ -70,7 +72,7 @@ class MailController extends Controller
             Thread::find($thread_id)->update(['state', Thread::STATE_ASSIGNED]);
             Log::info("mailgun message incoming, is a reply to thread {$thread_id}");
         } else {
-            $targetInboxId = self::getInboxIdForIncoming(Request::get('recipient'));
+            $targetInboxId = self::getInboxForIncoming(Request::get('recipient'))->id;
             $thread_id = Thread::create([
                 'inbox_id' => $targetInboxId,
                 'state'    => Thread::STATE_NEW,
