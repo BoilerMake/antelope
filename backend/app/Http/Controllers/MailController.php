@@ -39,7 +39,7 @@ class MailController extends Controller
     /**
      * Given a full email, like: bob john <bob@gmail.com>, extract the raw address.
      * @param $text
-     * @return null
+     * @return null|string
      */
     public static function extractAddress($text)
     {
@@ -53,20 +53,12 @@ class MailController extends Controller
      * If it is a reply, we need to add it to the appropriate thread
      * If it is a new email, we need to determine which inbox to route it to, and add it to a new thread in that inbox.
      *
-     * @param Request $request
-     *
      * @return mixed
      */
     public function mailgunHook()
     {
-
-        //Need to verify that the POST request is authentic from Mailgun, not spoofed
-        $mg = Mailgun::create(env('MAILGUN_APIKEY'));
-        if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
-            if (!env('MAILGUN_IGNORE_SIGNATURE')) {//so we can override signature validation for testing
-                return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
-            }
-        }
+        if(!$this->isMailgunSignatureValid())
+            return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
 
         //Determine if we need to start a new thread, or if we add to existing thread (for reply).
         $reference = Message::where('message_id', Request::get('In-Reply-To'))->first();
@@ -83,7 +75,7 @@ class MailController extends Controller
                 'inbox_id' => $targetInboxId,
                 'state'    => Thread::STATE_NEW,
             ])->id;
-            Log::info("mailgun message incoming, routing to new thread in inbox {$targetInboxId}");
+            Log::info("mailgun message incoming, routing to new thread ({$thread_id})in inbox {$targetInboxId}");
         }
 
         //Persist message to DB;
@@ -112,7 +104,6 @@ class MailController extends Controller
         $m->timestamp = Request::get('timestamp');
         $m->raw = json_encode(Request::all());
         $m->save();
-//        $m->reply(null,'sup');
         //we need to return a 200 to mailgun, or else they will retry POSTing.
         return response()->success('message saved. is-reply?:'.($isAReply ? 'y' : 'n').' thread:'.$thread_id);
     }
@@ -125,13 +116,8 @@ class MailController extends Controller
      */
     public function mailgunEvent()
     {
-        //Need to verify that the POST request is authentic from Mailgun, not spoofed
-        $mg = Mailgun::create(env('MAILGUN_APIKEY'));
-        if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
-            if (!env('MAILGUN_IGNORE_SIGNATURE')) {//so we can override signature validation for testing
-                return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
-            }
-        }
+        if(!$this->isMailgunSignatureValid())
+            return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
 
         $message_id = Request::get('antelope-message-id');
         if (!$message_id || !Message::find($message_id)) {
@@ -147,5 +133,20 @@ class MailController extends Controller
         ]);
 
         return response()->success('ok');
+    }
+
+    /**
+     * Need to verify that the POST request is authentic from Mailgun, not spoofed
+     * @return bool is valid
+     */
+    private function isMailgunSignatureValid()
+    {
+        $mg = Mailgun::create(env('MAILGUN_APIKEY'));
+        if (!$mg->webhooks()->verifyWebhookSignature(Request::get('timestamp'), Request::get('token'), Request::get('signature'))) {
+            if (!env('MAILGUN_IGNORE_SIGNATURE')) {//so we can override signature validation for testing
+                return false;
+            }
+        }
+        return true;
     }
 }
