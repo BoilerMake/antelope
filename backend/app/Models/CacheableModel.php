@@ -11,7 +11,7 @@ trait CacheableModel
     {
         $caller = __CLASS__;
         $tag = $this->getCacheTag();
-        Log::info("CashFlush: {$caller} #{$this->id}, tag: {$tag}");
+//        Log::info("CashFlush: {$caller} #{$this->id}, tag: {$tag}");
         Cache::tags($tag)->flush();
     }
 

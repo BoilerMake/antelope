@@ -39,6 +39,7 @@ class SettingsController extends Controller
                     'name'           => $eachInbox['name'],
                     'regex'          => $eachInbox['regex'],
                     'primary_address'=> $eachInbox['primary_address'],
+                    'is_default'     => (Inbox::count() == 1)//if we don't have any inboxes yet, first is default
                 ]);
             }
         }

@@ -16,7 +16,7 @@ class CreateInboxesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('regex');
-            $table->string('primary_address')->unique();
+            $table->string('primary_address');
             $table->boolean('is_default')->default(false);
             $table->softDeletes();
             $table->timestamps();

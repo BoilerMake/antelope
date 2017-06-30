@@ -37,6 +37,7 @@ $factory->define(Inbox::class, function (Faker\Generator $faker) {
         'name'              => 'inb'.$faker->word,
         'primary_address'   => $faker->unique()->safeEmail,
         'regex'             => '',
+        'is_default'        => true,
     ];
 });
 $factory->define(Group::class, function (Faker\Generator $faker) {

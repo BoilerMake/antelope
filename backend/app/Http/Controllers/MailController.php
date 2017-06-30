@@ -20,17 +20,32 @@ class MailController extends Controller
 
     /**
      * Given a recipient address, will determine which inbox it should be routed to
-     * todo: Use some sort of regex based on Inbox table columns
-     * todo: will we need to strip <> data ever? probably...
      *
      * @param $recipientAddress
      *
      * @return int Inbox id
      */
-    public function getInboxIdForIncoming($recipientAddress)
+    public function getInboxIdForIncoming($recipient)
     {
-        //TODO
-        return Inbox::first()->id;
+        $recipientAddress = self::extractAddress($recipient);
+        $match = Inbox::where('regex', 'LIKE', "%{$recipientAddress}%")->first();
+        if($match)
+            return $match->id;
+        //if no match, fall back to default
+        return Inbox::where('is_default',true)->first()->id;
+
+    }
+
+    /**
+     * Given a full email, like: bob john <bob@gmail.com>, extract the raw address.
+     * @param $text
+     * @return null
+     */
+    public static function extractAddress($text)
+    {
+        preg_match_all('/\b[^\s]+@[^\s|^>]+/', $text, $matches);
+        $match = $matches[0];
+        return sizeof($match)==0 ? null : $match[0];
     }
 
     /**
