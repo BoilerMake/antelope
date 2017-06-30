@@ -48,9 +48,9 @@ export class SettingsPageInboxes extends Component {
         let inboxList = this.state.inboxes.map((inbox,idx)=>{
             return(<tr key={idx}>
                 <td>#{inbox.id}</td>
-                <td><input className="textInput_Dark" type="text" onChange={this.handleInboxChange.bind(this, idx, "name")} value={inbox.name}/></td>
-                <td><input className="textInput_Dark" type="text" onChange={this.handleInboxChange.bind(this, idx, "regex")} value={inbox.regex}/></td>
-                <td><input className="textInput_Dark" type="text" onChange={this.handleInboxChange.bind(this, idx, "primary_address")} value={inbox.primary_address}/></td>
+                <td><input className="textInput_Dark" style={{width: '90%', marginLeft: 0}} type="text" onChange={this.handleInboxChange.bind(this, idx, "name")} value={inbox.name}/></td>
+                <td><input className="textInput_Dark" style={{width: '90%', marginLeft: 0}} type="text" onChange={this.handleInboxChange.bind(this, idx, "regex")} value={inbox.regex}/></td>
+                <td><input className="textInput_Dark" style={{width: '90%', marginLeft: 0}} type="text" onChange={this.handleInboxChange.bind(this, idx, "primary_address")} value={inbox.primary_address}/></td>
                 <td>{inbox.is_default? 'yes' : 'no'}</td>
             </tr>);
         });
@@ -59,10 +59,10 @@ export class SettingsPageInboxes extends Component {
             <table style={{width: "100%"}}>
                 <thead style={{textAlign: "left", fontWeight: 700}}>
                     <tr>
-                        <th>num</th>
-                        <th>name</th>
+                        <th width={"50px"}>num</th>
+                        <th width={"20%"}>name</th>
                         <th>regex</th>
-                        <th>primary address</th>
+                        <th width={"20%"}>primary address</th>
                         <th>default</th>
                     </tr>
                 </thead>
