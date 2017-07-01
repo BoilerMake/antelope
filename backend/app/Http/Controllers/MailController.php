@@ -19,35 +19,41 @@ class MailController extends Controller
     const ERR_MAILGUN_REF_DNE = 'mailgun reference thread does not exist';
 
     /**
-     * Given a recipient address, will determine which inbox it should be routed to
+     * Given a recipient address, will determine which inbox it should be routed to.
      *
      * @param $recipient
+     *
      * @return Inbox
      */
     public static function getInboxForIncoming($recipient)
     {
         $recipientAddress = self::extractAddress($recipient);
-        foreach(Inbox::all() as $eachInbox) {
+        foreach (Inbox::all() as $eachInbox) {
             $noWhite = str_replace(' ', '', $eachInbox->regex);
             //strip whitespace, then explode
-            foreach(explode(",",$noWhite) as $eachAddress)
-                if($recipientAddress===$eachAddress)
+            foreach (explode(',', $noWhite) as $eachAddress) {
+                if ($recipientAddress === $eachAddress) {
                     return $eachInbox;
+                }
+            }
         }
         //if no match, fall back to default
-        return Inbox::where('is_default',true)->first();
+        return Inbox::where('is_default', true)->first();
     }
 
     /**
      * Given a full email, like: bob john <bob@gmail.com>, extract the raw address.
+     *
      * @param $text
+     *
      * @return null|string
      */
     public static function extractAddress($text)
     {
         preg_match_all('/\b[^\s]+@[^\s|^>]+/', $text, $matches);
         $match = $matches[0];
-        return sizeof($match)==0 ? null : $match[0];
+
+        return count($match) == 0 ? null : $match[0];
     }
 
     /**
@@ -59,8 +65,9 @@ class MailController extends Controller
      */
     public function mailgunHook()
     {
-        if(!$this->isMailgunSignatureValid())
+        if (!$this->isMailgunSignatureValid()) {
             return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
+        }
 
         //Determine if we need to start a new thread, or if we add to existing thread (for reply).
         $reference = Message::where('message_id', Request::get('In-Reply-To'))->first();
@@ -117,8 +124,9 @@ class MailController extends Controller
      */
     public function mailgunEvent()
     {
-        if(!$this->isMailgunSignatureValid())
+        if (!$this->isMailgunSignatureValid()) {
             return response()->error(self::ERR_MAILGUN_SIGNATURE_INVALID);
+        }
 
         $message_id = Request::get('antelope-message-id');
         if (!$message_id || !Message::find($message_id)) {
@@ -137,7 +145,8 @@ class MailController extends Controller
     }
 
     /**
-     * Need to verify that the POST request is authentic from Mailgun, not spoofed
+     * Need to verify that the POST request is authentic from Mailgun, not spoofed.
+     *
      * @return bool is valid
      */
     private function isMailgunSignatureValid()
@@ -148,6 +157,7 @@ class MailController extends Controller
                 return false;
             }
         }
+
         return true;
     }
 }
