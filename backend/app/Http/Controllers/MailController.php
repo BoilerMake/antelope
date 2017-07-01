@@ -112,7 +112,6 @@ class MailController extends Controller
 
     /**
      * Receives mailgun events such as click, open, etc.
-     * TODO: implement.
      *
      * @return string
      */

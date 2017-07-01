@@ -78,9 +78,18 @@ export default class Draft extends Component {
                 wrapperClassName="draft-wrapper"
                 editorClassName="draft-editor"
                 />
-                <input className="textInput" type="email" name="from" placeholder="From" value={this.state.from} onChange={this.textChange.bind(this)}/>
-                <input className="textInput" type="email" name="to" placeholder="To" value={this.state.to} onChange={this.textChange.bind(this)}/>
-                <input className="textInput" type="text" name="subject" placeholder="Subject" value={this.state.subject} onChange={this.textChange.bind(this)}/>
+                <div>
+                    <p>from:</p>
+                    <input disabled={true} className="textInput wideInput" type="email" name="from" placeholder="From" value={this.state.from} onChange={this.textChange.bind(this)}/>
+                </div>
+                <div>
+                    <p>to:</p>
+                    <input className="textInput wideInput" type="email" name="to" placeholder="To" value={this.state.to} onChange={this.textChange.bind(this)}/>
+                </div>
+                <div>
+                    <p>subject:</p>
+                    <input className="textInput wideInput" type="text" name="subject" placeholder="Subject" value={this.state.subject} onChange={this.textChange.bind(this)}/>
+                </div>
                 <hr/>
                 <button className="btn-secondary" onClick={this.saveDraft}>Save</button>
                 <button className="btn-secondary" onClick={this.toggleEditing}>Close</button>

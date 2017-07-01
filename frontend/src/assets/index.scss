@@ -424,6 +424,9 @@ $active-text: #F3F3F3;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
   color: $active-text;
 }
+.wideInput {
+  width: 500px;
+}
 
 /** Generic Layout Things **/
 .pullRight {

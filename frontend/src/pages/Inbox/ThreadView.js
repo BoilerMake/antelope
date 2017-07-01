@@ -113,7 +113,7 @@ class ThreadView extends Component {
                             <div className="threadview-sender">{threadContents.snippet.from}</div>
                         </div>
                         <div className="pullRight">
-                            <button className="btn-primary">Notes</button>
+                            <button className="btn-primary" disabled={true}>Notes</button>
                             <button className="btn-primary" onClick={this.handleOpenAssignmentsModal}>Assignments</button>
                         </div>
                     </div>
@@ -121,7 +121,7 @@ class ThreadView extends Component {
                     <hr/>
                     {comboList}
                     <div className="pullRight">
-                        <button className="btn-primary" disabled={readOnly || numMessages === 0} onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
+                        <button className="btn-primary" disabled={readOnly || numMessages === 0 || true } onClick={()=>{this.props.createDraft(threadId,'replyall')}}>Reply All</button>
                         <button className="btn-primary" disabled={readOnly || numMessages === 0} onClick={()=>{this.props.createDraft(threadId,'reply')}}>Reply</button>
                     </div>
                     <p>Drafts</p>
