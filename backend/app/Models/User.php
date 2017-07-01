@@ -157,6 +157,6 @@ class User extends Authenticatable
 
     public function getSignupUrl()
     {
-       return env('FRONTEND_URI')."/signup/{$this->confirmation_code}";
+        return env('FRONTEND_URI')."/signup/{$this->confirmation_code}";
     }
 }

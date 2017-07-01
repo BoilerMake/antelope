@@ -29,7 +29,7 @@ class UserWelcome extends Mailable
      */
     public function build()
     {
-        return $this->from('antelope@'.env('MAILGUN_DOMAIN'),"Antelope")
+        return $this->from('antelope@'.env('MAILGUN_DOMAIN'), 'Antelope')
             ->subject('Welcome to antelope!')
             ->view('welcome')
             ->with([
