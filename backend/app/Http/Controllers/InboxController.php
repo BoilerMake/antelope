@@ -30,10 +30,11 @@ class InboxController extends Controller
         //todo: proper sorting
         //todo: pagination
         $user = Auth::user();
+        $searchQuery = Request::get('query');
         $user_inbox_ids = $user->getInboxIds();
         if ($inbox_id == 0) {
             //we want to combine all the user's Inbox to act as the fake 0 inbox
-            $threads = Thread::getSorted($user_inbox_ids);
+            $threads = Thread::getSorted($user_inbox_ids,$searchQuery);
             $inboxName = 'All Inboxes';
             //get the counts for each inbox
             //todo: this is kinda slow i think, maybe if we lightly cache this?
@@ -57,7 +58,7 @@ class InboxController extends Controller
             }
             $inbox = Inbox::find($inbox_id);
             $inboxName = $inbox->name;
-            $threads = Thread::getSorted([$inbox_id]);
+            $threads = Thread::getSorted([$inbox_id],$searchQuery);
             $counts = $inbox->counts();
         }
 
@@ -66,6 +67,7 @@ class InboxController extends Controller
             'name'   => $inboxName,
             'threads'=> $threads,
             'counts' => $counts,
+            'query'  => $searchQuery,
         ]);
     }
 

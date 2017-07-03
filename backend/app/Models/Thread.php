@@ -89,25 +89,46 @@ class Thread extends Model
 
     /**
      * Gets the threads for given $inbox_ids
-     * Sorts them by the created_at of the most recent Message message in each thread, descending.
+     * Sorts them by the created_at of the most recent message in each thread, descending.
      *
      * @param array $inbox_ids the Inboxes to pull threads from
-     *
+     * @param $searchQuery
      * @return array threadData
      */
-    public static function getSorted(array $inbox_ids)
+    public static function getSorted(array $inbox_ids, $searchQuery)
     {
-        $t = self::with('users')->whereIn('inbox_id', $inbox_ids)
+        $threadQueryBase = self::with('users');
+        if($searchQuery) {
+            //TODO: use ES instead of this sad, slow query
+            $message_hits = Message::with('thread')
+                ->where('body_plain',    'like', "%{$searchQuery}%")
+                ->orWhere('subject',     'like', "%{$searchQuery}%")
+                ->orWhere('recipient',   'like', "%{$searchQuery}%")
+                ->orWhere('from',        'like', "%{$searchQuery}%")
+                ->orWhere('sender',      'like', "%{$searchQuery}%")
+                ->orWhere('to',          'like', "%{$searchQuery}%")
+                ->get()
+                ->unique()//no harm in duplicating here
+                ->all();
+            //we know which message have hits, now we need to ensure that their parent threads are in our inbox_ids whitelist
+            $valid_thread_id_hits = [];
+            foreach ($message_hits as $m) {
+                if(in_array($m->thread->inbox_id,$inbox_ids))
+                    $valid_thread_id_hits[]=$m->thread->id;
+            }
+            $threadQuery = $threadQueryBase->whereIn('id', $valid_thread_id_hits);
+        } else {
+            //no search param
+            $threadQuery = $threadQueryBase->whereIn('inbox_id', $inbox_ids);
+        }
+        //Sort our thread by the date of last message. If thread has no messages, we use thread creation time.
+        return $threadQuery
             ->get()
             ->sortByDesc(function ($thread) {
-                if ($thread->snippet['empty']) { //if thread has no messages, we use thread creation time.
+                if ($thread->snippet['empty'])
                     return $thread->created_at->toDateTimeString();
-                }
-
                 return $thread->snippet->created_at->toDateTimeString();
-            });
-
-        return $t->values()->all();
+            })->values()->all();
     }
 
     public function getUserIdsWithReadWriteAccess()

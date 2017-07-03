@@ -49,6 +49,24 @@ class UserInboxTest extends TestCase
         $this->assertEquals(5, count($response->json()['data']['threads']));
         $inbox->delete();
     }
+    /**
+     * Test GET inbox/{id}.
+     */
+    public function testGetSingleInboxByIdWithSearch()
+    {
+        $inbox = self::makeSeededInbox(4);
+        factory(Thread::class)->create(['inbox_id'=>$inbox->id]);
+
+        $user = factory(User::class)->create();
+        self::connectUserToInbox($user, $inbox);
+        $response = $this->json('GET', '/inbox/'.$inbox->id, ['query'=>'plain'], ['Authorization' => 'Bearer '.$user->getToken()]);
+        $response
+            ->assertStatus(200)
+            ->assertJson(['success' => true]);
+
+        $this->assertNotEquals(0, count($response->json()['data']['threads']));
+        $inbox->delete();
+    }
 
     /**
      * Test GET inbox/{id} where user does not have access.

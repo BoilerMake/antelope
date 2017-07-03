@@ -84,7 +84,15 @@ export default class Draft extends Component {
                 </div>
                 <div>
                     <p>to:</p>
-                    <input className="textInput wideInput" type="email" name="to" placeholder="To" value={this.state.to} onChange={this.textChange.bind(this)}/>
+                    <input className="textInput wideInput" type="text" name="to" placeholder="To" value={this.state.to} onChange={this.textChange.bind(this)}/>
+                </div>
+                <div>
+                    <p>cc:</p>
+                    <input className="textInput wideInput" type="text" name="cc" placeholder="CC" value={this.state.cc} onChange={this.textChange.bind(this)}/>
+                </div>
+                <div>
+                    <p>bcc:</p>
+                    <input className="textInput wideInput" type="text" name="bcc" placeholder="BCC" value={this.state.bcc} onChange={this.textChange.bind(this)}/>
                 </div>
                 <div>
                     <p>subject:</p>

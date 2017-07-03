@@ -3,13 +3,19 @@ import { findDOMNode} from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import ThreadItem from './ThreadItem';
 class ThreadListView extends Component {
+    constructor () {
+        super();
+        this.state = {
+            searchQuery: "",
+        };
+    }
     componentDidMount() {
-        this.props.fetchInbox(this.props.inboxId);
+        this.props.fetchInbox(this.props.inboxId, this.state.searchQuery);
         this.ensureActiveItemVisible();
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps.inboxId !== this.props.inboxId)
-            this.props.fetchInbox(nextProps.inboxId);
+            this.props.fetchInbox(nextProps.inboxId, this.state.searchQuery);
     }
     componentDidUpdate(prevProps) {
         // only scroll into view if the active item changed last render
@@ -19,6 +25,10 @@ class ThreadListView extends Component {
     ensureActiveItemVisible() {
         const itemComponent = this.refs.activeItem;
         if (itemComponent) findDOMNode(itemComponent).scrollIntoView();
+    }
+    searchQueryChange(event) {
+        this.setState({searchQuery: event.target.value});
+        this.props.fetchInbox(this.props.inboxId, this.state.searchQuery);
     }
     render () {
         let inboxId = this.props.inboxId;
@@ -65,10 +75,10 @@ class ThreadListView extends Component {
                             <div className="inboxlist-header-name">{inboxContents.name}</div>
                         </div>
                         <div className="inboxlist-header-row">
-                            <input className="textInput" type="text" name="search" placeholder="search..."/>
+                            <input className="textInput" type="text" name="search" placeholder="search..." value={this.state.searchQuery} onChange={this.searchQueryChange.bind(this)}/>
                         </div>
                         {parseInt(inboxId,10) !== 0 && (<button className="btn-primary" onClick={this.props.createThread}>Create Thread</button>)}
-
+                        <i>{inboxContents.query ? `Showing messages containing string: ${inboxContents.query}` : null}</i>
                     </div>
                     <div className="inboxlist-header-rightcol">
                         <div>{this.props.isMobile &&  <a onClick={this.props.toggleSidebar}>[toggle sidebar]</a>}</div>
@@ -110,8 +120,8 @@ function mapStateToProps (state) {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    fetchInbox: (inboxId) => {
-        dispatch(fetchInbox(inboxId));
+    fetchInbox: (inboxId, query) => {
+        dispatch(fetchInbox(inboxId, query));
     },
     createThread: () => {
         dispatch(createThread(ownProps.inboxId));
