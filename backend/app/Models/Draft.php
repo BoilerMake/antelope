@@ -22,7 +22,6 @@ class Draft extends Model
 
     /**
      * Sends a draft.
-     * TODO: cc and bcc.
      */
     public function send()
     {
@@ -36,7 +35,7 @@ class Draft extends Model
         $userId = $this->user_id;
         $replying_to_message_id = $this->reply_to_message_id;
 
-        Message::sendMessage($to, $from, $subject, $body_html, $threadId, $userId, $replying_to_message_id);
+        Message::sendMessage($to, $from, $subject, $cc, $bcc, $body_html, $threadId, $userId, $replying_to_message_id);
         Thread::find($this->thread_id)->update(['state'=>Thread::STATE_IN_PROGRESS]);
     }
 }

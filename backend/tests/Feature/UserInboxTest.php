@@ -306,6 +306,43 @@ class UserInboxTest extends TestCase
         $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'body' => $data['body']]);
         $inbox->delete();
     }
+    public function testCreateSaveSendDraftWithCcAndBcc()
+    {
+        $user = factory(User::class)->create();
+        $inbox = TestCase::makeSeededInbox();
+        TestCase::connectUserToInbox($user, $inbox);
+        $thread_id = $inbox->threads[0]->id;
+        $token = $user->getToken();
+        $response = $this->json('POST', "/thread/{$thread_id}/drafts", [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $this->assertDatabaseHas('user_events', ['user_id' => $user->id, 'thread_id' => $thread_id, 'type' => UserEvent::TYPE_CREATE_DRAFT]);
+
+        $data = $response->json()['data'];
+        //todo: check user signature is in there
+
+        //todo: make sure the draft is in there
+        $response = $this->json('GET', "/thread/{$thread_id}", [], ['Authorization' => 'Bearer '.$token]);
+        $response->assertStatus(200);
+
+        //assign user2 to the thread.
+        $data['body'] = '<p>newhtml</p>';
+        $data['bcc'] = 'test@test.com';
+        $data['cc'] = 'test@test.com';
+        $data['action'] = 'send';
+        $response = $this->json('PUT', "/drafts/{$data['id']}", $data, ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+        $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'body' => $data['body']]);
+        $inbox->delete();
+    }
 
     public function testCreateDrafttNoPermission()
     {

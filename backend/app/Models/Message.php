@@ -27,16 +27,16 @@ class Message extends Model
      * @param $to - who to send the message to
      * @param $from - who to send the message from
      * @param $subject - subject
+     * @param $cc
+     * @param $bcc
      * @param $body_html - html body
      * @param $threadId - the thread that the message should be attached to
      * @param $user_id - the User who is sending the message
      * @param null|int $replying_to_message_id
-     *
      * @return Message|false
-     *                       TODO: return false on failure, maybe error somehow cleanly
-     *                       TODO: BCC and CC
+     * TODO: return false on failure, maybe error somehow cleanly
      */
-    public static function sendMessage($to, $from, $subject, $body_html, $threadId, $user_id, $replying_to_message_id = null)
+    public static function sendMessage($to, $from, $subject, $cc, $bcc, $body_html, $threadId, $user_id, $replying_to_message_id = null)
     {
         $body_plain = Html2Text::convert($body_html, true);
 
@@ -45,6 +45,8 @@ class Message extends Model
         $m->thread_id = $threadId;
         $m->from = $from;
         $m->sender = $from; //sender is silly
+        $m->cc = $cc;
+        $m->bcc = $bcc;
         $m->subject = $subject;
         $m->recipient = $to;
         $m->message_id = 'pending';
@@ -66,9 +68,16 @@ class Message extends Model
             'html'                 => $body_html,
             'v:antelope-message-id'=> $m->id,
         ];
+        //cc and bcc aren't always present, and mailgun doesn't accept null.
+        if($cc)
+            $params['cc'] = $cc;
+        if($bcc)
+            $params['bcc'] = $bcc;
+        //don't send mail if we are in test mode!
         if (env('MAILGUN_TEST_MODE')) {
             $params['o:testmode'] = true;
         }
+
         if ($replying_to_message_id) {
             $params['In-Reply-To'] = $replying_to_message_id;
             $params['References'] = $replying_to_message_id;
