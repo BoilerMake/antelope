@@ -33,8 +33,9 @@ class Message extends Model
      * @param $threadId - the thread that the message should be attached to
      * @param $user_id - the User who is sending the message
      * @param null|int $replying_to_message_id
+     *
      * @return Message|false
-     * TODO: return false on failure, maybe error somehow cleanly
+     *                       TODO: return false on failure, maybe error somehow cleanly
      */
     public static function sendMessage($to, $from, $subject, $cc, $bcc, $body_html, $threadId, $user_id, $replying_to_message_id = null)
     {
@@ -69,10 +70,12 @@ class Message extends Model
             'v:antelope-message-id'=> $m->id,
         ];
         //cc and bcc aren't always present, and mailgun doesn't accept null.
-        if($cc)
+        if ($cc) {
             $params['cc'] = $cc;
-        if($bcc)
+        }
+        if ($bcc) {
             $params['bcc'] = $bcc;
+        }
         //don't send mail if we are in test mode!
         if (env('MAILGUN_TEST_MODE')) {
             $params['o:testmode'] = true;
