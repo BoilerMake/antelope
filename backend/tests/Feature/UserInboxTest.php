@@ -49,6 +49,7 @@ class UserInboxTest extends TestCase
         $this->assertEquals(5, count($response->json()['data']['threads']));
         $inbox->delete();
     }
+
     /**
      * Test GET inbox/{id}.
      */
@@ -306,6 +307,7 @@ class UserInboxTest extends TestCase
         $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'body' => $data['body']]);
         $inbox->delete();
     }
+
     public function testCreateSaveSendDraftWithCcAndBcc()
     {
         $user = factory(User::class)->create();

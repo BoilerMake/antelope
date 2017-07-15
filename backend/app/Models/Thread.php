@@ -93,28 +93,30 @@ class Thread extends Model
      *
      * @param array $inbox_ids the Inboxes to pull threads from
      * @param $searchQuery
+     *
      * @return array threadData
      */
     public static function getSorted(array $inbox_ids, $searchQuery)
     {
         $threadQueryBase = self::with('users');
-        if($searchQuery) {
+        if ($searchQuery) {
             //TODO: use ES instead of this sad, slow query
             $message_hits = Message::with('thread')
-                ->where('body_plain',    'like', "%{$searchQuery}%")
-                ->orWhere('subject',     'like', "%{$searchQuery}%")
-                ->orWhere('recipient',   'like', "%{$searchQuery}%")
-                ->orWhere('from',        'like', "%{$searchQuery}%")
-                ->orWhere('sender',      'like', "%{$searchQuery}%")
-                ->orWhere('to',          'like', "%{$searchQuery}%")
+                ->where('body_plain', 'like', "%{$searchQuery}%")
+                ->orWhere('subject', 'like', "%{$searchQuery}%")
+                ->orWhere('recipient', 'like', "%{$searchQuery}%")
+                ->orWhere('from', 'like', "%{$searchQuery}%")
+                ->orWhere('sender', 'like', "%{$searchQuery}%")
+                ->orWhere('to', 'like', "%{$searchQuery}%")
                 ->get()
                 ->unique()//no harm in duplicating here
                 ->all();
             //we know which message have hits, now we need to ensure that their parent threads are in our inbox_ids whitelist
             $valid_thread_id_hits = [];
             foreach ($message_hits as $m) {
-                if(in_array($m->thread->inbox_id,$inbox_ids))
-                    $valid_thread_id_hits[]=$m->thread->id;
+                if (in_array($m->thread->inbox_id, $inbox_ids)) {
+                    $valid_thread_id_hits[] = $m->thread->id;
+                }
             }
             $threadQuery = $threadQueryBase->whereIn('id', $valid_thread_id_hits);
         } else {
@@ -125,8 +127,10 @@ class Thread extends Model
         return $threadQuery
             ->get()
             ->sortByDesc(function ($thread) {
-                if ($thread->snippet['empty'])
+                if ($thread->snippet['empty']) {
                     return $thread->created_at->toDateTimeString();
+                }
+
                 return $thread->snippet->created_at->toDateTimeString();
             })->values()->all();
     }
