@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import OnboardingForm from './OnboardingForm'
 import { SubmissionError } from 'redux-form'
 import { Redirect, Link } from 'react-router-dom'
-import { API_BASE_URL } from '../../config';
+import apiFetch from '../../actions';
 import logo from '../../assets/images/logo.png'
 import {toastr} from 'react-redux-toastr'
 
@@ -20,7 +20,7 @@ export class Onboarding extends Component {
         d.append('first_name', values.first_name ? values.first_name : "");
         d.append('last_name', values.last_name ? values.last_name : "");
         d.append('confirmation_code', this.props.match.params.code);
-        return fetch(`${API_BASE_URL}/auth/onboard`,{
+        return apiFetch(`auth/onboard`,{
             method: 'POST',
             body: d
         }).then((response) => response.json())

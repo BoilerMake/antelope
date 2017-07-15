@@ -1,5 +1,5 @@
 import cookie from 'react-cookie';
-import { API_BASE_URL } from '../config';
+import apiFetch from './index';
 import {toastr} from 'react-redux-toastr'
 
 export const LOGIN_FROM_JWT_SUCCESS = 'LOGIN_FROM_JWT_SUCCESS';
@@ -32,10 +32,7 @@ export const RECEIVE_ME = 'RECEIVE_ME';
 export function fetchMe () {
     return (dispatch, getState) => {
         dispatch(requestMe());
-        const token = cookie.load('token');
-        // const token = getState().user.token;
-
-        return fetch(`${API_BASE_URL}/users/me?token=${token}`)
+        return apiFetch('users/me')
             .then((response) => response.json())
             .then((json) => dispatch(receiveMe(json)));
     };
@@ -64,8 +61,7 @@ export const RECEIVE_USER_INBOX_LIST = 'RECEIVE_USER_INBOX_LIST';
 export function fetchUserInboxList () {
     return (dispatch, getState) => {
         dispatch(requestUserInboxList());
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/users/me/inboxes?token=${token}`)
+        return apiFetch('users/me/inboxes')
             .then((response) => response.json())
             .then((json) => dispatch(receiveUserInboxList(json)));
     };
@@ -90,8 +86,7 @@ function receiveUserInboxList (json) {
 
 export function updateMe(me) {
     return (dispatch) => {
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/users/me?token=${token}`,
+        return apiFetch('users/me',
             {
                 method: 'PUT',
                 body: JSON.stringify(me)

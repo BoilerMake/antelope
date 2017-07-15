@@ -1,5 +1,4 @@
-import cookie from 'react-cookie';
-import { API_BASE_URL } from '../config';
+import apiFetch from './index';
 
 export const REQUEST_THREAD = 'REQUEST_THREAD';
 export const RECEIVE_THREAD = 'RECEIVE_THREAD';
@@ -8,8 +7,7 @@ export function fetchThread (id) {
     return (dispatch, getState) => {
         if(id===null) return;
         dispatch(requestThread(id));
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/thread/${id}?token=${token}`)
+        return apiFetch(`thread/${id}`)
             .then((response) => response.json())
             .then((json) => dispatch(receiveThread(json,id)));
     };
@@ -38,8 +36,7 @@ export function fetchThreadAssignments (id) {
     return (dispatch) => {
         if(id===null) return;
         dispatch(requestThreadAssignments(id));
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/thread/${id}/assignments?token=${token}`)
+        return apiFetch(`thread/${id}/assignments`)
             .then((response) => response.json())
             .then((json) => dispatch(receiveThreadAssignments(json,id)));
     };
@@ -66,8 +63,7 @@ function receiveThreadAssignments (json,id) {
 }
 export function updateThreadAssignments(id,assignments) {
     return (dispatch) => {
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/thread/${id}/assignments?token=${token}`,
+        return apiFetch(`thread/${id}/assignments`,
             {
                 method: 'PUT',
                 body: JSON.stringify(assignments)
@@ -80,8 +76,7 @@ export function updateThreadAssignments(id,assignments) {
 
 export function createDraft(thread_id,mode) {
     return (dispatch) => {
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/thread/${thread_id}/drafts?token=${token}`,
+        return apiFetch(`thread/${thread_id}/drafts`,
             {
                 method: 'POST',
                 body: JSON.stringify(mode)
@@ -93,8 +88,8 @@ export function createDraft(thread_id,mode) {
 export function updateDraft(draft,action) {
     //todo: errors
     return (dispatch) => {
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/drafts/${draft.id}?token=${token}&action=${action}`,
+
+        return apiFetch(`drafts/${draft.id}&action=${action}`,
             {
                 method: 'PUT',
                 body: JSON.stringify(draft)

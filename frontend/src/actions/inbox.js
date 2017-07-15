@@ -1,5 +1,4 @@
-import cookie from 'react-cookie';
-import { API_BASE_URL } from '../config';
+import apiFetch from './index';
 
 export const REQUEST_INBOX = 'REQUEST_INBOX';
 export const RECEIVE_INBOX = 'RECEIVE_INBOX';
@@ -7,8 +6,7 @@ export const RECEIVE_INBOX = 'RECEIVE_INBOX';
 export function fetchInbox (id,query) {
     return (dispatch, getState) => {
         dispatch(requestInbox(id));
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/inbox/${id}?query=${query}&token=${token}`)
+        return apiFetch(`inbox/${id}?query=${query}`)
             .then((response) => response.json())
             .then((json) => dispatch(receiveInbox(json,id)));
     };
@@ -34,8 +32,7 @@ function receiveInbox (json,id,query) {
 
 export function createThread(inbox_id) {
     return (dispatch) => {
-        const token = cookie.load('token');
-        return fetch(`${API_BASE_URL}/inbox/${inbox_id}/threads?token=${token}`,
+        return apiFetch(`inbox/${inbox_id}/threads`,
             {
                 method: 'POST',
             })
