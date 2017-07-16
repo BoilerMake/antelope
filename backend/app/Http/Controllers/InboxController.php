@@ -284,7 +284,7 @@ class InboxController extends Controller
         } elseif ($action === 'delete') {
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_DELETE_DRAFT);
             $draft->delete();
-        }        
+        }
 
         return response()->success($draft);
     }
