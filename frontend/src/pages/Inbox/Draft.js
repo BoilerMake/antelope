@@ -55,6 +55,9 @@ export default class Draft extends Component {
     sendDraft() {
         this.update("send");
     }
+    deleteDraft() {
+        this.update("delete");
+    }
     update(action) {
         let draft     = this.props.draft;
         draft.body    = this.state.markup;
