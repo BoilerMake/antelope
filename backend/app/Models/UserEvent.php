@@ -10,6 +10,7 @@ class UserEvent extends Model
     const TYPE_UNASSIGN_THREAD = 'unassign_thread';
     const TYPE_CREATE_DRAFT = 'create_draft';
     const TYPE_SEND_DRAFT = 'send_draft';
+    const TYPE_DELETE_DRAFT = 'delete_draft';
     const TYPE_UPDATE_GROUP_INBOX_PERMISSIONS = 'update_group_inbox_permissions';
     const TYPE_GROUP_USER_ADD = 'group_user_add';
     const TYPE_GROUP_USER_REMOVE = 'group_user_remove';
