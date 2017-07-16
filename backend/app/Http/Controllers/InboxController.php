@@ -280,7 +280,7 @@ class InboxController extends Controller
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
             $draft->send();
             $draft->delete(); //delete the draft because we sent it
-        } else if ($action === 'delete'){
+        } elseif ($action === 'delete') {
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_DELETE_DRAFT);
             $draft->delete();
         }        
