@@ -47,9 +47,8 @@ $app->configureMonologUsing(function ($monolog) {
     $monolog->pushProcessor(function ($r) {
         //add in some 'extra' info
         $r['extra'] = [
-            'app'                 => 'boilermake_api',
+            'app'                 => 'antelope_api',
             'env'                 => env('APP_ENV'),
-            'origin_request_uuid' => Request::header('X-UUID'),
             'origin_request_path' => Request::path(),
         ];
 
