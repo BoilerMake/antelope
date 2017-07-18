@@ -89,7 +89,7 @@ export function updateDraft(draft,action) {
     //todo: errors
     return (dispatch) => {
 
-        return apiFetch(`drafts/${draft.id}&action=${action}`,
+        return apiFetch(`drafts/${draft.id}/${action}`,
             {
                 method: 'PUT',
                 body: JSON.stringify(draft)
