@@ -34,7 +34,7 @@ export function fetchMe () {
         dispatch(requestMe());
         return apiFetch('users/me')
             .then((response) => response.json())
-            .then((json) => dispatch(receiveMe(json)));
+            .then((json) => {dispatch(receiveMe(json))});
     };
 }
 
@@ -45,13 +45,11 @@ function requestMe () {
 }
 
 function receiveMe (json) {
-    if ('error' in json) {
-        json = null;
-    }
+    let {success} = json;
     return {
         type: RECEIVE_ME,
         me: json,
-        receivedAt: Date.now()
+        success
     };
 }
 
@@ -74,13 +72,11 @@ function requestUserInboxList () {
 }
 
 function receiveUserInboxList (json) {
-    if ('error' in json) {
-        json = null;
-    }
+    let {success} = json;
     return {
         type: RECEIVE_USER_INBOX_LIST,
         data: json,
-        receivedAt: Date.now()
+        success
     };
 }
 
