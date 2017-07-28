@@ -40,7 +40,31 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
+use Monolog\Handler\StreamHandler;
 
+$app->configureMonologUsing(function ($monolog) {
+
+    $monolog->pushProcessor(function ($r) {
+        //add in some 'extra' info
+        $r['extra'] = [
+            'app'                 => 'antelope_api',
+            'env'                 => env('APP_ENV'),
+            'origin_request_path' => Request::path(),
+        ];
+
+        return $r;
+    });
+
+    //re-setup default laravel log style since we're overriding Monoog initially
+    $infoStreamHandler = new StreamHandler(storage_path('/logs/laravel.log'));
+    if (env('JSON_LOG')) {
+        //logstash pipeline needs JSON logs
+        $infoStreamHandler->setFormatter(new \Monolog\Formatter\JsonFormatter());
+    } else {
+        $infoStreamHandler->setFormatter(new \Monolog\Formatter\LineFormatter(null, null, true, true));
+    }
+    $monolog->pushHandler($infoStreamHandler);
+});
 /*
 |--------------------------------------------------------------------------
 | Return The Application

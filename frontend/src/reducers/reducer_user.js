@@ -37,14 +37,24 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, loading: true };
         case RECEIVE_ME:
             //todo: error checking
-            return { ...state,
-                loading: false,
-                me: action.me.data
-            };
+            if(action.success) {
+                return {
+                    ...state,
+                    loading: false,
+                    me: action.me.data
+                };
+            } else {
+                return state;
+            }
         case RECEIVE_USER_INBOX_LIST:
-            return { ...state,
-                inbox_list: action.data.data
-            };
+            if(action.success) {
+                return {
+                    ...state,
+                    inbox_list: action.data.data
+                };
+            } else {
+                return state;
+            }
 
         default:
             return state;

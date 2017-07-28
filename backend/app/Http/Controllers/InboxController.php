@@ -260,7 +260,7 @@ class InboxController extends Controller
      *
      * @return mixed
      */
-    public function updateDraft($draft_id)
+    public function updateDraft($draft_id,$action)
     {
         $draft = Draft::with('thread')->find($draft_id);
         $user = Auth::user();
@@ -276,7 +276,6 @@ class InboxController extends Controller
         $draft->from = $data['from'];
         $draft->save();
 
-        $action = Request::get('action');
         if ($action === 'send') {
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
             $draft->send();

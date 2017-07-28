@@ -27,7 +27,7 @@ Route::group(['middleware'=>['jwt.auth']], function () {
     Route::put('thread/{id}/assignments', 'InboxController@putAssignments');
 
     Route::post('thread/{thread_id}/drafts', 'InboxController@createDraft');
-    Route::put('drafts/{draft_id}', 'InboxController@updateDraft');
+    Route::put('drafts/{draft_id}/{action}', 'InboxController@updateDraft');
 });
 
 Route::group(['middleware'=>['jwt.auth'], 'prefix' => 'users/me'], function () {
