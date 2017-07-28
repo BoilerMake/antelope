@@ -310,7 +310,7 @@ class UserInboxTest extends TestCase
         // Check Delete
         $this->assertDatabaseMissing('drafts', [
             'thread_id' => $thread_id, 
-            'body' => $data['body']
+            'body'      => $data['body']
         ]);
     }
 
