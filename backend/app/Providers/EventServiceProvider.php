@@ -40,6 +40,5 @@ class EventServiceProvider extends ServiceProvider
         Event::listen('tymon.jwt.invalid', function ($user) {
             return response()->error('token_invalid', 'token invalid', 401);
         });
-
     }
 }
