@@ -305,6 +305,12 @@ class UserInboxTest extends TestCase
             ]);
         $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'body' => $data['body']]);
         $inbox->delete();
+
+        // Check Delete
+        $this->assertDatabaseMissing('drafts', [
+            'thread_id' => $thread_id, 
+            'body' => $data['body']
+        ]);
     }
 
     public function testCreateSaveSendDraftWithCcAndBcc()
