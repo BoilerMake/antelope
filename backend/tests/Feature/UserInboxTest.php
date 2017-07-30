@@ -297,8 +297,7 @@ class UserInboxTest extends TestCase
 
         //assign user2 to the thread.
         $data['body'] = '<p>newhtml</p>';
-        $data['action'] = 'send';
-        $response = $this->json('PUT', "/drafts/{$data['id']}", $data, ['Authorization' => 'Bearer '.$token]);
+        $response = $this->json('PUT', "/drafts/{$data['id']}/send", $data, ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -335,8 +334,7 @@ class UserInboxTest extends TestCase
         $data['body'] = '<p>newhtml</p>';
         $data['bcc'] = 'test@test.com';
         $data['cc'] = 'test@test.com';
-        $data['action'] = 'send';
-        $response = $this->json('PUT', "/drafts/{$data['id']}", $data, ['Authorization' => 'Bearer '.$token]);
+        $response = $this->json('PUT', "/drafts/{$data['id']}/send", $data, ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -382,7 +380,7 @@ class UserInboxTest extends TestCase
         $user = factory(User::class)->create();
         $token = $user->getToken();
         $draft_id = factory(Draft::class)->create()->id;
-        $response = $this->json('PUT', "/drafts/{$draft_id}", ['randomdata'], ['Authorization' => 'Bearer '.$token]);
+        $response = $this->json('PUT', "/drafts/{$draft_id}/send", ['randomdata'], ['Authorization' => 'Bearer '.$token]);
         $response
             ->assertStatus(403)
             ->assertJson([
