@@ -260,7 +260,7 @@ class InboxController extends Controller
      *
      * @return mixed
      */
-    public function updateDraft($draft_id,$action)
+    public function updateDraft($draft_id, $action)
     {
         $draft = Draft::with('thread')->find($draft_id);
         $user = Auth::user();
