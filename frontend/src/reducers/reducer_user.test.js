@@ -37,10 +37,12 @@ it('handles REQUEST_ME', ()=>{
 it('handles RECEIVE_ME', ()=>{
     const newState = reducer_user(initialState, {
         type: 'RECEIVE_ME',
+        success: true,
         me: {
             data: "me-data"
         }
     });
     assert.equal(newState.loading,false);
+    console.log(newState);
     assert.equal(newState.me,"me-data");
 })
