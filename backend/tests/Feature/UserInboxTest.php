@@ -305,12 +305,6 @@ class UserInboxTest extends TestCase
             ]);
         $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'body' => $data['body']]);
         $inbox->delete();
-
-        // Check Delete
-        $this->assertDatabaseMissing('drafts', [
-            'thread_id' => $thread_id,
-            'body'      => $data['body'],
-        ]);
     }
 
     public function testCreateSaveSendDraftWithCcAndBcc()
@@ -408,5 +402,48 @@ class UserInboxTest extends TestCase
 
         $response = $this->json('POST', "/thread/{$newThreadId}/drafts", [], ['Authorization' => 'Bearer '.$token]);
         $response->assertStatus(200);
+    }
+
+    /**
+     * Tests creating a draft and deleting it
+     */
+    public function testCreateDeleteDraft()
+    {
+        $user = factory(User::class)->create();
+        $inbox = TestCase::makeSeededInbox();
+        TestCase::connectUserToInbox($user, $inbox);
+        $thread_id = $inbox->threads[0]->id;
+        $token = $user->getToken();
+        $response = $this->json('POST', "/thread/{$thread_id}/drafts", [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $this->assertDatabaseHas('user_events', ['user_id' => $user->id, 'thread_id' => $thread_id, 'type' => UserEvent::TYPE_CREATE_DRAFT]);
+
+        $data = $response->json()['data'];
+        //todo: check user signature is in there
+
+        //todo: make sure the draft is in there
+        $response = $this->json('GET', "/thread/{$thread_id}", [], ['Authorization' => 'Bearer '.$token]);
+        $response->assertStatus(200);
+
+        // Check if draft is there
+        $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'data' => $data['id']]);
+        // Delete draft
+        $response = $this->json('PUT', "/drafts/{$data['id']}/delete");
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+        // Check Delete
+        $this->assertDatabaseMissing('drafts', [
+            'thread_id' => $thread_id,
+            'body'      => $data['body'],
+        ]);
+        $inbox->delete();
     }
 }
