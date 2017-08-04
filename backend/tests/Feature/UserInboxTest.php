@@ -405,7 +405,7 @@ class UserInboxTest extends TestCase
     }
 
     /**
-     * Tests creating a draft and deleting it
+     * Tests creating a draft and deleting it.
      */
     public function testCreateDeleteDraft()
     {
