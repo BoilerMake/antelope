@@ -431,7 +431,7 @@ class UserInboxTest extends TestCase
         $response->assertStatus(200);
 
         // Check if draft is there
-        $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'data' => $data['id']]);
+        $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'id' => $data['id']]);
         // Delete draft
         $response = $this->json('PUT', "/drafts/{$data['id']}/delete");
         $response
