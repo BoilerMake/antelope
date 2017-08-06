@@ -424,26 +424,23 @@ class UserInboxTest extends TestCase
         $this->assertDatabaseHas('user_events', ['user_id' => $user->id, 'thread_id' => $thread_id, 'type' => UserEvent::TYPE_CREATE_DRAFT]);
 
         $data = $response->json()['data'];
-        //todo: check user signature is in there
-
-        //todo: make sure the draft is in there
-        $response = $this->json('GET', "/thread/{$thread_id}", [], ['Authorization' => 'Bearer '.$token]);
-        $response->assertStatus(200);
+        $draftId = $data['id'];
 
         // Check if draft is there
-        $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'id' => $data['id']]);
+        $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'id' => $draftId]);
         // Delete draft
-        $response = $this->json('PUT', "/drafts/{$data['id']}/delete");
+        $response = $this->json('PUT', "/drafts/{$draftId}/delete");
         $response
             ->assertStatus(200)
             ->assertJson([
                 'success' => true,
+                'data'    => 'deleted'
             ]);
-        // Check Delete
-        $this->assertDatabaseMissing('drafts', [
-            'thread_id' => $thread_id,
-            'body'      => $data['body'],
-        ]);
+        // The draft model has soft deletes enabled, so we can't use assertDatabaseMissing because it is still in the database,
+        //    it just has a non-null deleted_at attribute. Here are two diff ways we can verify that it's 'deleted'
+        $this->assertTrue(Draft::withTrashed()->find($draftId)->deleted_at !== null);
+        $this->assertTrue(Draft::find($draftId) === null);
+
         $inbox->delete();
     }
 }

@@ -267,6 +267,13 @@ class InboxController extends Controller
         if ($user->id !== $draft->user_id) {
             return response()->error('You can only update your own draft.', null, 403);
         }
+
+        if ($action === 'delete') {
+            $user->recordThreadEvent($draft->thread, UserEvent::TYPE_DELETE_DRAFT);
+            $draft->delete();
+            return response()->success('deleted');
+        }
+
         $data = json_decode(Request::getContent(), true);
         $draft->body = $data['body'];
         $draft->to = $data['to'];
@@ -280,9 +287,6 @@ class InboxController extends Controller
             $user->recordThreadEvent($draft->thread, UserEvent::TYPE_SEND_DRAFT);
             $draft->send();
             $draft->delete(); //delete the draft because we sent it
-        } elseif ($action === 'delete') {
-            $user->recordThreadEvent($draft->thread, UserEvent::TYPE_DELETE_DRAFT);
-            $draft->delete();
         }
 
         return response()->success($draft);
