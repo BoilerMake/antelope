@@ -403,4 +403,44 @@ class UserInboxTest extends TestCase
         $response = $this->json('POST', "/thread/{$newThreadId}/drafts", [], ['Authorization' => 'Bearer '.$token]);
         $response->assertStatus(200);
     }
+
+    /**
+     * Tests creating a draft and deleting it.
+     */
+    public function testCreateDeleteDraft()
+    {
+        $user = factory(User::class)->create();
+        $inbox = TestCase::makeSeededInbox();
+        TestCase::connectUserToInbox($user, $inbox);
+        $thread_id = $inbox->threads[0]->id;
+        $token = $user->getToken();
+        $response = $this->json('POST', "/thread/{$thread_id}/drafts", [], ['Authorization' => 'Bearer '.$token]);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $this->assertDatabaseHas('user_events', ['user_id' => $user->id, 'thread_id' => $thread_id, 'type' => UserEvent::TYPE_CREATE_DRAFT]);
+
+        $data = $response->json()['data'];
+        $draftId = $data['id'];
+
+        // Check if draft is there
+        $this->assertDatabaseHas('drafts', ['thread_id' => $thread_id, 'id' => $draftId]);
+        // Delete draft
+        $response = $this->json('PUT', "/drafts/{$draftId}/delete");
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data'    => 'deleted'
+            ]);
+        // The draft model has soft deletes enabled, so we can't use assertDatabaseMissing because it is still in the database,
+        //    it just has a non-null deleted_at attribute. Here are two diff ways we can verify that it's 'deleted'
+        $this->assertTrue(Draft::withTrashed()->find($draftId)->deleted_at !== null);
+        $this->assertTrue(Draft::find($draftId) === null);
+
+        $inbox->delete();
+    }
 }
