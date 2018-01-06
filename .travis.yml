@@ -37,6 +37,3 @@ after_success:
 - cd frontend/
 - bash <(curl -s https://codecov.io/bash)
 - cd ..
-notifications:
-  slack:
-    secure: cODB11k0N06HrpN6S+aARdv/tRcoK654TjTDNrIEVqrMsay1ljm3gXwKTCwZ7AiE4WdvUwK5OrMc3boBI01gZoIol3xsXd5WEFfmsTROY3pPuWUSWIklRHcLFJpK7z0U1SjlYp8WG6zTBAKRnacGpEC8JJdCxvA7CvyQ70WqeF+4qM3RAgydCCV0mPmVLlaJJ4QWBTijsP/4nstV7R2Dy9zu3sw6PaGC1lG+isDro+n4UaDcmbaOtiVUSlgu+OQTOk2IWFdfmT3q+T/XAI+2kB/hlk52v/jQ+mOcXFr5fL4tc7TJ0eWZ+tXKdOVNxh7iYrudpd7dJRU02/RRQ9dSUOapAhjBmiTROWeqRfPLDthe3XSTcnv/EuT+fwOZQyuYgAWMRtHuzRMCkVFonTo0FYR4l0/lQFywzJztIOtzjZxfUbONLq5huV+j+quhoDWKR+yIl55Z4e0RZRaBmdBLAMXA9wuts/CtgJWYLUUT+YxDEtrW7d7ASJXTeKOoUallwHOLgZJptDrnu17KVX0aiF/CsVIr0nyV1GbkAi70CVby4/I/fF93EXL7a3tqTCtBMTmB9rV1LpLlxHoYTl8WO72911cWGksLgvm1enGvNUav2zvCJawFNQWQnwaSIWmLDzhsRTXTHYJ1Ns3dVC95EZMnWas7rMA9Z7YzO+24Ev0=
