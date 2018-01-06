@@ -43,7 +43,6 @@ $app->singleton(
 use Monolog\Handler\StreamHandler;
 
 $app->configureMonologUsing(function ($monolog) {
-
     $monolog->pushProcessor(function ($r) {
         //add in some 'extra' info
         $r['extra'] = [
